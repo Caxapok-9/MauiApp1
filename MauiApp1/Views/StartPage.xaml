@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.Views.StartPage"
+             Title="Общие данные о матче">
+    
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <!-- Заголовок -->
+            <Label Text="Общие сведения о матче" 
+                   FontSize="22" 
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" 
+                   Margin="0,0,0,20"/>
+
+            <!-- Турнир -->
+            <Label Text="Название турнира:" />
+            <Entry x:Name="EntryTournament" 
+                   Placeholder="Например: Чемпионат города" />
+
+            <!-- Команда А -->
+            <Label Text="Команда Хозяева:" />
+            <Entry x:Name="EntryTeamHome" 
+                   Placeholder="Название команды хозяев" />
+
+            <!-- Команда Б -->
+            <Label Text="Команда Гости:" />
+            <Entry x:Name="EntryTeamGuest" 
+                   Placeholder="Название команды гостей" />
+
+            <!-- Адрес / Арена -->
+            <Label Text="Место проведения:" />
+            <Entry x:Name="EntryVenue" 
+                   Placeholder="Город, адрес, зал" />
+
+            <!-- Судья -->
+            <Label Text="Главный судья:" />
+            <Entry x:Name="EntryReferee" 
+                   Placeholder="Фамилия И.О." />
+
+            <!-- Секретарь -->
+            <Label Text="Секретарь:" />
+            <Entry x:Name="EntrySecretary" 
+                   Placeholder="Фамилия И.О." />
+
+            <Label Text="⚠️ Проверяйте заполненные данные!&#10;Они отразятся в итоговом протоколе." 
+               TextColor="DarkOrange" 
+               FontAttributes="Italic"
+               FontSize="14"
+               HorizontalOptions="Center" 
+               Margin="0,20,0,10"
+               LineBreakMode="WordWrap"/>
+            
+            <!-- Кнопка сохранения -->
+            <Button Text="Сохранить и продолжить" 
+                    Clicked="OnSaveClicked"
+                    BackgroundColor="#007ACC"
+                    TextColor="White"
+                    Margin="0,20,0,0"
+                    HeightRequest="50"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

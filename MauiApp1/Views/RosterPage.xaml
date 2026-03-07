@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.Views.RosterPage"
+             Title="Заявки команд">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Frame BorderColor="#007ACC" CornerRadius="10" Padding="10">
+                <VerticalStackLayout>
+                    <Label Text="Команда Хозяев" FontSize="18" FontAttributes="Bold" 
+                           TextColor="#007ACC"/>
+
+                    <!-- Список игроков -->
+                    <CollectionView x:Name="TeamHomeList" HeightRequest="200">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="40,*,Auto,Auto,40" Padding="5">
+                                    
+                                    <!-- Номер -->
+                                    <Entry Grid.Column="0" Text="{Binding Number}" 
+                                           Keyboard="Numeric" Placeholder="№"
+                                           HorizontalTextAlignment="Center"/>
+                                    
+                                    <!-- ФИО -->
+                                    <Entry Grid.Column="1" Text="{Binding Name}" 
+                                           Placeholder="Фамилия И.О." Margin="5,0"/>
+                                    
+                                    <!-- Капитан -->
+                                    <Button Grid.Column="2" 
+                                        Text="Cap" 
+                                        FontAttributes="Bold"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnCaptainClicked"
+                                        BackgroundColor="DarkGrey" 
+                                        TextColor="Black"
+                                        WidthRequest="40" HeightRequest="40"
+                                        CornerRadius="10"
+                                        Padding="0"                                            
+                                        VerticalOptions="Center" HorizontalOptions="Center">
+
+                                        <Button.Triggers>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="#007ACC"/>
+                                                <Setter Property="TextColor" Value="White"/>
+                                            </DataTrigger>
+                                        </Button.Triggers>
+                                    </Button>
+
+                                    <!-- Либеро -->
+                                    <Button Grid.Column="3" 
+                                        Text="Lib" 
+                                        FontAttributes="Bold"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnLiberoClicked"
+                                        BackgroundColor="DarkGrey" 
+                                        TextColor="Black"
+                                        WidthRequest="40" HeightRequest="40"
+                                        CornerRadius="10"
+                                        Padding="0"
+                                        Margin="10,0,0,0"
+                                        VerticalOptions="Center" HorizontalOptions="Center">
+
+                                        <Button.Triggers>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="LightGreen"/>
+                                                <Setter Property="TextColor" Value="White"/>
+                                            </DataTrigger>
+                                        </Button.Triggers>
+                                    </Button>
+                                    
+                                    <!-- Удалить -->
+                                    <Label Grid.Column="4" Text="Х" FontSize="22" 
+                                        TextColor="Red"
+                                        VerticalOptions="Center" HorizontalOptions="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="DeletePlayerClicked"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                    
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Button Text="+ Добавить игрока (Хозяева)" 
+                            Clicked="OnAddPlayerHomeClicked"
+                            BackgroundColor="#E0E0E0" TextColor="Black"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BorderColor="#007ACC" CornerRadius="10" Padding="10">
+                <VerticalStackLayout>
+                    <Label Text="Команда Гости" FontSize="18" FontAttributes="Bold" 
+               TextColor="#007ACC"/>
+
+                    <!-- Список игроков -->
+                    <CollectionView x:Name="TeamGuestList" HeightRequest="200">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="40,*,Auto,Auto,40" Padding="5">
+
+                                    <!-- Номер -->
+                                    <Entry Grid.Column="0" Text="{Binding Number}" 
+                               Keyboard="Numeric" Placeholder="№"
+                               HorizontalTextAlignment="Center"/>
+
+                                    <!-- ФИО -->
+                                    <Entry Grid.Column="1" Text="{Binding Name}" 
+                               Placeholder="Фамилия И.О." Margin="5,0"/>
+
+                                    <!-- Капитан -->
+                                    <Button Grid.Column="2" 
+                                        Text="Cap" 
+                                        FontAttributes="Bold"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnCaptainClicked"
+                                        BackgroundColor="DarkGrey" 
+                                        TextColor="Black"
+                                        WidthRequest="40" HeightRequest="40"
+                                        CornerRadius="10"
+                                        Padding="0"                                            
+                                        VerticalOptions="Center" HorizontalOptions="Center">
+
+                                        <Button.Triggers>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="#007ACC"/>
+                                                <Setter Property="TextColor" Value="White"/>
+                                            </DataTrigger>
+                                        </Button.Triggers>
+                                    </Button>
+
+                                    <!-- Либеро -->
+                                    <Button Grid.Column="3" 
+                                        Text="Lib" 
+                                        FontAttributes="Bold"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnLiberoClicked"
+                                        BackgroundColor="DarkGrey" 
+                                        TextColor="Black"
+                                        WidthRequest="40" HeightRequest="40"
+                                        CornerRadius="10"
+                                        Padding="0"
+                                        Margin="10,0,0,0"
+                                        VerticalOptions="Center" HorizontalOptions="Center">
+
+                                        <Button.Triggers>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="LightGreen"/>
+                                                <Setter Property="TextColor" Value="White"/>
+                                            </DataTrigger>
+                                        </Button.Triggers>
+                                    </Button>
+
+                                    <!-- Удалить -->
+                                    <Label Grid.Column="4" Text="Х" FontSize="22" 
+                                        TextColor="Red"
+                                        VerticalOptions="Center" HorizontalOptions="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="DeletePlayerClicked"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Button Text="+ Добавить игрока (Гости)" 
+                Clicked="OnAddPlayerGuestClicked"
+                BackgroundColor="#E0E0E0" TextColor="Black"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label Text="⚠️ Проверяйте заполненные данные!&#10;Они отразятся в итоговом протоколе." 
+               TextColor="DarkOrange" 
+               FontAttributes="Italic"
+               FontSize="14"
+               HorizontalOptions="Center" 
+               Margin="0,20,0,10"
+               LineBreakMode="WordWrap"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
