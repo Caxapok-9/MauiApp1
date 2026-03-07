@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.Views.LineupPage"
+             Title="Начальная расстановка"
+             BackgroundColor="#FAFAFA">
+
+    <Grid RowDefinitions="Auto,*,Auto" 
+          Padding="0"
+          BackgroundColor="#FAFAFA">
+
+        <!-- Площадка -->
+        <ScrollView Grid.Row="1">
+            
+            <VerticalStackLayout Padding="20" Spacing="20">
+
+                <Label
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#333333"
+                   Text="Хозяева"/>
+
+                <!-- Сетка расстановки -->
+                <Frame BackgroundColor="White" 
+                       Padding="20"
+                       CornerRadius="12"
+                       HasShadow="True">
+
+                    <Grid ColumnDefinitions="*,*,*" 
+                          RowDefinitions="Auto,Auto,Auto,Auto"
+                          ColumnSpacing="15" 
+                          RowSpacing="15">
+
+                        <Frame Grid.Row="1" Grid.Column="0" 
+                               BackgroundColor="Gray" 
+                               Padding="15" 
+                               CornerRadius="8"
+                               HeightRequest="60">
+                            <Label Text="Зона 4" 
+                                   VerticalOptions="Center" 
+                                   HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <Frame Grid.Row="1" Grid.Column="1" 
+                               BackgroundColor="Gray" 
+                               Padding="15" 
+                               CornerRadius="8"
+                               HeightRequest="60">
+                            <Label Text="Зона 3" 
+                                   VerticalOptions="Center" 
+                                   HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <Frame Grid.Row="1" Grid.Column="2" 
+                               BackgroundColor="Gray" 
+                               Padding="15" 
+                               CornerRadius="8"
+                               HeightRequest="60">
+                            <Label Text="Зона 2" 
+                                   VerticalOptions="Center" 
+                                   HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <Frame Grid.Row="2" Grid.Column="0" 
+                               BackgroundColor="Gray"  
+                               Padding="15" 
+                               CornerRadius="8"
+                               HeightRequest="60">
+                            <Label Text="Зона 5" 
+                                   VerticalOptions="Center" 
+                                   HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <Frame Grid.Row="2" Grid.Column="1" 
+                               BackgroundColor="Gray"  
+                               Padding="15" 
+                               CornerRadius="8"
+                               HeightRequest="60">
+                            <Label Text="Зона 6" 
+                                   VerticalOptions="Center" 
+                                   HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <Frame Grid.Row="2" Grid.Column="2" 
+                               BackgroundColor="Gray"  
+                               Padding="15" 
+                               CornerRadius="8"
+                               HeightRequest="60">
+                            <Label Text="Зона 1" 
+                                   VerticalOptions="Center" 
+                                   HorizontalOptions="Center"/>
+                        </Frame>
+
+                    </Grid>
+                </Frame>
+
+                <Label
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#333333"
+                   Text="Гости"/>
+
+                <!-- Сетка расстановки -->
+                <Frame BackgroundColor="White" 
+                   Padding="20"
+                   CornerRadius="12"
+                   HasShadow="True">
+
+                    <Grid ColumnDefinitions="*,*,*" 
+                      RowDefinitions="Auto,Auto,Auto,Auto"
+                      ColumnSpacing="15" 
+                      RowSpacing="15">
+
+                        <Frame Grid.Row="1" Grid.Column="0" 
+                           BackgroundColor="Gray" 
+                           Padding="15" 
+                           CornerRadius="8"
+                           HeightRequest="60">
+                                <Label Text="Зона 4" 
+                                    VerticalOptions="Center" 
+                                    HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <Frame Grid.Row="1" Grid.Column="1" 
+                           BackgroundColor="Gray" 
+                           Padding="15" 
+                           CornerRadius="8"
+                           HeightRequest="60">
+                                <Label Text="Зона 3" 
+                                   VerticalOptions="Center" 
+                                   HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <Frame Grid.Row="1" Grid.Column="2" 
+                           BackgroundColor="Gray" 
+                           Padding="15" 
+                           CornerRadius="8"
+                           HeightRequest="60">
+                                <Label Text="Зона 2" 
+                                    VerticalOptions="Center" 
+                                    HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <Frame Grid.Row="2" Grid.Column="0" 
+                           BackgroundColor="Gray"  
+                           Padding="15" 
+                           CornerRadius="8"
+                           HeightRequest="60">  
+                                <Label Text="Зона 5" 
+                                    VerticalOptions="Center" 
+                                    HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <Frame Grid.Row="2" Grid.Column="1" 
+                           BackgroundColor="Gray"  
+                           Padding="15" 
+                           CornerRadius="8"
+                           HeightRequest="60">
+                                <Label Text="Зона 6" 
+                                    VerticalOptions="Center" 
+                                    HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <Frame Grid.Row="2" Grid.Column="2" 
+                           BackgroundColor="Gray"  
+                           Padding="15" 
+                           CornerRadius="8"
+                           HeightRequest="60">
+                                <Label Text="Зона 1" 
+                                    VerticalOptions="Center" 
+                                    HorizontalOptions="Center"/>
+                        </Frame>
+
+                    </Grid>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Кнопки управления -->
+        <Grid Grid.Row="2" 
+              ColumnDefinitions="*,*"
+              ColumnSpacing="10"
+              Padding="20"
+              BackgroundColor="White">
+
+            <Button Grid.Column="0"
+                    Text="⬅️ Назад"
+                    FontSize="16"
+                    BackgroundColor="Gray"
+                    TextColor="White"
+                    HeightRequest="56"
+                    CornerRadius="12"
+                    HorizontalOptions="Fill"/>
+            <!--Clicked="OnBackClicked"/>-->
+
+                <Button Grid.Column="1"
+                    Text="▶️ Начать матч"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    BackgroundColor="#28A745"
+                    TextColor="White"
+                    HeightRequest="56"
+                    CornerRadius="12"
+                    HorizontalOptions="Fill"/>
+                <!--Clicked="OnStartMatchClicked"/>-->
+        </Grid>
+
+    </Grid>
+</ContentPage>

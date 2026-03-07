@@ -110,6 +110,11 @@ public partial class RosterPage : ContentPage
             }
         }
     }
+
+    private void NextPageClick(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new LineupPage());
+    }
 }
 
 public class Player : INotifyPropertyChanged
