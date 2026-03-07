@@ -37,9 +37,29 @@
                                Padding="15" 
                                CornerRadius="8"
                                HeightRequest="60">
-                            <Label Text="Зона 4" 
-                                   VerticalOptions="Center" 
-                                   HorizontalOptions="Center"/>
+
+                            <Grid>
+                                <!-- Label для отображения -->
+                                <Label x:Name="homePosLabel4"
+                                   Text="Зона 4"
+                                   TextColor="White"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"
+                                   FontSize="14"/>
+
+                                <!-- Picker поверх Label (прозрачный) -->
+                                <Picker x:Name="homePosPicker4"
+                                    Title="Выберите игрока"
+                                    Opacity="0"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    SelectedIndexChanged="OnPlayerSelectedHome"/>
+                            </Grid>
+
+                            <Frame.GestureRecognizers>
+                                <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                            </Frame.GestureRecognizers>
                         </Frame>
 
                         <Frame Grid.Row="1" Grid.Column="1" 
@@ -47,9 +67,28 @@
                                Padding="15" 
                                CornerRadius="8"
                                HeightRequest="60">
-                            <Label Text="Зона 3" 
-                                   VerticalOptions="Center" 
-                                   HorizontalOptions="Center"/>
+                            <Grid>
+                                <!-- Label для отображения -->
+                                <Label x:Name="homePosLabel3"
+                                   Text="Зона 3"
+                                   TextColor="White"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"
+                                   FontSize="14"/>
+
+                                                            <!-- Picker поверх Label (прозрачный) -->
+                                <Picker x:Name="homePosPicker3"
+                                    Title="Выберите игрока"
+                                    Opacity="0"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    SelectedIndexChanged="OnPlayerSelectedHome"/>
+                            </Grid>
+
+                            <Frame.GestureRecognizers>
+                                <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                            </Frame.GestureRecognizers>
                         </Frame>
 
                         <Frame Grid.Row="1" Grid.Column="2" 
@@ -57,9 +96,28 @@
                                Padding="15" 
                                CornerRadius="8"
                                HeightRequest="60">
-                            <Label Text="Зона 2" 
-                                   VerticalOptions="Center" 
-                                   HorizontalOptions="Center"/>
+                            <Grid>
+                                <!-- Label для отображения -->
+                                <Label x:Name="homePosLabel2"
+                                   Text="Зона 2"
+                                   TextColor="White"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"
+                                   FontSize="14"/>
+
+                                                            <!-- Picker поверх Label (прозрачный) -->
+                                <Picker x:Name="homePosPicker2"
+                                    Title="Выберите игрока"
+                                    Opacity="0"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    SelectedIndexChanged="OnPlayerSelectedHome"/>
+                            </Grid>
+
+                            <Frame.GestureRecognizers>
+                                <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                            </Frame.GestureRecognizers>
                         </Frame>
 
                         <Frame Grid.Row="2" Grid.Column="0" 
@@ -67,30 +125,87 @@
                                Padding="15" 
                                CornerRadius="8"
                                HeightRequest="60">
-                            <Label Text="Зона 5" 
-                                   VerticalOptions="Center" 
-                                   HorizontalOptions="Center"/>
-                        </Frame>
+                            <Grid>
+                            <!-- Label для отображения -->
+                            <Label x:Name="homePosLabel5"
+                               Text="Зона 5"
+                               TextColor="White"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"
+                               FontSize="14"/>
+
+                                                    <!-- Picker поверх Label (прозрачный) -->
+                             <Picker x:Name="homePosPicker5"
+                                Title="Выберите игрока"
+                                Opacity="0"
+                                BackgroundColor="Transparent"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                SelectedIndexChanged="OnPlayerSelectedHome"/>
+                    </Grid>
+
+                    <Frame.GestureRecognizers>
+                        <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                    </Frame.GestureRecognizers>
+                </Frame>
 
                         <Frame Grid.Row="2" Grid.Column="1" 
                                BackgroundColor="Gray"  
                                Padding="15" 
                                CornerRadius="8"
                                HeightRequest="60">
-                            <Label Text="Зона 6" 
-                                   VerticalOptions="Center" 
-                                   HorizontalOptions="Center"/>
-                        </Frame>
+                    <Grid>
+                        <!-- Label для отображения -->
+                        <Label x:Name="homePosLabel6"
+       Text="Зона 6"
+       TextColor="White"
+       VerticalOptions="Center"
+       HorizontalOptions="Center"
+       FontSize="14"/>
+
+                        <!-- Picker поверх Label (прозрачный) -->
+                        <Picker x:Name="homePosPicker6"
+        Title="Выберите игрока"
+        Opacity="0"
+        BackgroundColor="Transparent"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill"
+        SelectedIndexChanged="OnPlayerSelectedHome"/>
+                    </Grid>
+
+                    <Frame.GestureRecognizers>
+                        <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                    </Frame.GestureRecognizers>
+                </Frame>
 
                         <Frame Grid.Row="2" Grid.Column="2" 
                                BackgroundColor="Gray"  
                                Padding="15" 
                                CornerRadius="8"
                                HeightRequest="60">
-                            <Label Text="Зона 1" 
-                                   VerticalOptions="Center" 
-                                   HorizontalOptions="Center"/>
-                        </Frame>
+                    <Grid>
+                        <!-- Label для отображения -->
+                        <Label x:Name="homePosLabel1"
+       Text="Зона 1"
+       TextColor="White"
+       VerticalOptions="Center"
+       HorizontalOptions="Center"
+       FontSize="14"/>
+
+                        <!-- Picker поверх Label (прозрачный) -->
+                        <Picker x:Name="homePosPicker1"
+        Title="Выберите игрока"
+        Opacity="0"
+        BackgroundColor="Transparent"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill"
+        SelectedIndexChanged="OnPlayerSelectedHome"/>
+                    </Grid>
+
+                    <Frame.GestureRecognizers>
+                        <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                    </Frame.GestureRecognizers>
+                </Frame>
 
                     </Grid>
                 </Frame>
@@ -118,94 +233,193 @@
                            Padding="15" 
                            CornerRadius="8"
                            HeightRequest="60">
-                                <Label Text="Зона 4" 
-                                    VerticalOptions="Center" 
-                                    HorizontalOptions="Center"/>
-                        </Frame>
+                <Grid>
+                    <!-- Label для отображения -->
+                    <Label x:Name="guestPosLabel4"
+       Text="Зона 4"
+       TextColor="White"
+       VerticalOptions="Center"
+       HorizontalOptions="Center"
+       FontSize="14"/>
+
+                    <!-- Picker поверх Label (прозрачный) -->
+                                <Picker x:Name="guestPosPicker4"
+        Title="Выберите игрока"
+        Opacity="0"
+        BackgroundColor="Transparent"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill"
+        SelectedIndexChanged="OnPlayerSelectedGuest"/>
+                </Grid>
+
+                <Frame.GestureRecognizers>
+                    <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                </Frame.GestureRecognizers>
+            </Frame>
 
                         <Frame Grid.Row="1" Grid.Column="1" 
                            BackgroundColor="Gray" 
                            Padding="15" 
                            CornerRadius="8"
                            HeightRequest="60">
-                                <Label Text="Зона 3" 
-                                   VerticalOptions="Center" 
-                                   HorizontalOptions="Center"/>
-                        </Frame>
+                <Grid>
+                    <!-- Label для отображения -->
+                                <Label x:Name="guestPosLabel3"
+       Text="Зона 3"
+       TextColor="White"
+       VerticalOptions="Center"
+       HorizontalOptions="Center"
+       FontSize="14"/>
+
+                    <!-- Picker поверх Label (прозрачный) -->
+                                <Picker x:Name="guestPosPicker3"
+        Title="Выберите игрока"
+        Opacity="0"
+        BackgroundColor="Transparent"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill"
+        SelectedIndexChanged="OnPlayerSelectedGuest"/>
+                </Grid>
+
+                <Frame.GestureRecognizers>
+                    <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                </Frame.GestureRecognizers>
+            </Frame>
 
                         <Frame Grid.Row="1" Grid.Column="2" 
                            BackgroundColor="Gray" 
                            Padding="15" 
                            CornerRadius="8"
                            HeightRequest="60">
-                                <Label Text="Зона 2" 
-                                    VerticalOptions="Center" 
-                                    HorizontalOptions="Center"/>
-                        </Frame>
+                <Grid>
+                    <!-- Label для отображения -->
+                                <Label x:Name="guestPosLabel2"
+       Text="Зона 2"
+       TextColor="White"
+       VerticalOptions="Center"
+       HorizontalOptions="Center"
+       FontSize="14"/>
+
+                    <!-- Picker поверх Label (прозрачный) -->
+                                <Picker x:Name="guestPosPicker2"
+        Title="Выберите игрока"
+        Opacity="0"
+        BackgroundColor="Transparent"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill"
+        SelectedIndexChanged="OnPlayerSelectedGuest"/>
+                </Grid>
+
+                <Frame.GestureRecognizers>
+                    <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                </Frame.GestureRecognizers>
+            </Frame>
 
                         <Frame Grid.Row="2" Grid.Column="0" 
                            BackgroundColor="Gray"  
                            Padding="15" 
                            CornerRadius="8"
-                           HeightRequest="60">  
-                                <Label Text="Зона 5" 
-                                    VerticalOptions="Center" 
-                                    HorizontalOptions="Center"/>
-                        </Frame>
+                           HeightRequest="60">
+                <Grid>
+                    <!-- Label для отображения -->
+                                <Label x:Name="guestPosLabel5"
+       Text="Зона 5"
+       TextColor="White"
+       VerticalOptions="Center"
+       HorizontalOptions="Center"
+       FontSize="14"/>
+
+                    <!-- Picker поверх Label (прозрачный) -->
+                                <Picker x:Name="guestPosPicker5"
+        Title="Выберите игрока"
+        Opacity="0"
+        BackgroundColor="Transparent"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill"
+        SelectedIndexChanged="OnPlayerSelectedGuest"/>
+                </Grid>
+
+                <Frame.GestureRecognizers>
+                    <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                </Frame.GestureRecognizers>
+            </Frame>
 
                         <Frame Grid.Row="2" Grid.Column="1" 
                            BackgroundColor="Gray"  
                            Padding="15" 
                            CornerRadius="8"
                            HeightRequest="60">
-                                <Label Text="Зона 6" 
-                                    VerticalOptions="Center" 
-                                    HorizontalOptions="Center"/>
-                        </Frame>
+                <Grid>
+                    <!-- Label для отображения -->
+                                <Label x:Name="guestPosLabel6"
+       Text="Зона 6"
+       TextColor="White"
+       VerticalOptions="Center"
+       HorizontalOptions="Center"
+       FontSize="14"/>
+
+                    <!-- Picker поверх Label (прозрачный) -->
+                                <Picker x:Name="guestPosPicker6"
+        Title="Выберите игрока"
+        Opacity="0"
+        BackgroundColor="Transparent"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill"
+        SelectedIndexChanged="OnPlayerSelectedGuest"/>
+                </Grid>
+
+                <Frame.GestureRecognizers>
+                    <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                </Frame.GestureRecognizers>
+            </Frame>
 
                         <Frame Grid.Row="2" Grid.Column="2" 
                            BackgroundColor="Gray"  
                            Padding="15" 
                            CornerRadius="8"
                            HeightRequest="60">
-                                <Label Text="Зона 1" 
-                                    VerticalOptions="Center" 
-                                    HorizontalOptions="Center"/>
-                        </Frame>
+                <Grid>
+                    <!-- Label для отображения -->
+                                <Label x:Name="guestPosLabel1"
+       Text="Зона 1"
+       TextColor="White"
+       VerticalOptions="Center"
+       HorizontalOptions="Center"
+       FontSize="14"/>
+
+                    <!-- Picker поверх Label (прозрачный) -->
+                                <Picker x:Name="guestPosPicker1"
+        Title="Выберите игрока"
+        Opacity="0"
+        BackgroundColor="Transparent"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill"
+        SelectedIndexChanged="OnPlayerSelectedGuest"/>
+                </Grid>
+
+                <Frame.GestureRecognizers>
+                    <!--<TapGestureRecognizer Tapped="OnFrameTapped"/>-->
+                </Frame.GestureRecognizers>
+            </Frame>
 
                     </Grid>
                 </Frame>
-            </VerticalStackLayout>
-        </ScrollView>
 
-        <!-- Кнопки управления -->
-        <Grid Grid.Row="2" 
-              ColumnDefinitions="*,*"
-              ColumnSpacing="10"
-              Padding="20"
-              BackgroundColor="White">
-
-            <Button Grid.Column="0"
-                    Text="⬅️ Назад"
-                    FontSize="16"
-                    BackgroundColor="Gray"
-                    TextColor="White"
-                    HeightRequest="56"
-                    CornerRadius="12"
-                    HorizontalOptions="Fill"/>
-            <!--Clicked="OnBackClicked"/>-->
-
-                <Button Grid.Column="1"
-                    Text="▶️ Начать матч"
+                <Button Text="Начать партию"
                     FontSize="16"
                     FontAttributes="Bold"
                     BackgroundColor="#28A745"
                     TextColor="White"
                     HeightRequest="56"
                     CornerRadius="12"
-                    HorizontalOptions="Fill"/>
-                <!--Clicked="OnStartMatchClicked"/>-->
-        </Grid>
+                    HorizontalOptions="Fill"
+                    Clicked="OnStartMatchClicked"/>
+            </VerticalStackLayout>
+            
+        </ScrollView>
+
 
     </Grid>
+    
+
 </ContentPage>
