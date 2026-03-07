@@ -96,7 +96,19 @@ public partial class RosterPage : ContentPage
 
     private void DeletePlayerClicked(object sender, EventArgs e)
     {
-
+        // Получаем Label, на который нажали
+        if (sender is Label label && label.BindingContext is Player player)
+        {
+            // Определяем, в какой коллекции находится игрок
+            if (homePlayers.Contains(player))
+            {
+                homePlayers.Remove(player);
+            }
+            else if (guestPlayers.Contains(player))
+            {
+                guestPlayers.Remove(player);
+            }
+        }
     }
 }
 

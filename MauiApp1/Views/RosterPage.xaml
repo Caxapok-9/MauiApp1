@@ -40,6 +40,35 @@
                                         Padding="0"                                            
                                         VerticalOptions="Center" HorizontalOptions="Center">
 
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroupList>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <!-- Нормальное состояние -->
+                                                    <VisualState x:Name="Normal">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Наведение мыши (работает на Desktop) -->
+                                                    <VisualState x:Name="PointerOver">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1.2"/>
+                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Нажатие -->
+                                                    <VisualState x:Name="Pressed">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="TextColor" Value="Crimson"/>
+                                                            <Setter Property="Scale" Value="0.9"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateGroupList>
+                                        </VisualStateManager.VisualStateGroups>
+
                                         <Button.Triggers>
                                             <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="True">
                                                 <Setter Property="BackgroundColor" Value="#007ACC"/>
@@ -62,6 +91,35 @@
                                         Margin="10,0,0,0"
                                         VerticalOptions="Center" HorizontalOptions="Center">
 
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroupList>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <!-- Нормальное состояние -->
+                                                    <VisualState x:Name="Normal">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Наведение мыши (работает на Desktop) -->
+                                                    <VisualState x:Name="PointerOver">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1.2"/>
+                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Нажатие -->
+                                                    <VisualState x:Name="Pressed">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="TextColor" Value="Crimson"/>
+                                                            <Setter Property="Scale" Value="0.9"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateGroupList>
+                                        </VisualStateManager.VisualStateGroups>
+
                                         <Button.Triggers>
                                             <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="True">
                                                 <Setter Property="BackgroundColor" Value="LightGreen"/>
@@ -71,9 +129,39 @@
                                     </Button>
                                     
                                     <!-- Удалить -->
-                                    <Label Grid.Column="4" Text="Х" FontSize="22" 
+                                    <Label Grid.Column="4" Text="Del" FontSize="22" 
                                         TextColor="Red"
-                                        VerticalOptions="Center" HorizontalOptions="Center">
+                                        VerticalOptions="Center" HorizontalOptions="End">
+
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroupList>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <!-- Нормальное состояние -->
+                                                    <VisualState x:Name="Normal">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Наведение мыши (работает на Desktop) -->
+                                                    <VisualState x:Name="PointerOver">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1.2"/>
+                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Нажатие -->
+                                                    <VisualState x:Name="Pressed">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="TextColor" Value="Crimson"/>
+                                                            <Setter Property="Scale" Value="0.9"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateGroupList>
+                                        </VisualStateManager.VisualStateGroups>
+
                                         <Label.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="DeletePlayerClicked"/>
                                         </Label.GestureRecognizers>
@@ -123,6 +211,35 @@
                                         Padding="0"                                            
                                         VerticalOptions="Center" HorizontalOptions="Center">
 
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroupList>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <!-- Нормальное состояние -->
+                                                    <VisualState x:Name="Normal">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Наведение мыши (работает на Desktop) -->
+                                                    <VisualState x:Name="PointerOver">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1.2"/>
+                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Нажатие -->
+                                                    <VisualState x:Name="Pressed">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="TextColor" Value="Crimson"/>
+                                                            <Setter Property="Scale" Value="0.9"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateGroupList>
+                                        </VisualStateManager.VisualStateGroups>
+
                                         <Button.Triggers>
                                             <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="True">
                                                 <Setter Property="BackgroundColor" Value="#007ACC"/>
@@ -145,6 +262,35 @@
                                         Margin="10,0,0,0"
                                         VerticalOptions="Center" HorizontalOptions="Center">
 
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroupList>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <!-- Нормальное состояние -->
+                                                    <VisualState x:Name="Normal">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Наведение мыши (работает на Desktop) -->
+                                                    <VisualState x:Name="PointerOver">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1.2"/>
+                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Нажатие -->
+                                                    <VisualState x:Name="Pressed">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="TextColor" Value="Crimson"/>
+                                                            <Setter Property="Scale" Value="0.9"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateGroupList>
+                                        </VisualStateManager.VisualStateGroups>
+
                                         <Button.Triggers>
                                             <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="True">
                                                 <Setter Property="BackgroundColor" Value="LightGreen"/>
@@ -154,9 +300,39 @@
                                     </Button>
 
                                     <!-- Удалить -->
-                                    <Label Grid.Column="4" Text="Х" FontSize="22" 
+                                    <Label Grid.Column="4" Text="Del" FontSize="22" 
                                         TextColor="Red"
-                                        VerticalOptions="Center" HorizontalOptions="Center">
+                                        VerticalOptions="Center" HorizontalOptions="End">
+                                        
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroupList>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <!-- Нормальное состояние -->
+                                                    <VisualState x:Name="Normal">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Наведение мыши (работает на Desktop) -->
+                                                    <VisualState x:Name="PointerOver">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="Scale" Value="1.2"/>
+                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <!-- Нажатие -->
+                                                    <VisualState x:Name="Pressed">
+                                                        <VisualState.Setters>
+                                                            <Setter Property="TextColor" Value="Crimson"/>
+                                                            <Setter Property="Scale" Value="0.9"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateGroupList>
+                                        </VisualStateManager.VisualStateGroups>
+
                                         <Label.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="DeletePlayerClicked"/>
                                         </Label.GestureRecognizers>
