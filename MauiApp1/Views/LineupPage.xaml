@@ -22,131 +22,281 @@
                         ColumnSpacing="30" 
                         RowSpacing="15">
 
-                <Grid Grid.Row="0" Grid.Column="0">
+                <Border Grid.Row="0" Grid.Column="0" StrokeShape="RoundRectangle 15" >
+                    
+                    <Grid MinimumHeightRequest="110">
 
-                    <Label x:Name="homePosLabel4"
-                                Text="Зона 4"
+                        <Label x:Name="homePosLabel4"
+                                    Text="Зона 4"
+                                    TextColor="White"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    FontSize="14">
+                        </Label>
+                    
+                        <Picker x:Name="homePosPicker4"
+                                    Title="Выберите игрока"
+                                    Opacity="0"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    SelectedIndexChanged="OnPlayerSelectedHome">
+                        </Picker>
+                    
+                    </Grid>
+
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="1" StrokeShape="RoundRectangle 15">
+
+                    <Grid MinimumHeightRequest="110">
+                    
+                        <Label x:Name="homePosLabel3"
+                                    Text="Зона 3"
+                                    TextColor="White"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    FontSize="14">
+                        </Label>
+
+                        <Picker x:Name="homePosPicker3"
+                                    Title="Выберите игрока"
+                                    Opacity="0"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    SelectedIndexChanged="OnPlayerSelectedHome">
+                        </Picker>
+                    
+                    </Grid>
+
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="2" StrokeShape="RoundRectangle 15">
+
+                    <Grid MinimumHeightRequest="110">
+
+                        <Label x:Name="homePosLabel2"
+                                    Text="Зона 2"
+                                    TextColor="White"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    FontSize="14">
+                        </Label>
+
+                        <Picker x:Name="homePosPicker2"
+                                    Title="Выберите игрока"
+                                    Opacity="0"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    SelectedIndexChanged="OnPlayerSelectedHome">
+                        </Picker>
+                    
+                    </Grid>
+
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="0" StrokeShape="RoundRectangle 15">
+
+                    <Grid MinimumHeightRequest="110">
+
+                        <Label x:Name="homePosLabel5"
+                                Text="Зона 5"
                                 TextColor="White"
                                 VerticalOptions="Center"
                                 HorizontalOptions="Center"
                                 FontSize="14">
-                    </Label>
-                    
-                    <Picker x:Name="homePosPicker4"
+                        </Label>
+
+                        <Picker x:Name="homePosPicker5"
                                 Title="Выберите игрока"
                                 Opacity="0"
                                 BackgroundColor="Transparent"
                                 HorizontalOptions="Fill"
                                 VerticalOptions="Fill"
                                 SelectedIndexChanged="OnPlayerSelectedHome">
-                    </Picker>
+                        </Picker>
                     
-                </Grid>
+                    </Grid>
 
-                <Grid Grid.Row="0" Grid.Column="1">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="1" StrokeShape="RoundRectangle 15">
+
+                    <Grid MinimumHeightRequest="110">
+
+                        <Label x:Name="homePosLabel6"
+                                    Text="Зона 6"
+                                    TextColor="White"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    FontSize="14">
+                        </Label>
+
+                        <Picker x:Name="homePosPicker6"
+                                    Title="Выберите игрока"
+                                    Opacity="0"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    SelectedIndexChanged="OnPlayerSelectedHome">
+                        </Picker>
                     
-                    <Label x:Name="homePosLabel3"
-                                Text="Зона 3"
-                                TextColor="White"
-                                VerticalOptions="Center"
-                                HorizontalOptions="Center"
-                                FontSize="14">
-                    </Label>
-
-                    <Picker x:Name="homePosPicker3"
-                                Title="Выберите игрока"
-                                Opacity="0"
-                                BackgroundColor="Transparent"
-                                HorizontalOptions="Fill"
-                                VerticalOptions="Fill"
-                                SelectedIndexChanged="OnPlayerSelectedHome">
-                    </Picker>
+                    </Grid>
                     
-                </Grid>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                <Grid Grid.Row="0" Grid.Column="2">
-
-                    <Label x:Name="homePosLabel2"
-                                Text="Зона 2"
-                                TextColor="White"
-                                VerticalOptions="Center"
-                                HorizontalOptions="Center"
-                                FontSize="14">
-                    </Label>
-
-                    <Picker x:Name="homePosPicker2"
-                                Title="Выберите игрока"
-                                Opacity="0"
-                                BackgroundColor="Transparent"
-                                HorizontalOptions="Fill"
-                                VerticalOptions="Fill"
-                                SelectedIndexChanged="OnPlayerSelectedHome">
-                    </Picker>
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
                     
-                </Grid>
+                </Border>
 
-                <Grid Grid.Row="1" Grid.Column="0" >
+                <Border Grid.Row="1" Grid.Column="2" StrokeShape="RoundRectangle 15">
 
-                    <Label x:Name="homePosLabel5"
-                            Text="Зона 5"
-                            TextColor="White"
-                            VerticalOptions="Center"
-                            HorizontalOptions="Center"
-                            FontSize="14">
-                    </Label>
+                    <Grid MinimumHeightRequest="110">
 
-                    <Picker x:Name="homePosPicker5"
-                            Title="Выберите игрока"
-                            Opacity="0"
-                            BackgroundColor="Transparent"
-                            HorizontalOptions="Fill"
-                            VerticalOptions="Fill"
-                            SelectedIndexChanged="OnPlayerSelectedHome">
-                    </Picker>
+                        <Label x:Name="homePosLabel1"
+                                    Text="Зона 1"
+                                    TextColor="White"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    FontSize="14">
+                        </Label>
+
+                        <Picker x:Name="homePosPicker1"
+                                    Title="Выберите игрока"
+                                    Opacity="0"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    SelectedIndexChanged="OnPlayerSelectedHome">
+                        </Picker>
                     
-                </Grid>
+                    </Grid>
 
-                <Grid Grid.Row="1" Grid.Column="1">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Label x:Name="homePosLabel6"
-                                Text="Зона 6"
-                                TextColor="White"
-                                VerticalOptions="Center"
-                                HorizontalOptions="Center"
-                                FontSize="14">
-                    </Label>
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Picker x:Name="homePosPicker6"
-                                Title="Выберите игрока"
-                                Opacity="0"
-                                BackgroundColor="Transparent"
-                                HorizontalOptions="Fill"
-                                VerticalOptions="Fill"
-                                SelectedIndexChanged="OnPlayerSelectedHome">
-                    </Picker>
-                    
-                </Grid>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
 
-                <Grid Grid.Row="1" Grid.Column="2" >
-
-                    <Label x:Name="homePosLabel1"
-                                Text="Зона 1"
-                                TextColor="White"
-                                VerticalOptions="Center"
-                                HorizontalOptions="Center"
-                                FontSize="14">
-                    </Label>
-
-                    <Picker x:Name="homePosPicker1"
-                                Title="Выберите игрока"
-                                Opacity="0"
-                                BackgroundColor="Transparent"
-                                HorizontalOptions="Fill"
-                                VerticalOptions="Fill"
-                                SelectedIndexChanged="OnPlayerSelectedHome">
-                    </Picker>
-                    
-                </Grid>
+                </Border>
 
             </Grid>
 
@@ -160,136 +310,286 @@
             </Label>
 
             <Grid ColumnDefinitions="*,*,*" 
-                    RowDefinitions="*,*,*"
+                    RowDefinitions="*,*"
                     ColumnSpacing="30" 
                     RowSpacing="15">
 
-                <Grid  Grid.Row="1" Grid.Column="0">
+                <Border Grid.Row="0" Grid.Column="0" StrokeShape="RoundRectangle 15">
 
-                    <Label x:Name="guestPosLabel4"
-                        Text="Зона 4"
-                        TextColor="White"
-                        VerticalOptions="Center"
-                        HorizontalOptions="Center"
-                        FontSize="14">
-                    </Label>
+                    <Grid MinimumHeightRequest="110">
 
-                    <Picker x:Name="guestPosPicker4"
-                        Title="Выберите игрока"
-                        Opacity="0"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="Fill"
-                        VerticalOptions="Fill"
-                        SelectedIndexChanged="OnPlayerSelectedGuest">
-                    </Picker>
+                        <Label x:Name="guestPosLabel4"
+                            Text="Зона 4"
+                            TextColor="White"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            FontSize="14">
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker4"
+                            Title="Выберите игрока"
+                            Opacity="0"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill"
+                            SelectedIndexChanged="OnPlayerSelectedGuest">
+                        </Picker>
                     
-                </Grid>
+                    </Grid>
 
-                <Grid Grid.Row="1" Grid.Column="1">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Label x:Name="guestPosLabel3"
-                        Text="Зона 3"
-                        TextColor="White"
-                        VerticalOptions="Center"
-                        HorizontalOptions="Center"
-                        FontSize="14">
-                    </Label>
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Picker x:Name="guestPosPicker3"
-                        Title="Выберите игрока"
-                        Opacity="0"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="Fill"
-                        VerticalOptions="Fill"
-                        SelectedIndexChanged="OnPlayerSelectedGuest">
-                    </Picker>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="1" StrokeShape="RoundRectangle 15">
+
+                    <Grid MinimumHeightRequest="110">
+
+                        <Label x:Name="guestPosLabel3"
+                            Text="Зона 3"
+                            TextColor="White"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            FontSize="14">
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker3"
+                            Title="Выберите игрока"
+                            Opacity="0"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill"
+                            SelectedIndexChanged="OnPlayerSelectedGuest">
+                        </Picker>
                     
-                </Grid>
+                    </Grid>
 
-                <Grid Grid.Row="1" Grid.Column="2">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Label x:Name="guestPosLabel2"
-                        Text="Зона 2"
-                        TextColor="White"
-                        VerticalOptions="Center"
-                        HorizontalOptions="Center"
-                        FontSize="14">
-                    </Label>
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Picker x:Name="guestPosPicker2"
-                        Title="Выберите игрока"
-                        Opacity="0"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="Fill"
-                        VerticalOptions="Fill"
-                        SelectedIndexChanged="OnPlayerSelectedGuest">
-                    </Picker>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="2" StrokeShape="RoundRectangle 15">
+
+                    <Grid MinimumHeightRequest="110">
+
+                        <Label x:Name="guestPosLabel2"
+                            Text="Зона 2"
+                            TextColor="White"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            FontSize="14">
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker2"
+                            Title="Выберите игрока"
+                            Opacity="0"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill"
+                            SelectedIndexChanged="OnPlayerSelectedGuest">
+                        </Picker>
                     
-                </Grid>
+                    </Grid>
 
-                <Grid Grid.Row="2" Grid.Column="0">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Label x:Name="guestPosLabel5"
-                        Text="Зона 5"
-                        TextColor="White"
-                        VerticalOptions="Center"
-                        HorizontalOptions="Center"
-                        FontSize="14">
-                    </Label>
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Picker x:Name="guestPosPicker5"
-                        Title="Выберите игрока"
-                        Opacity="0"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="Fill"
-                        VerticalOptions="Fill"
-                        SelectedIndexChanged="OnPlayerSelectedGuest">
-                    </Picker>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="0" StrokeShape="RoundRectangle 15">
+
+                    <Grid MinimumHeightRequest="110">
+
+                        <Label x:Name="guestPosLabel5"
+                            Text="Зона 5"
+                            TextColor="White"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            FontSize="14">
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker5"
+                            Title="Выберите игрока"
+                            Opacity="0"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill"
+                            SelectedIndexChanged="OnPlayerSelectedGuest">
+                        </Picker>
                     
-                </Grid>
+                    </Grid>
 
-                <Grid Grid.Row="2" Grid.Column="1">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Label x:Name="guestPosLabel6"
-                        Text="Зона 6"
-                        TextColor="White"
-                        VerticalOptions="Center"
-                        HorizontalOptions="Center"
-                        FontSize="14">
-                    </Label>
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Picker x:Name="guestPosPicker6"
-                        Title="Выберите игрока"
-                        Opacity="0"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="Fill"
-                        VerticalOptions="Fill"
-                        SelectedIndexChanged="OnPlayerSelectedGuest">
-                    </Picker>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="1" StrokeShape="RoundRectangle 15">
+
+                    <Grid MinimumHeightRequest="110">
+
+                        <Label x:Name="guestPosLabel6"
+                            Text="Зона 6"
+                            TextColor="White"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            FontSize="14">
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker6"
+                            Title="Выберите игрока"
+                            Opacity="0"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill"
+                            SelectedIndexChanged="OnPlayerSelectedGuest">
+                        </Picker>
                     
-                </Grid>
+                    </Grid>
 
-                <Grid Grid.Row="2" Grid.Column="2">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Label x:Name="guestPosLabel1"
-                        Text="Зона 1"
-                        TextColor="White"
-                        VerticalOptions="Center"
-                        HorizontalOptions="Center"
-                        FontSize="14">
-                    </Label>
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                    <Picker x:Name="guestPosPicker1"
-                        Title="Выберите игрока"
-                        Opacity="0"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="Fill"
-                        VerticalOptions="Fill"
-                        SelectedIndexChanged="OnPlayerSelectedGuest">
-                    </Picker>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="2" StrokeShape="RoundRectangle 15">
+
+                    <Grid MinimumHeightRequest="110">
+
+                        <Label x:Name="guestPosLabel1"
+                            Text="Зона 1"
+                            TextColor="White"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            FontSize="14">
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker1"
+                            Title="Выберите игрока"
+                            Opacity="0"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill"
+                            SelectedIndexChanged="OnPlayerSelectedGuest">
+                        </Picker>
                     
-                </Grid>
+                    </Grid>
 
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Gray"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+                
             </Grid>
 
 
@@ -302,6 +602,27 @@
                 CornerRadius="12"
                 HorizontalOptions="Fill"
                 Clicked="OnStartMatchClicked">
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <!-- Нормальное состояние -->
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="#28A745"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            <!-- Наведение мыши (работает на Desktop) -->
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="Green"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
             </Button>
             
         </VerticalStackLayout>

@@ -46,25 +46,17 @@
                                                     <!-- Нормальное состояние -->
                                                     <VisualState x:Name="Normal">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1"/>
+                                                            <Setter Property="BackgroundColor" Value="DarkGray"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
                                                     <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1.2"/>
-                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                            <Setter Property="BackgroundColor" Value="#007ACC"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
-                                                    <!-- Нажатие -->
-                                                    <VisualState x:Name="Pressed">
-                                                        <VisualState.Setters>
-                                                            <Setter Property="TextColor" Value="Crimson"/>
-                                                            <Setter Property="Scale" Value="0.9"/>
-                                                        </VisualState.Setters>
-                                                    </VisualState>
                                                 </VisualStateGroup>
                                             </VisualStateGroupList>
                                         </VisualStateManager.VisualStateGroups>
@@ -97,25 +89,17 @@
                                                     <!-- Нормальное состояние -->
                                                     <VisualState x:Name="Normal">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1"/>
+                                                            <Setter Property="BackgroundColor" Value="DarkGray"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
                                                     <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1.2"/>
-                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                            <Setter Property="BackgroundColor" Value="LightGreen"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
-                                                    <!-- Нажатие -->
-                                                    <VisualState x:Name="Pressed">
-                                                        <VisualState.Setters>
-                                                            <Setter Property="TextColor" Value="Crimson"/>
-                                                            <Setter Property="Scale" Value="0.9"/>
-                                                        </VisualState.Setters>
-                                                    </VisualState>
                                                 </VisualStateGroup>
                                             </VisualStateGroupList>
                                         </VisualStateManager.VisualStateGroups>
@@ -139,25 +123,17 @@
                                                     <!-- Нормальное состояние -->
                                                     <VisualState x:Name="Normal">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1"/>
+                                                            <Setter Property="TextColor" Value="Red"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
                                                     <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1.2"/>
-                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                            <Setter Property="TextColor" Value="DarkRed"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
-                                                    <!-- Нажатие -->
-                                                    <VisualState x:Name="Pressed">
-                                                        <VisualState.Setters>
-                                                            <Setter Property="TextColor" Value="Crimson"/>
-                                                            <Setter Property="Scale" Value="0.9"/>
-                                                        </VisualState.Setters>
-                                                    </VisualState>
                                                 </VisualStateGroup>
                                             </VisualStateGroupList>
                                         </VisualStateManager.VisualStateGroups>
@@ -174,7 +150,29 @@
 
                     <Button Text="+ Добавить игрока (Хозяева)" 
                             Clicked="OnAddPlayerHomeClicked"
-                            BackgroundColor="#E0E0E0" TextColor="Black"/>
+                            BackgroundColor="#E0E0E0" TextColor="Black">
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <!-- Нормальное состояние -->
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="#E0E0E0"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+
+                                    <!-- Наведение мыши (работает на Desktop) -->
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Gray"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                    </Button>
                 </VerticalStackLayout>
             </Frame>
 
@@ -217,25 +215,17 @@
                                                     <!-- Нормальное состояние -->
                                                     <VisualState x:Name="Normal">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1"/>
+                                                            <Setter Property="BackgroundColor" Value="DarkGrey"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
                                                     <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1.2"/>
-                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                            <Setter Property="BackgroundColor" Value="#007ACC"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
-                                                    <!-- Нажатие -->
-                                                    <VisualState x:Name="Pressed">
-                                                        <VisualState.Setters>
-                                                            <Setter Property="TextColor" Value="Crimson"/>
-                                                            <Setter Property="Scale" Value="0.9"/>
-                                                        </VisualState.Setters>
-                                                    </VisualState>
                                                 </VisualStateGroup>
                                             </VisualStateGroupList>
                                         </VisualStateManager.VisualStateGroups>
@@ -268,25 +258,17 @@
                                                     <!-- Нормальное состояние -->
                                                     <VisualState x:Name="Normal">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1"/>
+                                                            <Setter Property="BackgroundColor" Value="DarkGrey"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
                                                     <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1.2"/>
-                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                            <Setter Property="BackgroundColor" Value="LightGreen"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
-                                                    <!-- Нажатие -->
-                                                    <VisualState x:Name="Pressed">
-                                                        <VisualState.Setters>
-                                                            <Setter Property="TextColor" Value="Crimson"/>
-                                                            <Setter Property="Scale" Value="0.9"/>
-                                                        </VisualState.Setters>
-                                                    </VisualState>
                                                 </VisualStateGroup>
                                             </VisualStateGroupList>
                                         </VisualStateManager.VisualStateGroups>
@@ -310,25 +292,17 @@
                                                     <!-- Нормальное состояние -->
                                                     <VisualState x:Name="Normal">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1"/>
+                                                            <Setter Property="TextColor" Value="Red"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
                                                     <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
                                                         <VisualState.Setters>
-                                                            <Setter Property="Scale" Value="1.2"/>
-                                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                                            <Setter Property="TextColor" Value="DarkRed"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
 
-                                                    <!-- Нажатие -->
-                                                    <VisualState x:Name="Pressed">
-                                                        <VisualState.Setters>
-                                                            <Setter Property="TextColor" Value="Crimson"/>
-                                                            <Setter Property="Scale" Value="0.9"/>
-                                                        </VisualState.Setters>
-                                                    </VisualState>
                                                 </VisualStateGroup>
                                             </VisualStateGroupList>
                                         </VisualStateManager.VisualStateGroups>
@@ -344,8 +318,30 @@
                     </CollectionView>
 
                     <Button Text="+ Добавить игрока (Гости)" 
-                Clicked="OnAddPlayerGuestClicked"
-                BackgroundColor="#E0E0E0" TextColor="Black"/>
+                            Clicked="OnAddPlayerGuestClicked"
+                            BackgroundColor="#E0E0E0" TextColor="Black">
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <!-- Нормальное состояние -->
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="#E0E0E0"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+
+                                    <!-- Наведение мыши (работает на Desktop) -->
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Gray"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                    </Button>
                 </VerticalStackLayout>
             </Frame>
 
@@ -368,8 +364,30 @@
                 HorizontalOptions="Fill"
                 VerticalOptions="End"
                 Margin="0,0,0,20"
-                Clicked="NextPageClick"/>
-            
+                Clicked="NextPageClick">
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <!-- Нормальное состояние -->
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="#007ACC"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            <!-- Наведение мыши (работает на Desktop) -->
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="Blue"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Button>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

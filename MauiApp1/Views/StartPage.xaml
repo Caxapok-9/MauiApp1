@@ -6,14 +6,7 @@
     
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
-
-            <!-- Заголовок -->
-            <Label Text="Общие сведения о матче" 
-                   FontSize="22" 
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" 
-                   Margin="0,0,0,20"/>
-
+            
             <!-- Турнир -->
             <Label Text="Название турнира:" />
             <Entry x:Name="EntryTournament" 
@@ -58,7 +51,29 @@
                     BackgroundColor="#007ACC"
                     TextColor="White"
                     Margin="0,20,0,0"
-                    HeightRequest="50"/>
+                    HeightRequest="50">
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <!-- Нормальное состояние -->
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="#007ACC"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            <!-- Наведение мыши (работает на Desktop) -->
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="Blue"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Button>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
