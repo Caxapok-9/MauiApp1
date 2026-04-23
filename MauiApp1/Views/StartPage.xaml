@@ -10,7 +10,7 @@
             <!-- Турнир -->
             <Label Text="Название турнира:" />
             <Entry x:Name="EntryTournament" 
-                   Placeholder="Например: Чемпионат города" />
+                   Placeholder="Чемпионат города Твери" />
 
             <!-- Команда А -->
             <Label Text="Команда Хозяева:" />
@@ -24,8 +24,8 @@
 
             <!-- Адрес / Арена -->
             <Label Text="Место проведения:" />
-            <Entry x:Name="EntryVenue" 
-                   Placeholder="Город, адрес, зал" />
+            <Entry x:Name="EntryLocation" 
+                   Placeholder="Адрес, зал" />
 
             <!-- Судья -->
             <Label Text="Главный судья:" />

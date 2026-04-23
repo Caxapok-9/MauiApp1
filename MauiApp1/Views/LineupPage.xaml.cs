@@ -2,30 +2,47 @@ namespace MauiApp1.Views;
 
 public partial class LineupPage : ContentPage
 {
-    private List<string> _players = new()
-    {
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6"
-    };
+    private List<string> playersHome = new();
 
-    public LineupPage()
+    private List<string> playersGuest = new();
+
+    DatabaseService _db;
+
+    public LineupPage(DatabaseService db)
 	{
 		InitializeComponent();
+
+        _db = db;
+
         FillPickers();
 	}
 
-    private void FillPickers()
+    private async void FillPickers()
     {
+        var rosterHome = await _db.GetRosterHomeAsync();
+
+        playersHome = rosterHome.Select(x => x.Number).ToList();
+
         homePosPicker1.Items.Clear();
         homePosPicker2.Items.Clear();
         homePosPicker3.Items.Clear();
         homePosPicker4.Items.Clear();
         homePosPicker5.Items.Clear();
         homePosPicker6.Items.Clear();
+
+        foreach (var player in playersHome)
+        {
+            homePosPicker1.Items.Add(player);
+            homePosPicker2.Items.Add(player);
+            homePosPicker3.Items.Add(player);
+            homePosPicker4.Items.Add(player);
+            homePosPicker5.Items.Add(player);
+            homePosPicker6.Items.Add(player);
+        }
+
+        var rosterGuest = await _db.GetRosterGuestAsync();
+
+        playersGuest = rosterGuest.Select(x => x.Number).ToList();
 
         guestPosPicker1.Items.Clear();
         guestPosPicker2.Items.Clear();
@@ -34,15 +51,8 @@ public partial class LineupPage : ContentPage
         guestPosPicker5.Items.Clear();
         guestPosPicker6.Items.Clear();
 
-        foreach (var player in _players)
+        foreach (var player in playersGuest)
         {
-            homePosPicker1.Items.Add(player);
-            homePosPicker2.Items.Add(player);
-            homePosPicker3.Items.Add(player);
-            homePosPicker4.Items.Add(player);
-            homePosPicker5.Items.Add(player);
-            homePosPicker6.Items.Add(player);
-
             guestPosPicker1.Items.Add(player);
             guestPosPicker2.Items.Add(player);
             guestPosPicker3.Items.Add(player);
@@ -128,6 +138,8 @@ public partial class LineupPage : ContentPage
 
     private void OnStartMatchClicked(object sender, EventArgs e)
     {
+        // Проверка заполнения
+
         Navigation.PushAsync(new ScoreBoardPage());
     }
 

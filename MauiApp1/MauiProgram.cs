@@ -15,8 +15,12 @@ namespace MauiApp1
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "VolleyBallApp.db3");
+            builder.Services.AddSingleton(new DatabaseService(dbPath));
+            builder.Services.AddTransient<App>();
+
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

@@ -137,7 +137,8 @@
                     Grid.Column="0" 
                     VerticalOptions="Center" 
                     Margin="0,0,10,0" 
-                    Text="Текущая расстановка">
+                    Text="Текущая расстановка"
+                    MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroupList>
@@ -165,7 +166,8 @@
                     Grid.Column="1" 
                     VerticalOptions="Center" 
                     Margin="0,0,10,0" 
-                    Text="Таймауты">
+                    Text="Таймауты"
+                    MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroupList>
@@ -193,7 +195,8 @@
                     Grid.Column="2" 
                     VerticalOptions="Center" 
                     Margin="0,0,30,0" 
-                    Text="Замены">
+                    Text="Замены"
+                    MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroupList>
@@ -221,7 +224,8 @@
                     Grid.Column="3" 
                     VerticalOptions="Center" 
                     Margin="30,0,0,0" 
-                    Text="Замены">
+                    Text="Замены"
+                    MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroupList>
@@ -249,7 +253,8 @@
                     Grid.Column="4" 
                     VerticalOptions="Center" 
                     Margin="10,0,0,0" 
-                    Text="Таймауты">
+                    Text="Таймауты"
+                    MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroupList>
@@ -277,7 +282,8 @@
                     Grid.Column="5" 
                     VerticalOptions="Center" 
                     Margin="10,0,0,0" 
-                    Text="Текущая расстановка">
+                    Text="Текущая расстановка"
+                    MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroupList>

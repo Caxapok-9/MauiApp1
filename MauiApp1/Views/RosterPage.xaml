@@ -9,7 +9,7 @@
 
             <Frame BorderColor="#007ACC" CornerRadius="10" Padding="10">
                 <VerticalStackLayout>
-                    <Label Text="Команда Хозяев" FontSize="18" FontAttributes="Bold" 
+                    <Label x:Name="NameTeamHome" FontSize="18" FontAttributes="Bold" 
                            TextColor="#007ACC"/>
 
                     <!-- Список игроков -->
@@ -46,7 +46,7 @@
                                                     <!-- Нормальное состояние -->
                                                     <VisualState x:Name="Normal">
                                                         <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor" Value="DarkGray"/>
+
                                                         </VisualState.Setters>
                                                     </VisualState>
 
@@ -71,11 +71,11 @@
 
                                     <!-- Либеро -->
                                     <Button Grid.Column="3" 
-                                        Text="Lib" 
+                                        Text="L" 
                                         FontAttributes="Bold"
                                         CommandParameter="{Binding .}"
                                         Clicked="OnLiberoClicked"
-                                        BackgroundColor="DarkGrey" 
+                                        BackgroundColor="DarkGray"
                                         TextColor="Black"
                                         WidthRequest="40" HeightRequest="40"
                                         CornerRadius="10"
@@ -86,14 +86,14 @@
                                         <VisualStateManager.VisualStateGroups>
                                             <VisualStateGroupList>
                                                 <VisualStateGroup x:Name="CommonStates">
-                                                    <!-- Нормальное состояние -->
+                                                     <!--Нормальное состояние--> 
                                                     <VisualState x:Name="Normal">
                                                         <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor" Value="DarkGray"/>
+
                                                         </VisualState.Setters>
                                                     </VisualState>
 
-                                                    <!-- Наведение мыши (работает на Desktop) -->
+                                                     <!--Наведение мыши (работает на Desktop)--> 
                                                     <VisualState x:Name="PointerOver">
                                                         <VisualState.Setters>
                                                             <Setter Property="BackgroundColor" Value="LightGreen"/>
@@ -106,7 +106,7 @@
 
                                         <Button.Triggers>
                                             <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="True">
-                                                <Setter Property="BackgroundColor" Value="LightGreen"/>
+                                                <Setter Property="BackgroundColor" Value="Green"/>
                                                 <Setter Property="TextColor" Value="White"/>
                                             </DataTrigger>
                                         </Button.Triggers>
@@ -178,7 +178,7 @@
 
             <Frame BorderColor="#007ACC" CornerRadius="10" Padding="10">
                 <VerticalStackLayout>
-                    <Label Text="Команда Гости" FontSize="18" FontAttributes="Bold" 
+                    <Label x:Name="NameTeamGuest" FontSize="18" FontAttributes="Bold" 
                TextColor="#007ACC"/>
 
                     <!-- Список игроков -->
@@ -215,7 +215,7 @@
                                                     <!-- Нормальное состояние -->
                                                     <VisualState x:Name="Normal">
                                                         <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor" Value="DarkGrey"/>
+
                                                         </VisualState.Setters>
                                                     </VisualState>
 
@@ -240,7 +240,7 @@
 
                                     <!-- Либеро -->
                                     <Button Grid.Column="3" 
-                                        Text="Lib" 
+                                        Text="L" 
                                         FontAttributes="Bold"
                                         CommandParameter="{Binding .}"
                                         Clicked="OnLiberoClicked"
@@ -258,7 +258,7 @@
                                                     <!-- Нормальное состояние -->
                                                     <VisualState x:Name="Normal">
                                                         <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor" Value="DarkGrey"/>
+
                                                         </VisualState.Setters>
                                                     </VisualState>
 
@@ -275,7 +275,7 @@
 
                                         <Button.Triggers>
                                             <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="True">
-                                                <Setter Property="BackgroundColor" Value="LightGreen"/>
+                                                <Setter Property="BackgroundColor" Value="Green"/>
                                                 <Setter Property="TextColor" Value="White"/>
                                             </DataTrigger>
                                         </Button.Triggers>
