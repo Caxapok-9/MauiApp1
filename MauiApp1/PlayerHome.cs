@@ -10,5 +10,6 @@ namespace MauiApp1
     {
         public string Number {  get; set; }
         public string Name { get; set; }
+        public bool IsLibero { get; set; }
     }
 }

@@ -2,13 +2,17 @@ namespace MauiApp1.Views;
 
 public partial class ScoreBoardPage : ContentPage
 {
-	public ScoreBoardPage()
+    private DatabaseService _db;
+
+	public ScoreBoardPage(DatabaseService db)
 	{
 		InitializeComponent();
+        _db = db;
 	}
 
     protected override bool OnBackButtonPressed()
     {
+        
         Device.BeginInvokeOnMainThread(async () =>
         {
             bool confirm = await DisplayAlert(
