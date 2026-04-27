@@ -10,9 +10,9 @@ public partial class LineupPage : ContentPage
 
     private List<Picker> ListPickerGuest = new List<Picker>();
 
-    private string nameTeamHome = "";
+    private string nameTeamHome;
 
-    private string nameTeamGuest = "";
+    private string nameTeamGuest;
 
     DatabaseService _db;
 
@@ -26,13 +26,23 @@ public partial class LineupPage : ContentPage
 
         GetNamesTeams();
 
-        ListPickersAdds();
+        Task.Run(async () =>
+        {
+            Dispatcher.Dispatch(() => NameTeamHome.Text = nameTeamHome); 
+        });
+
+        Task.Run(async () =>
+        {
+            Dispatcher.Dispatch(() => NameTeamGuest.Text = nameTeamGuest);
+        });   
 
         FillPickers();
     }
 
     private async void FillPickers()
     {
+        ListPickersAdds();
+
         var rosterHome = await _db.GetRosterHomeAsync();
 
         playersHome = rosterHome.Where(x => !x.IsLibero).Select(x => x.Number).ToList();
@@ -141,6 +151,7 @@ public partial class LineupPage : ContentPage
         else
         {
             // Запись в БД
+
             await Navigation.PushAsync(new ScoreBoardPage(_db));
         }            
     }

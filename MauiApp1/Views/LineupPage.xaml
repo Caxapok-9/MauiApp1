@@ -2,16 +2,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.Views.LineupPage"
-             Title="Начальная расстановка"             
-             BackgroundColor="#FAFAFA">
+             Title="Начальная расстановка">
 
     <ScrollView>
 
         <Grid RowDefinitions="10*,80*,10*" ColumnDefinitions="40*,10*,40*">
 
-            <Label x:Name="NameTeamHome" Grid.Row="0" Grid.Column="0" Text="Экономист" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" FontFamily="Arial"/>
+            <Label x:Name="NameTeamHome" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" FontFamily="Arial"/>
 
-            <Label x:Name="NameTeamGuest" Grid.Row="0" Grid.Column="2" Text="Сбербанк" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" FontFamily="Arial"/>
+            <Label x:Name="NameTeamGuest" Grid.Row="0" Grid.Column="2" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" FontFamily="Arial"/>
 
             <Grid RowDefinitions="*,*,*" ColumnDefinitions="*,*" Grid.Row="1" Grid.Column="0">
 
