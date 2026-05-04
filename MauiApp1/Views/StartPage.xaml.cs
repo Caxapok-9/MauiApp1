@@ -1,4 +1,5 @@
 using Microsoft.Maui.Controls.PlatformConfiguration;
+using System.Linq;
 
 namespace MauiApp1.Views;
 
@@ -26,6 +27,10 @@ public partial class StartPage : ContentPage
     {
         await _db.InitializeMainInfoAsync();
         await _db.InitializeRosterAsync();
+        await _db.InitializeSetAsync();
+        await _db.InitializeLineUpBeginAsync();
+        await _db.InitializeEventAsync();
+        await _db.InitializeTeamAsync();
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
@@ -53,21 +58,34 @@ public partial class StartPage : ContentPage
             return;
         }
 
-        await _db.DeleteMainInfoAsync();
+        await _db.DeleteAsync();
 
         // 3. Код сохранения в базу данных (SQLite)
-        await _db.SaveMainInfoAsync
-            (
-                new MainInformation
-                {
-                    NameTournament = tournament,
-                    NameTeamHome = teamHome,
-                    NameTeamGuest = teamGuest,
-                    Location = location,
-                    Referee = referee,
-                    Secretary = secretary
-                }
-            );
+
+        Team TeamHome = new Team();
+        TeamHome.Name = teamHome;
+        TeamHome.IsHome = true;
+
+        await _db.SaveTeamAsync(TeamHome);        
+
+        Team TeamGuest = new Team();
+        TeamGuest.Name = teamGuest;
+        TeamGuest.IsHome = false;
+
+        await _db.SaveTeamAsync(TeamGuest);
+
+        var ListTeam = await _db.GetTeamAsync();
+
+        MainInformation information = new MainInformation();
+
+        information.NameTournament = tournament;
+        information.TeamHome = ListTeam.Where(x => x.IsHome).First().Id;
+        information.TeamGuest = ListTeam.Where(x => !x.IsHome).First().Id;
+        information.Location = location;
+        information.Referee = referee;
+        information.Secretary = secretary;        
+
+        await _db.SaveMainInfoAsync(information);
 
         // 4. Переход на следующую страницу (составы)
         await Navigation.PushAsync(new RosterPage(_db));

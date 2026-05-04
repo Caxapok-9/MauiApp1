@@ -8,9 +8,9 @@
 
         <Grid RowDefinitions="10*,80*,10*" ColumnDefinitions="40*,10*,40*">
 
-            <Label x:Name="NameTeamHome" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" FontFamily="Arial"/>
+            <Label x:Name="NameTeamHome" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24"/>
 
-            <Label x:Name="NameTeamGuest" Grid.Row="0" Grid.Column="2" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" FontFamily="Arial"/>
+            <Label x:Name="NameTeamGuest" Grid.Row="0" Grid.Column="2" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24"/>
 
             <Grid RowDefinitions="*,*,*" ColumnDefinitions="*,*" Grid.Row="1" Grid.Column="0">
 
@@ -572,28 +572,67 @@
 
             </Grid>
 
-            <Button 
+            <Button
                 Grid.Row="2" 
                 Grid.Column="0" 
                 Grid.ColumnSpan="3" 
                 Text="Начать партию" 
-                FontSize="24" 
-                FontFamily="Arial" 
+                FontSize="24"  
                 HorizontalOptions="Fill" 
                 VerticalOptions="End" 
                 Margin="20,0,20,10"
-                Clicked="OnStartMatchClicked"/>
+                Clicked="OnStartMatchClicked">
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <!--Нормальное состояние-->
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>                                    
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            <!--Наведение мыши (работает на Desktop)-->
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Button>
 
             <Button 
                 Grid.Row="0" 
                 Grid.Column="1" 
                 Text="Смена" 
                 FontSize="24" 
-                FontFamily="Arial" 
                 HorizontalOptions="Center" 
                 VerticalOptions="Center"
-                Clicked="OnReverseClicked"/>
+                Clicked="OnReverseClicked">
 
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <!--Нормальное состояние-->
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            <!--Наведение мыши (работает на Desktop)-->
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Button>
         </Grid>    
 
     </ScrollView>

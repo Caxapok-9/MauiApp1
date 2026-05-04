@@ -4,6 +4,12 @@ public partial class ScoreBoardPage : ContentPage
 {
     private DatabaseService _db;
 
+    Set set = new Set();
+
+    LineUpBegin lineup = new LineUpBegin();
+
+    List<Player> roster = new List<Player>();
+
 	public ScoreBoardPage(DatabaseService db)
 	{
 		InitializeComponent();
@@ -11,8 +17,7 @@ public partial class ScoreBoardPage : ContentPage
 	}
 
     protected override bool OnBackButtonPressed()
-    {
-        
+    {        
         Device.BeginInvokeOnMainThread(async () =>
         {
             bool confirm = await DisplayAlert(
@@ -23,6 +28,7 @@ public partial class ScoreBoardPage : ContentPage
 
             if (confirm)
             {
+                _db.DeleteAsync();
                 Navigation.PopToRootAsync();
             }
         });

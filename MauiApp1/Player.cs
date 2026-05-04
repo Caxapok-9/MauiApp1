@@ -1,6 +1,8 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using SQLiteNetExtensions.Attributes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +11,19 @@ namespace MauiApp1
 {
     public class Player : INotifyPropertyChanged
     {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
         public string Name { get; set; }
+
         public string Number { get; set; }
+
         public bool _IsCaptain { get; set; }
+
         public bool _IsLibero { get; set; }
+
+        [ForeignKey(typeof(Team))]
+        public int TeamID { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
