@@ -36,6 +36,20 @@ public partial class RosterPage : ContentPage
         GetNamesTeams();
     }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+#if ANDROID
+
+        var activty = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
+        if (activty != null)
+            activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+
+#endif
+
+    }
+
     private void OnAddPlayerHomeClicked(object sender, EventArgs e)
     {
         homePlayers.Add(new Player());
@@ -56,7 +70,18 @@ public partial class RosterPage : ContentPage
 
         var teamList = homePlayers.Contains(player) ? homePlayers : guestPlayers;
 
-        player.IsCaptain = player.IsCaptain ? false : true;
+        player.IsCaptain = !player.IsCaptain;
+
+        if(player.IsCaptain)
+        {
+            button.BackgroundColor = Color.FromArgb("#007ACC");
+            button.TextColor = Colors.White;
+        }
+        else
+        {
+            button.BackgroundColor = Colors.LightGray;
+            button.TextColor = Colors.Black;
+        }
     }
 
     private void OnLiberoClicked(object sender, EventArgs e)
@@ -69,7 +94,18 @@ public partial class RosterPage : ContentPage
 
         var teamList = homePlayers.Contains(player) ? homePlayers : guestPlayers;
 
-        player.IsLibero = player.IsLibero ? false : true;
+        player.IsLibero = !player.IsLibero;
+
+        if (player.IsLibero)
+        {
+            button.BackgroundColor = Colors.LimeGreen;
+            button.TextColor = Colors.White;
+        }
+        else
+        {
+            button.BackgroundColor = Colors.LightGray;
+            button.TextColor = Colors.Black;
+        }
     }
 
     private void DeletePlayerClicked(object sender, EventArgs e)

@@ -18,9 +18,9 @@ namespace MauiApp1
 
         public string Number { get; set; }
 
-        public bool _IsCaptain { get; set; }
+        private bool _IsCaptain { get; set; }
 
-        public bool _IsLibero { get; set; }
+        private bool _IsLibero { get; set; }
 
         [ForeignKey(typeof(Team))]
         public int TeamID { get; set; }

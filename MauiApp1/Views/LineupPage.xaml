@@ -8,13 +8,13 @@
 
         <Grid RowDefinitions="10*,80*,10*" ColumnDefinitions="40*,10*,40*">
 
-            <Label x:Name="NameTeamHome" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24"/>
+            <Label x:Name="NameTeamHome" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" TextColor="White"/>
 
-            <Label x:Name="NameTeamGuest" Grid.Row="0" Grid.Column="2" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24"/>
+            <Label x:Name="NameTeamGuest" Grid.Row="0" Grid.Column="2" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" TextColor="White"/>
 
             <Grid RowDefinitions="*,*,*" ColumnDefinitions="*,*" Grid.Row="1" Grid.Column="0">
 
-                <Border Grid.Row="0" Grid.Column="0" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="0" Grid.Column="0" Margin="20,5,0,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -29,7 +29,6 @@
                         <Picker x:Name="homePosPicker5"
                                     Title="Выберите игрока"
                                     Opacity="0"
-                                    BackgroundColor="Transparent"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedHome">
@@ -42,9 +41,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
@@ -60,7 +57,7 @@
 
                 </Border>
 
-                <Border Grid.Row="0" Grid.Column="1" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="0" Grid.Column="1" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -75,7 +72,6 @@
                         <Picker x:Name="homePosPicker4"
                                     Title="Выберите игрока"
                                     Opacity="0"
-                                    BackgroundColor="Transparent"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedHome">
@@ -88,9 +84,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
@@ -106,7 +100,7 @@
 
                 </Border>
 
-                <Border Grid.Row="1" Grid.Column="0" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="1" Grid.Column="0" Margin="20,5,0,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -121,7 +115,6 @@
                         <Picker x:Name="homePosPicker6"
                                     Title="Выберите игрока"
                                     Opacity="0"
-                                    BackgroundColor="Transparent"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedHome">
@@ -134,9 +127,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
@@ -152,7 +143,7 @@
 
                 </Border>
 
-                <Border Grid.Row="1" Grid.Column="1" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="1" Grid.Column="1" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -167,7 +158,6 @@
                         <Picker x:Name="homePosPicker3"
                                     Title="Выберите игрока"
                                     Opacity="0"
-                                    BackgroundColor="Transparent"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedHome">
@@ -180,9 +170,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
@@ -198,7 +186,7 @@
 
                 </Border>
 
-                <Border Grid.Row="2" Grid.Column="0" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="2" Grid.Column="0" Margin="20,5,0,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -213,7 +201,6 @@
                         <Picker x:Name="homePosPicker1"
                                     Title="Выберите игрока"
                                     Opacity="0"
-                                    BackgroundColor="Transparent"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedHome">
@@ -226,9 +213,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
@@ -244,7 +229,7 @@
 
                 </Border>
 
-                <Border Grid.Row="2" Grid.Column="1" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="2" Grid.Column="1" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -259,7 +244,6 @@
                         <Picker x:Name="homePosPicker2"
                                     Title="Выберите игрока"
                                     Opacity="0"
-                                    BackgroundColor="Transparent"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedHome">
@@ -272,9 +256,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
@@ -294,7 +276,7 @@
 
             <Grid RowDefinitions="*,*,*" ColumnDefinitions="*,*" Grid.Row="1" Grid.Column="2">
 
-                <Border Grid.Row="0" Grid.Column="0" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="0" Grid.Column="0" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -309,7 +291,6 @@
                         <Picker x:Name="guestPosPicker2"
                                     Title="Выберите игрока"
                                     Opacity="0"
-                                    BackgroundColor="Transparent"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedGuest">
@@ -322,9 +303,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
@@ -340,7 +319,7 @@
 
                 </Border>
 
-                <Border Grid.Row="0" Grid.Column="1" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="0" Grid.Column="1" Margin="0,5,20,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -355,7 +334,6 @@
                         <Picker x:Name="guestPosPicker1"
                                     Title="Выберите игрока"
                                     Opacity="0"
-                                    BackgroundColor="Transparent"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedGuest">
@@ -368,9 +346,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
@@ -386,7 +362,7 @@
 
                 </Border>
 
-                <Border Grid.Row="1" Grid.Column="0" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="1" Grid.Column="0" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -401,7 +377,6 @@
                         <Picker x:Name="guestPosPicker3"
                                     Title="Выберите игрока"
                                     Opacity="0"
-                                    BackgroundColor="Transparent"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedGuest">
@@ -414,9 +389,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
@@ -432,7 +405,7 @@
 
                 </Border>
 
-                <Border Grid.Row="1" Grid.Column="1" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="1" Grid.Column="1" Margin="0,5,20,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -447,7 +420,6 @@
                         <Picker x:Name="guestPosPicker6"
                                     Title="Выберите игрока"
                                     Opacity="0"
-                                    BackgroundColor="Transparent"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedGuest">
@@ -460,16 +432,12 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
                                 <VisualState x:Name="PointerOver">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="Gray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                             </VisualStateGroup>
@@ -478,7 +446,7 @@
 
                 </Border>
 
-                <Border Grid.Row="2" Grid.Column="0" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="2" Grid.Column="0" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -493,7 +461,6 @@
                         <Picker x:Name="guestPosPicker4"
                                     Title="Выберите игрока"
                                     Opacity="0"
-                                    BackgroundColor="Transparent"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedGuest">
@@ -506,9 +473,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
@@ -524,7 +489,7 @@
 
                 </Border>
 
-                <Border Grid.Row="2" Grid.Column="1" Margin="10" StrokeShape="RoundRectangle 25">
+                <Border Grid.Row="2" Grid.Column="1" Margin="0,5,20,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -538,8 +503,7 @@
 
                         <Picker x:Name="guestPosPicker5"
                                     Title="Выберите игрока"
-                                    Opacity="0"
-                                    BackgroundColor="Transparent"
+                                    Opacity="0"                                    
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill"
                                     SelectedIndexChanged="OnPlayerSelectedGuest">
@@ -552,9 +516,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--Нормальное состояние-->
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DarkGray"/>
-                                    </VisualState.Setters>
+                                    <VisualState.Setters/>
                                 </VisualState>
 
                                 <!--Наведение мыши (работает на Desktop)-->
@@ -576,11 +538,13 @@
                 Grid.Row="2" 
                 Grid.Column="0" 
                 Grid.ColumnSpan="3" 
+                BackgroundColor="#007ACC"
+                TextColor="White"
                 Text="Начать партию" 
                 FontSize="24"  
                 HorizontalOptions="Fill" 
                 VerticalOptions="End" 
-                Margin="20,0,20,10"
+                Margin="20,10,20,10"
                 Clicked="OnStartMatchClicked">
 
                 <VisualStateManager.VisualStateGroups>
@@ -595,7 +559,7 @@
                             <!--Наведение мыши (работает на Desktop)-->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                    <Setter Property="BackgroundColor" Value="Blue"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -608,7 +572,9 @@
                 Grid.Row="0" 
                 Grid.Column="1" 
                 Text="Смена" 
-                FontSize="24" 
+                BackgroundColor="#007ACC"
+                TextColor="White"
+                FontSize="20" 
                 HorizontalOptions="Center" 
                 VerticalOptions="Center"
                 Clicked="OnReverseClicked">
@@ -625,7 +591,7 @@
                             <!--Наведение мыши (работает на Desktop)-->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                    <Setter Property="BackgroundColor" Value="Blue"/>
                                 </VisualState.Setters>
                             </VisualState>
 

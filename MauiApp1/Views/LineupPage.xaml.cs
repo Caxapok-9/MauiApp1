@@ -39,6 +39,20 @@ public partial class LineupPage : ContentPage
         CreateSet();
     }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+#if ANDROID
+
+        var activty = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
+        if (activty != null)
+            activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape;
+
+#endif
+
+    }
+
     private void ListPickerAdd()
     {
         ListPickerHome = new List<Picker>

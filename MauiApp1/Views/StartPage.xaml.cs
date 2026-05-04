@@ -23,6 +23,20 @@ public partial class StartPage : ContentPage
         InizializeTables();
     }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+#if ANDROID
+
+        var activty = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
+        if (activty != null)
+            activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+
+#endif
+
+    }
+
     private async void InizializeTables()
     {
         await _db.InitializeMainInfoAsync();
