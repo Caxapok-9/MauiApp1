@@ -14,34 +14,34 @@ public partial class LineupPage : ContentPage
 
     private List<Label> ListLabelGuest;
 
-    private Team TeamHome = new Team();
+    private Team TeamHome;
 
-    private Team TeamGuest = new Team();
+    private Team TeamGuest;
 
-    DatabaseService _db;
+    private DatabaseService _db;
 
-    Set set = new Set();
+    private Set set = new Set();
 
-    List<Player> roster = new List<Player>();
+    private List<Player> roster;
 
     public LineupPage(DatabaseService db)
 	{
-		InitializeComponent();
-
-        ListPickerAdd();
-
         _db = db;
 
-        GetData();
+        InitializeComponent();
+
+        ListPickerAdd();
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        await GetData();
 
         FillPickers();
 
-        CreateSet();
-    }
-
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
+        await CreateSet();
 
 #if ANDROID
 
@@ -50,7 +50,6 @@ public partial class LineupPage : ContentPage
             activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape;
 
 #endif
-
     }
 
     private void ListPickerAdd()
@@ -96,7 +95,7 @@ public partial class LineupPage : ContentPage
         };
     }
 
-    private async void CreateSet()
+    private async Task CreateSet()
     {
         List<Set> sets = await _db.GetSetAsync();
 
@@ -116,6 +115,7 @@ public partial class LineupPage : ContentPage
             label.Text = "Зона " + zone++;
             label.TextColor = Colors.White;
             label.FontAttributes = FontAttributes.None;
+            label.FontSize = 20;
         }
 
         zone = 1;
@@ -125,6 +125,7 @@ public partial class LineupPage : ContentPage
             label.Text = "Зона " + zone++;
             label.TextColor = Colors.White;
             label.FontAttributes = FontAttributes.None;
+            label.FontSize = 20;
         }
 
         playersHome = roster.Where(x => x.TeamID == TeamHome.Id && !x.IsLibero).Select(x => x.Number).ToList();
@@ -161,27 +162,27 @@ public partial class LineupPage : ContentPage
             // Определяем какой Picker и обновляем нужный Label
             if (picker == homePosPicker1)
             {
-                UpdateLabel(homePosLabel1, selectedPlayer, Colors.Blue);
+                UpdateLabel(homePosLabel1, selectedPlayer);
             }
             else if (picker == homePosPicker2)
             {
-                UpdateLabel(homePosLabel2, selectedPlayer, Colors.Blue);
+                UpdateLabel(homePosLabel2, selectedPlayer);
             }
             else if (picker == homePosPicker3)
             {
-                UpdateLabel(homePosLabel3, selectedPlayer, Colors.Blue);
+                UpdateLabel(homePosLabel3, selectedPlayer);
             }
             else if (picker == homePosPicker4)
             {
-                UpdateLabel(homePosLabel4, selectedPlayer, Colors.Blue);
+                UpdateLabel(homePosLabel4, selectedPlayer);
             }
             else if (picker == homePosPicker5)
             {
-                UpdateLabel(homePosLabel5, selectedPlayer, Colors.Blue);
+                UpdateLabel(homePosLabel5, selectedPlayer);
             }
             else if (picker == homePosPicker6)
             {
-                UpdateLabel(homePosLabel6, selectedPlayer, Colors.Blue);
+                UpdateLabel(homePosLabel6, selectedPlayer);
             }
         }
     }
@@ -195,27 +196,27 @@ public partial class LineupPage : ContentPage
             // Определяем какой Picker и обновляем нужный Label
             if (picker == guestPosPicker1)
             {
-                UpdateLabel(guestPosLabel1, selectedPlayer, Colors.Blue);
+                UpdateLabel(guestPosLabel1, selectedPlayer);
             }
             else if (picker == guestPosPicker2)
             {
-                UpdateLabel(guestPosLabel2, selectedPlayer, Colors.Blue);
+                UpdateLabel(guestPosLabel2, selectedPlayer);
             }
             else if (picker == guestPosPicker3)
             {
-                UpdateLabel(guestPosLabel3, selectedPlayer, Colors.Blue);
+                UpdateLabel(guestPosLabel3, selectedPlayer);
             }
             else if (picker == guestPosPicker4)
             {
-                UpdateLabel(guestPosLabel4, selectedPlayer, Colors.Blue);
+                UpdateLabel(guestPosLabel4, selectedPlayer);
             }
             else if (picker == guestPosPicker5)
             {
-                UpdateLabel(guestPosLabel5, selectedPlayer, Colors.Blue);
+                UpdateLabel(guestPosLabel5, selectedPlayer);
             }
             else if (picker == guestPosPicker6)
             {
-                UpdateLabel(guestPosLabel6, selectedPlayer, Colors.Blue);
+                UpdateLabel(guestPosLabel6, selectedPlayer);
             }
         }
     }
@@ -295,14 +296,15 @@ public partial class LineupPage : ContentPage
         return null;
     }
 
-    private void UpdateLabel(Label label, string text, Color color)
+    private void UpdateLabel(Label label, string text)
     {
         label.Text = text;
-        label.TextColor = color;
+        label.TextColor = Colors.White;
         label.FontAttributes = FontAttributes.Bold;
+        label.FontSize = 28;
     }
 
-    private async void GetData()
+    private async Task GetData()
     {
         var ListTeam = await _db.GetTeamAsync();
 
