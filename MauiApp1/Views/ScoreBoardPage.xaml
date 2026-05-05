@@ -13,7 +13,7 @@
 
             <Label x:Name="NameTeamHome" 
                    Grid.Column="0" 
-                   FontSize="20" 
+                   FontSize="Title" 
                    TextColor="White" 
                    VerticalOptions="Center" 
                    HorizontalOptions="Center">
@@ -21,7 +21,7 @@
 
             <Label x:Name="CountSetTeamHome" 
                    Grid.Column="1" 
-                   FontSize="32" 
+                   FontSize="Title" 
                    FontAttributes="Bold" 
                    TextColor="White" 
                    VerticalTextAlignment="Center">
@@ -31,7 +31,6 @@
                     Text="Смена" 
                     Clicked="OnReverseClick"
                     BackgroundColor="#007ACC"
-                    FontSize="24" 
                     TextColor="White" 
                     Margin="20,0,20,0">
 
@@ -57,7 +56,7 @@
 
             <Label x:Name="CountSetTeamGuest"
                    Grid.Column="3" 
-                   FontSize="32" 
+                   FontSize="Title" 
                    FontAttributes="Bold" 
                    TextColor="White" 
                    VerticalTextAlignment="Center">
@@ -65,7 +64,7 @@
 
             <Label x:Name="NameTeamGuest" 
                    Grid.Column="4" 
-                   FontSize="24" 
+                   FontSize="Title" 
                    TextColor="White" 
                    VerticalOptions="Center" 
                    HorizontalOptions="Center">
@@ -110,7 +109,6 @@
                     TextColor="White"
                     VerticalOptions="Center"
                     BackgroundColor="#007ACC"
-                    FontSize="20" 
                     Margin="5,0,5,0">
 
                 <VisualStateManager.VisualStateGroups>
@@ -176,7 +174,6 @@
                     TextColor="White"
                     Margin="0,0,10,0" 
                     Text="Текущая расстановка"
-                    FontSize="20"
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
@@ -208,7 +205,6 @@
                     TextColor="White"
                     Margin="0,0,10,0" 
                     Text="Таймауты"
-                    FontSize="20"
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
@@ -240,7 +236,6 @@
                     TextColor="White"
                     Margin="0,0,30,0" 
                     Text="Замены"
-                    FontSize="20"
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
@@ -272,7 +267,6 @@
                     TextColor="White"
                     Margin="30,0,0,0" 
                     Text="Замены"
-                    FontSize="20"
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
@@ -304,7 +298,6 @@
                     TextColor="White"
                     Margin="10,0,0,0" 
                     Text="Таймауты"
-                    FontSize="20"
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
@@ -336,7 +329,6 @@
                     TextColor="White"
                     Margin="10,0,0,0" 
                     Text="Текущая расстановка"
-                    FontSize="20"
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>

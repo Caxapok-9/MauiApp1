@@ -219,7 +219,7 @@ public partial class ScoreBoardPage : ContentPage
 
             var but = sender as Button;
 
-            but.Text = "Нет тайм-аутов";            
+            but.Text = "Нет";            
 
             but.IsEnabled = false;
 
@@ -261,7 +261,7 @@ public partial class ScoreBoardPage : ContentPage
 
             var but = sender as Button;
 
-            but.Text = "Нет тайм-аутов";            
+            but.Text = "Нет";            
 
             but.IsEnabled = false;
 
