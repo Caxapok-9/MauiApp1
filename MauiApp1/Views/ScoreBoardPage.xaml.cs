@@ -55,9 +55,7 @@ public partial class ScoreBoardPage : ContentPage
 
         RosterTeamGuest = Roster.Where(x => x.TeamID == TeamGuest.Id).ToList();
 
-        var Events = await _db.GetEventCategoryAsync();
-
-        EventCategories = Events;
+        EventCategories = await _db.GetEventCategoryAsync();
 
         FillComponent();
     }
@@ -83,7 +81,7 @@ public partial class ScoreBoardPage : ContentPage
 
         ev.TeamID = TeamHome.Id;
         ev.SetID = set.Id;
-        ev.EventID = EventCategories.Where(x => x.ShortName == "o").First().IdCategory;
+        ev.EventID = EventCategories.Where(x => x.NameCategory == "Очко").First().IdCategory;
         ev.ScoreHome = set.ScoreHome;
         ev.ScoreGuest = set.ScoreGuest;
 
@@ -100,7 +98,7 @@ public partial class ScoreBoardPage : ContentPage
 
         ev.TeamID = TeamGuest.Id;
         ev.SetID = set.Id;
-        ev.EventID = EventCategories.Where(x => x.ShortName == "o").First().IdCategory;
+        ev.EventID = EventCategories.Where(x => x.NameCategory == "Очко").First().IdCategory;
         ev.ScoreHome = set.ScoreHome;
         ev.ScoreGuest = set.ScoreGuest;
 

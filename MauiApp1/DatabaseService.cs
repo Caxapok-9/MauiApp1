@@ -41,9 +41,16 @@ public class DatabaseService
     public async Task InitializeEventCategoryAsync()
     {
         await _db.CreateTableAsync<EventCategory>();
-    }
 
-    public async Task<int> SetEventCategoryAsync(List<EventCategory> list) => await _db.InsertAllAsync(list);
+        var list = new List<EventCategory>
+        {
+            new EventCategory() {NameCategory = "Очко"},
+            new EventCategory() {NameCategory = "Тайм-аут"},
+            new EventCategory() {NameCategory = "Замена"}
+        };
+
+        await _db.InsertAllAsync(list);
+    }
 
     public async Task<List<EventCategory>> GetEventCategoryAsync() => await _db.Table<EventCategory>().ToListAsync();
 
