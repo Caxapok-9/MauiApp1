@@ -15,11 +15,11 @@ namespace MauiApp1
 
         public int NumberSet { get; set; }
 
-        public int ScoreHome { get; set; }
+        public int ScoreHome { get; set; } = 0;
 
-        public int ScoreGuest { get; set; }
+        public int ScoreGuest { get; set; } = 0;
 
         [ForeignKey(typeof(Team))]
-        public int Winner { get; set; }
+        public int WinnerID { get; set; }
     }
 }

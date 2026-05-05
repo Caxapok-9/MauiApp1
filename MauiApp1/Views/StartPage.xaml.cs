@@ -19,13 +19,13 @@ public partial class StartPage : ContentPage
 		InitializeComponent();
 
         _db = db;
-
-        InizializeTables();
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
+        InizializeTables();
 
 #if ANDROID
 
@@ -39,12 +39,22 @@ public partial class StartPage : ContentPage
 
     private async void InizializeTables()
     {
+        await _db.InitializeEventCategoryAsync();
         await _db.InitializeMainInfoAsync();
         await _db.InitializeRosterAsync();
         await _db.InitializeSetAsync();
         await _db.InitializeLineUpBeginAsync();
         await _db.InitializeEventAsync();
         await _db.InitializeTeamAsync();
+
+        var ListEventCategory = new List<EventCategory>()
+        {
+            new EventCategory() { NameCategory = "Очко"},
+            new EventCategory() { NameCategory = "Тайм-аут"},
+            new EventCategory() { NameCategory = "Замена"}
+        };
+
+        await _db.SetEventCategoryAsync(ListEventCategory);
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)

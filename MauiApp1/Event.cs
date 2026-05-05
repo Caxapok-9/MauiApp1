@@ -17,14 +17,17 @@ namespace MauiApp1
         [ForeignKey(typeof(Team))]
         public int TeamID { get; set; }
 
+        [ForeignKey(typeof(EventCategory))]
+        public int EventID { get; set; }
+
         public int ScoreHome { get; set; }
 
         public int ScoreGuest { get; set; }
 
         [ForeignKey(typeof(Player))]
-        public int? PlayerInID { get; set; }
+        public int? PlayerInID { get; set; } = null;
 
         [ForeignKey(typeof(Player))]
-        public int? PlayerOutID { get; set; }
+        public int? PlayerOutID { get; set; } = null;
     }
 }

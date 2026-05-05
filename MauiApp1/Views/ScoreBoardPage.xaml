@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.Views.ScoreBoardPage"
@@ -11,26 +11,27 @@
         <!-- ВЕРХНЯЯ ЧАСТЬ: ПАРТИИ И НАЗВАНИЯ -->
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto, Auto, Auto, *" RowDefinitions="auto">
 
-            <Label Text="Хозяева" 
+            <Label x:Name="NameTeamHome" 
                    Grid.Column="0" 
                    FontSize="24" 
-                   TextColor="Black" 
+                   TextColor="White" 
                    VerticalOptions="Center" 
                    HorizontalOptions="Center">
             </Label>
 
-            <Label Text="1" 
+            <Label x:Name="CountSetTeamHome" 
                    Grid.Column="1" 
                    FontSize="32" 
                    FontAttributes="Bold" 
-                   TextColor="Black" 
+                   TextColor="White" 
                    VerticalTextAlignment="Center">
             </Label>
 
             <Button Grid.Column="2" 
-                    Text="Swap" 
+                    Text="Смена" 
+                    BackgroundColor="#007ACC"
                     FontSize="Title" 
-                    TextColor="Black" 
+                    TextColor="White" 
                     Margin="20,0,20,0">
 
                 <VisualStateManager.VisualStateGroups>
@@ -38,15 +39,13 @@
                         <VisualStateGroup x:Name="CommonStates">
                             <!-- Нормальное состояние -->
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="Gray"/>
-                                </VisualState.Setters>
+                                <VisualState.Setters/>
                             </VisualState>
 
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkGray"/>
+                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -55,18 +54,18 @@
                 </VisualStateManager.VisualStateGroups>
             </Button>
 
-            <Label Text="1" 
+            <Label x:Name="CountSetTeamGuest"
                    Grid.Column="3" 
                    FontSize="32" 
                    FontAttributes="Bold" 
-                   TextColor="Black" 
+                   TextColor="White" 
                    VerticalTextAlignment="Center">
             </Label>
 
-            <Label Text="Гости" 
+            <Label x:Name="NameTeamGuest" 
                    Grid.Column="4" 
                    FontSize="24" 
-                   TextColor="Black" 
+                   TextColor="White" 
                    VerticalOptions="Center" 
                    HorizontalOptions="Center">
             </Label>
@@ -76,7 +75,9 @@
         <Grid Grid.Row="1" ColumnDefinitions="*, *">
 
             <Button Grid.Column="0" 
-                    Text="21" 
+                    x:Name="ScoreHomeButton" 
+                    Clicked="OnScoreHomeClick"
+                    BackgroundColor="#007ACC"
                     FontSize="52" 
                     Margin="0,0,30,0">
 
@@ -85,15 +86,13 @@
                         <VisualStateGroup x:Name="CommonStates">
                             <!-- Нормальное состояние -->
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="BlueViolet"/>
-                                </VisualState.Setters>
+                                <VisualState.Setters/>
                             </VisualState>
 
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -103,7 +102,9 @@
             </Button>
 
             <Button Grid.Column="2" 
-                    Text="23" 
+                    x:Name="ScoreGuestButton"
+                    Clicked="OnScoreGuestClick"
+                    BackgroundColor="#007ACC"
                     FontSize="52" 
                     Margin="30,0,0,0">
                 
@@ -112,15 +113,13 @@
                         <VisualStateGroup x:Name="CommonStates">
                             <!-- Нормальное состояние -->
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="BlueViolet"/>
-                                </VisualState.Setters>
+                                <VisualState.Setters/>
                             </VisualState>
 
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -136,6 +135,7 @@
             <Button Grid.Row="1" 
                     Grid.Column="0" 
                     VerticalOptions="Center" 
+                    BackgroundColor="#007ACC"
                     Margin="0,0,10,0" 
                     Text="Текущая расстановка"
                     MinimumHeightRequest="80">
@@ -145,15 +145,13 @@
                         <VisualStateGroup x:Name="CommonStates">
                             <!-- Нормальное состояние -->
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="BlueViolet"/>
-                                </VisualState.Setters>
+                                <VisualState.Setters/>
                             </VisualState>
 
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -164,7 +162,8 @@
 
             <Button Grid.Row="1" 
                     Grid.Column="1" 
-                    VerticalOptions="Center" 
+                    VerticalOptions="Center"
+                    BackgroundColor="#007ACC"
                     Margin="0,0,10,0" 
                     Text="Таймауты"
                     MinimumHeightRequest="80">
@@ -174,15 +173,13 @@
                         <VisualStateGroup x:Name="CommonStates">
                             <!-- Нормальное состояние -->
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="BlueViolet"/>
-                                </VisualState.Setters>
+                                <VisualState.Setters/>
                             </VisualState>
 
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -193,7 +190,8 @@
 
             <Button Grid.Row="1" 
                     Grid.Column="2" 
-                    VerticalOptions="Center" 
+                    VerticalOptions="Center"
+                    BackgroundColor="#007ACC"
                     Margin="0,0,30,0" 
                     Text="Замены"
                     MinimumHeightRequest="80">
@@ -203,15 +201,13 @@
                         <VisualStateGroup x:Name="CommonStates">
                             <!-- Нормальное состояние -->
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="BlueViolet"/>
-                                </VisualState.Setters>
+                                <VisualState.Setters/>
                             </VisualState>
 
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -222,7 +218,8 @@
 
             <Button Grid.Row="1" 
                     Grid.Column="3" 
-                    VerticalOptions="Center" 
+                    VerticalOptions="Center"
+                    BackgroundColor="#007ACC"
                     Margin="30,0,0,0" 
                     Text="Замены"
                     MinimumHeightRequest="80">
@@ -232,16 +229,12 @@
                         <VisualStateGroup x:Name="CommonStates">
                             <!-- Нормальное состояние -->
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="BlueViolet"/>
-                                </VisualState.Setters>
+                                <VisualState.Setters/>
                             </VisualState>
 
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
-                                </VisualState.Setters>
+                                <VisualState.Setters/>
                             </VisualState>
 
                         </VisualStateGroup>
@@ -252,6 +245,7 @@
             <Button Grid.Row="1" 
                     Grid.Column="4" 
                     VerticalOptions="Center" 
+                    BackgroundColor="#007ACC"
                     Margin="10,0,0,0" 
                     Text="Таймауты"
                     MinimumHeightRequest="80">
@@ -261,15 +255,13 @@
                         <VisualStateGroup x:Name="CommonStates">
                             <!-- Нормальное состояние -->
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="BlueViolet"/>
-                                </VisualState.Setters>
+                                <VisualState.Setters/>
                             </VisualState>
 
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -281,6 +273,7 @@
             <Button Grid.Row="1" 
                     Grid.Column="5" 
                     VerticalOptions="Center" 
+                    BackgroundColor="#007ACC"
                     Margin="10,0,0,0" 
                     Text="Текущая расстановка"
                     MinimumHeightRequest="80">
@@ -290,15 +283,13 @@
                         <VisualStateGroup x:Name="CommonStates">
                             <!-- Нормальное состояние -->
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="BlueViolet"/>
-                                </VisualState.Setters>
+                                <VisualState.Setters/>
                             </VisualState>
 
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
                                 </VisualState.Setters>
                             </VisualState>
 

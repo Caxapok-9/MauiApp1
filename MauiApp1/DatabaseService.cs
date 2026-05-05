@@ -18,7 +18,8 @@ public class DatabaseService
         & await _db.DeleteAllAsync<Player>() 
         & await _db.DeleteAllAsync<LineUpBegin>() 
         & await _db.DeleteAllAsync<Team>() 
-        & await _db.DeleteAllAsync<MainInformation>();
+        & await _db.DeleteAllAsync<MainInformation>() 
+        & await _db.DeleteAllAsync<EventCategory>();
 
     #region MainInfo
 
@@ -32,6 +33,19 @@ public class DatabaseService
     public async Task<List<MainInformation>> GetMainInfoAsync() => await _db.Table<MainInformation>().ToListAsync();
 
     public async Task<int> DeleteMainInfoAsync() => await _db.DeleteAllAsync<MainInformation>();
+
+    #endregion
+
+    #region EventCategory
+
+    public async Task InitializeEventCategoryAsync()
+    {
+        await _db.CreateTableAsync<EventCategory>();
+    }
+
+    public async Task<int> SetEventCategoryAsync(List<EventCategory> list) => await _db.InsertAllAsync(list);
+
+    public async Task<List<EventCategory>> GetEventCategoryAsync() => await _db.Table<EventCategory>().ToListAsync();
 
     #endregion
 
@@ -102,7 +116,7 @@ public class DatabaseService
         await _db.CreateTableAsync<Event>();
     }
 
-    public async Task<int> SaveEventpAsync(Event ev) => await _db.InsertAsync(ev);
+    public async Task<int> SaveEventAsync(Event ev) => await _db.InsertAsync(ev);
 
     public async Task<List<Event>> GetEventAsync() => await _db.Table<Event>().ToListAsync();
 
