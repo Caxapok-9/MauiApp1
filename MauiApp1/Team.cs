@@ -15,5 +15,9 @@ namespace MauiApp1
         public string Name { get; set; }
 
         public bool IsHome { get; set; }
+
+        public bool FirstSetServ { get; set; } = false;
+
+        public bool FinalySetServ { get; set; } = false;
     }
 }

@@ -281,12 +281,12 @@ public partial class ScoreBoardPage : ContentPage
 
     private async void OnNowLineUpHomeClick(object sender, EventArgs e)
     {
-
+        await Navigation.PushAsync(new LineupNowPage(_db, TeamHome, set));
     }
 
     private async void OnNowLineUpGuestClick(object sender, EventArgs e)
     {
-
+        await Navigation.PushAsync(new LineupNowPage(_db, TeamGuest, set));
     }
 
     private async void OnScoreHomeClick(object sender, EventArgs e)

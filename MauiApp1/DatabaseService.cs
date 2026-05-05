@@ -100,6 +100,8 @@ public class DatabaseService
 
     public async Task<int> DeleteTeamAsync() => await _db.DeleteAllAsync<Team>();
 
+    public async Task<int> UpdateTeamAsync(Team team) => await _db.UpdateAsync(team);
+
     #endregion
 
     #region LineUp

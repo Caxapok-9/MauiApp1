@@ -147,6 +147,21 @@ public partial class RosterPage : ContentPage
                 await _db.SaveRosterAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamGuest.Id });
             }
 
+            string result = await DisplayActionSheet(" то подаЄт первым?", null, null, TeamHome.Name, TeamGuest.Name);
+
+            if(result == TeamHome.Name)
+            {
+                TeamHome.FirstSetServ = true;
+
+                await _db.UpdateTeamAsync(TeamHome);
+            }
+            else if(result == TeamGuest.Name)
+            {
+                TeamGuest.FirstSetServ = true;
+
+                await _db.UpdateTeamAsync(TeamGuest);
+            }
+            
             await Navigation.PushAsync(new LineupPage(_db));
         }            
     }
