@@ -46,6 +46,7 @@ public partial class StartPage : ContentPage
         await _db.InitializeLineUpBeginAsync();
         await _db.InitializeEventAsync();
         await _db.InitializeTeamAsync();
+        await _db.DeleteAsync();
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)

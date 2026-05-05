@@ -12,14 +12,13 @@ public class DatabaseService
         _db = new SQLiteAsyncConnection(dbPath);
     }
 
-    public async Task<int> DeleteAsync() => 
-        await _db.DeleteAllAsync<Event>() 
-        & await _db.DeleteAllAsync<Set>() 
-        & await _db.DeleteAllAsync<Player>() 
-        & await _db.DeleteAllAsync<LineUpBegin>() 
-        & await _db.DeleteAllAsync<Team>() 
-        & await _db.DeleteAllAsync<MainInformation>() 
-        & await _db.DeleteAllAsync<EventCategory>();
+    public async Task<int> DeleteAsync() =>
+        await _db.DeleteAllAsync<Event>()
+        & await _db.DeleteAllAsync<Set>()
+        & await _db.DeleteAllAsync<Player>()
+        & await _db.DeleteAllAsync<LineUpBegin>()
+        & await _db.DeleteAllAsync<Team>()
+        & await _db.DeleteAllAsync<MainInformation>();
 
     #region MainInfo
 
@@ -41,6 +40,8 @@ public class DatabaseService
     public async Task InitializeEventCategoryAsync()
     {
         await _db.CreateTableAsync<EventCategory>();
+
+        await _db.DeleteAllAsync<EventCategory>();
 
         var list = new List<EventCategory>
         {

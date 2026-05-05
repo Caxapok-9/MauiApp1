@@ -76,6 +76,7 @@
 
             <Button Grid.Column="0" 
                     x:Name="ScoreHomeButton" 
+                    Text="0"
                     Clicked="OnScoreHomeClick"
                     BackgroundColor="#007ACC"
                     FontSize="52" 
@@ -104,6 +105,7 @@
             <Button Grid.Column="2" 
                     x:Name="ScoreGuestButton"
                     Clicked="OnScoreGuestClick"
+                    Text="0"
                     BackgroundColor="#007ACC"
                     FontSize="52" 
                     Margin="30,0,0,0">

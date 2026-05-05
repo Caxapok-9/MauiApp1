@@ -57,16 +57,18 @@ public partial class ScoreBoardPage : ContentPage
 
         EventCategories = await _db.GetEventCategoryAsync();
 
-        FillComponent();
+        await FillComponent();
     }
 
-    private void FillComponent()
+    private Task FillComponent()
     {
         NameTeamHome.Text = TeamHome.Name;
         NameTeamGuest.Text = TeamGuest.Name;
 
         CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
         CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+
+        return Task.CompletedTask;
     }
 
     private void UpdateData()
