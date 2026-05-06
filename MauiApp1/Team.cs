@@ -19,5 +19,7 @@ namespace MauiApp1
         public bool FirstSetServ { get; set; } = false;
 
         public bool FinalySetServ { get; set; } = false;
+
+        public bool IsLeft { get; set; }
     }
 }

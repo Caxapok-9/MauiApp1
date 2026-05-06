@@ -18,12 +18,15 @@ public class DatabaseService
         & await _db.DeleteAllAsync<Player>()
         & await _db.DeleteAllAsync<LineUpBegin>()
         & await _db.DeleteAllAsync<Team>()
-        & await _db.DeleteAllAsync<MainInformation>();
+        & await _db.DeleteAllAsync<MainInformation>()
+        & await _db.DeleteAllAsync<EventCategory>();
 
     #region MainInfo
 
     public async Task InitializeMainInfoAsync()
     {
+        await _db.CreateTableAsync<MainInformation>();
+
         await _db.CreateTableAsync<MainInformation>();
     }
 
@@ -55,6 +58,8 @@ public class DatabaseService
 
     public async Task<List<EventCategory>> GetEventCategoryAsync() => await _db.Table<EventCategory>().ToListAsync();
 
+    public async Task<int> DeleteEventCategoryAsync() => await _db.DeleteAllAsync<EventCategory>();
+
     #endregion
 
     #region Roster
@@ -62,6 +67,8 @@ public class DatabaseService
     public async Task InitializeRosterAsync()
     {
         await _db.CreateTableAsync<Player>();
+
+        await _db.DeleteAllAsync<Player>();
     }
 
     public async Task<int> SaveRosterAsync(Player player) => await _db.InsertAsync(player);
@@ -77,6 +84,8 @@ public class DatabaseService
     public async Task InitializeSetAsync()
     {
         await _db.CreateTableAsync<Set>();
+
+        await _db.DeleteAllAsync<Set>();
     }
 
     public async Task<int> SaveSetAsync(Set set) => await _db.InsertAsync(set);
@@ -85,6 +94,8 @@ public class DatabaseService
 
     public async Task<int> DeleteSetAsync() => await _db.DeleteAllAsync<Set>();
 
+    public async Task<int> UpdateSetAsync(Set set) => await _db.UpdateAsync(set); 
+
     #endregion
 
     #region Team
@@ -92,6 +103,8 @@ public class DatabaseService
     public async Task InitializeTeamAsync()
     {
         await _db.CreateTableAsync<Team>();
+
+        await _db.DeleteAllAsync<Team>();
     }
 
     public async Task<int> SaveTeamAsync(Team team) => await _db.InsertAsync(team);
@@ -109,6 +122,8 @@ public class DatabaseService
     public async Task InitializeLineUpBeginAsync()
     {
         await _db.CreateTableAsync<LineUpBegin>();
+
+        await _db.DeleteAllAsync<LineUpBegin>();
     }
 
     public async Task<int> SaveLineUpAsync(LineUpBegin lineup) => await _db.InsertAsync(lineup);
@@ -124,6 +139,8 @@ public class DatabaseService
     public async Task InitializeEventAsync()
     {
         await _db.CreateTableAsync<Event>();
+
+        await _db.DeleteAllAsync<Event>();
     }
 
     public async Task<int> SaveEventAsync(Event ev) => await _db.InsertAsync(ev);

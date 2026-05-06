@@ -30,6 +30,14 @@ public partial class LineupPage : ContentPage
 
         InitializeComponent();
 
+#if ANDROID
+
+        var activty = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
+        if (activty != null)
+            activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape;
+
+#endif
+
         ListPickerAdd();
     }
 
@@ -42,57 +50,17 @@ public partial class LineupPage : ContentPage
         FillPickers();
 
         await CreateSet();
-
-#if ANDROID
-
-        var activty = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
-        if (activty != null)
-            activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape;
-
-#endif
     }
 
     private void ListPickerAdd()
     {
-        ListPickerHome = new List<Picker>
-        {
-            homePosPicker1, 
-            homePosPicker2, 
-            homePosPicker3, 
-            homePosPicker4, 
-            homePosPicker5, 
-            homePosPicker6
-        };
+        ListPickerHome = new List<Picker> {homePosPicker1, homePosPicker2, homePosPicker3, homePosPicker4, homePosPicker5, homePosPicker6 };
 
-        ListPickerGuest = new List<Picker>
-        {
-            guestPosPicker1,
-            guestPosPicker2,
-            guestPosPicker3,
-            guestPosPicker4,
-            guestPosPicker5,
-            guestPosPicker6
-        };
+        ListPickerGuest = new List<Picker> { guestPosPicker1, guestPosPicker2, guestPosPicker3, guestPosPicker4, guestPosPicker5, guestPosPicker6 };
 
-        ListLabelHome = new List<Label>
-        {
-            homePosLabel1,
-            homePosLabel2,
-            homePosLabel3,
-            homePosLabel4,
-            homePosLabel5,
-            homePosLabel6
-        };
+        ListLabelHome = new List<Label> { homePosLabel1, homePosLabel2, homePosLabel3, homePosLabel4, homePosLabel5, homePosLabel6 };
 
-        ListLabelGuest = new List<Label>
-        {
-            guestPosLabel1,
-            guestPosLabel2,
-            guestPosLabel3,
-            guestPosLabel4,
-            guestPosLabel5,
-            guestPosLabel6
-        };
+        ListLabelGuest = new List<Label> { guestPosLabel1, guestPosLabel2, guestPosLabel3, guestPosLabel4, guestPosLabel5, guestPosLabel6 };
     }
 
     private async Task CreateSet()
@@ -106,7 +74,7 @@ public partial class LineupPage : ContentPage
         await _db.SaveSetAsync(set);
     }
 
-    private void FillPickers()
+    private async Task FillPickers()
     {
         int zone = 1;
 
@@ -231,33 +199,62 @@ public partial class LineupPage : ContentPage
         }
         else
         {
-            LineUpBegin lineUpBeginHome = new LineUpBegin();
+            if (TeamHome.IsLeft)
+            {
+                LineUpBegin lineUpBeginHome = new LineUpBegin();
 
-            lineUpBeginHome.SetId = set.Id;
-            lineUpBeginHome.TeamId = TeamHome.Id;
-            lineUpBeginHome.Zone1PlayerID = roster.Where(x => x.Number == homePosPicker1.SelectedItem.ToString()).First().Id;
-            lineUpBeginHome.Zone2PlayerID = roster.Where(x => x.Number == homePosPicker2.SelectedItem.ToString()).First().Id;
-            lineUpBeginHome.Zone3PlayerID = roster.Where(x => x.Number == homePosPicker3.SelectedItem.ToString()).First().Id;
-            lineUpBeginHome.Zone4PlayerID = roster.Where(x => x.Number == homePosPicker4.SelectedItem.ToString()).First().Id;
-            lineUpBeginHome.Zone5PlayerID = roster.Where(x => x.Number == homePosPicker5.SelectedItem.ToString()).First().Id;
-            lineUpBeginHome.Zone6PlayerID = roster.Where(x => x.Number == homePosPicker6.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.SetId = set.Id;
+                lineUpBeginHome.TeamId = TeamHome.Id;
+                lineUpBeginHome.Zone1PlayerID = roster.Where(x => x.Number == homePosPicker1.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone2PlayerID = roster.Where(x => x.Number == homePosPicker2.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone3PlayerID = roster.Where(x => x.Number == homePosPicker3.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone4PlayerID = roster.Where(x => x.Number == homePosPicker4.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone5PlayerID = roster.Where(x => x.Number == homePosPicker5.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone6PlayerID = roster.Where(x => x.Number == homePosPicker6.SelectedItem.ToString()).First().Id;                
 
-            await _db.SaveLineUpAsync(lineUpBeginHome);
+                LineUpBegin lineUpBeginGuest = new LineUpBegin();
 
-            LineUpBegin lineUpBeginGuest = new LineUpBegin();
+                lineUpBeginGuest.SetId = set.Id;
+                lineUpBeginGuest.TeamId = TeamGuest.Id;
+                lineUpBeginGuest.Zone1PlayerID = roster.Where(x => x.Number == guestPosPicker1.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone2PlayerID = roster.Where(x => x.Number == guestPosPicker2.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone3PlayerID = roster.Where(x => x.Number == guestPosPicker3.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone4PlayerID = roster.Where(x => x.Number == guestPosPicker4.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone5PlayerID = roster.Where(x => x.Number == guestPosPicker5.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone6PlayerID = roster.Where(x => x.Number == guestPosPicker6.SelectedItem.ToString()).First().Id;
 
-            lineUpBeginGuest.SetId = set.Id;
-            lineUpBeginGuest.TeamId = TeamGuest.Id;
-            lineUpBeginGuest.Zone1PlayerID = roster.Where(x => x.Number == guestPosPicker1.SelectedItem.ToString()).First().Id;
-            lineUpBeginGuest.Zone2PlayerID = roster.Where(x => x.Number == guestPosPicker2.SelectedItem.ToString()).First().Id;
-            lineUpBeginGuest.Zone3PlayerID = roster.Where(x => x.Number == guestPosPicker3.SelectedItem.ToString()).First().Id;
-            lineUpBeginGuest.Zone4PlayerID = roster.Where(x => x.Number == guestPosPicker4.SelectedItem.ToString()).First().Id;
-            lineUpBeginGuest.Zone5PlayerID = roster.Where(x => x.Number == guestPosPicker5.SelectedItem.ToString()).First().Id;
-            lineUpBeginGuest.Zone6PlayerID = roster.Where(x => x.Number == guestPosPicker6.SelectedItem.ToString()).First().Id;
+                await _db.SaveLineUpAsync(lineUpBeginHome);
+                await _db.SaveLineUpAsync(lineUpBeginGuest);
 
-            await _db.SaveLineUpAsync(lineUpBeginGuest);
+            }
+            else
+            {
+                LineUpBegin lineUpBeginHome = new LineUpBegin();
 
-            await Navigation.PushAsync(new ScoreBoardPage(_db));
+                lineUpBeginHome.SetId = set.Id;
+                lineUpBeginHome.TeamId = TeamHome.Id;
+                lineUpBeginHome.Zone1PlayerID = roster.Where(x => x.Number == guestPosPicker1.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone2PlayerID = roster.Where(x => x.Number == guestPosPicker2.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone3PlayerID = roster.Where(x => x.Number == guestPosPicker3.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone4PlayerID = roster.Where(x => x.Number == guestPosPicker4.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone5PlayerID = roster.Where(x => x.Number == guestPosPicker5.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone6PlayerID = roster.Where(x => x.Number == guestPosPicker6.SelectedItem.ToString()).First().Id;                
+
+                LineUpBegin lineUpBeginGuest = new LineUpBegin();
+
+                lineUpBeginGuest.SetId = set.Id;
+                lineUpBeginGuest.TeamId = TeamGuest.Id;
+                lineUpBeginGuest.Zone1PlayerID = roster.Where(x => x.Number == homePosPicker1.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone2PlayerID = roster.Where(x => x.Number == homePosPicker2.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone3PlayerID = roster.Where(x => x.Number == homePosPicker3.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone4PlayerID = roster.Where(x => x.Number == homePosPicker4.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone5PlayerID = roster.Where(x => x.Number == homePosPicker5.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone6PlayerID = roster.Where(x => x.Number == homePosPicker6.SelectedItem.ToString()).First().Id;
+
+                await _db.SaveLineUpAsync(lineUpBeginHome);
+                await _db.SaveLineUpAsync(lineUpBeginGuest);
+            }
+                await Navigation.PushAsync(new ScoreBoardPage(_db));
         }            
     }
 
@@ -319,44 +316,63 @@ public partial class LineupPage : ContentPage
         return;
     }
 
-    private void OnReverseClicked(object sender, EventArgs e)
+    private async void OnReverseClicked(object sender, EventArgs e)
     {
-        Reverse();
+        await Reverse();
+
+        await FillPickers();
     }
 
-    private void Reverse()
+    private async Task Reverse()
     {
-        List<Picker> lh = new List<Picker>();
-        lh.AddRange(ListPickerHome);
+        TeamHome.IsLeft = !TeamHome.IsLeft;
 
-        List<Picker> lg = new List<Picker>();
-        lg.AddRange(ListPickerGuest);
+        await _db.UpdateTeamAsync(TeamHome);
 
-        ListPickerHome.Clear();
-        ListPickerGuest.Clear();
+        if (TeamHome.IsLeft)
+        {
+            ListPickerHome.Clear();
 
-        ListPickerHome.AddRange(lg);
-        ListPickerGuest.AddRange(lh);
+            ListPickerHome.AddRange(new List<Picker> { homePosPicker1, homePosPicker2, homePosPicker3, homePosPicker4, homePosPicker5, homePosPicker6 });
 
-        List<Label> lhl = new List<Label>();
-        lhl.AddRange(ListLabelHome);
+            ListPickerGuest.Clear();
 
-        List<Label> lgl = new List<Label>();
-        lgl.AddRange(ListLabelGuest);
+            ListPickerGuest.AddRange(new List<Picker> { guestPosPicker1, guestPosPicker2, guestPosPicker3, guestPosPicker4, guestPosPicker5, guestPosPicker6 });
 
-        ListLabelHome.Clear();
-        ListLabelGuest.Clear();
+            ListLabelHome.Clear();
 
-        ListLabelHome.AddRange(lgl);
-        ListLabelGuest.AddRange(lhl);
+            ListLabelHome.AddRange(new List<Label> { homePosLabel1, homePosLabel2, homePosLabel3, homePosLabel4, homePosLabel5, homePosLabel6 });
 
-        string th = NameTeamHome.Text;
-        string tg = NameTeamGuest.Text;
+            ListLabelGuest.Clear();
 
-        NameTeamHome.Text = tg;
-        NameTeamGuest.Text = th;
+            ListLabelGuest.AddRange(new List<Label> { guestPosLabel1, guestPosLabel2, guestPosLabel3, guestPosLabel4, guestPosLabel5, guestPosLabel6 });
 
-        FillPickers();
+            NameTeamHome.Text = TeamHome.Name;
+
+            NameTeamGuest.Text = TeamGuest.Name;
+        }
+        else
+        {
+            ListPickerHome.Clear();
+
+            ListPickerHome.AddRange(new List<Picker> { guestPosPicker1, guestPosPicker2, guestPosPicker3, guestPosPicker4, guestPosPicker5, guestPosPicker6 });
+
+            ListPickerGuest.Clear();
+
+            ListPickerGuest.AddRange(new List<Picker> { homePosPicker1, homePosPicker2, homePosPicker3, homePosPicker4, homePosPicker5, homePosPicker6 });
+
+            ListLabelHome.Clear();
+
+            ListLabelHome.AddRange(new List<Label> { guestPosLabel1, guestPosLabel2, guestPosLabel3, guestPosLabel4, guestPosLabel5, guestPosLabel6 });
+
+            ListLabelGuest.Clear();
+
+            ListLabelGuest.AddRange(new List<Label> { homePosLabel1, homePosLabel2, homePosLabel3, homePosLabel4, homePosLabel5, homePosLabel6 });
+
+            NameTeamHome.Text = TeamGuest.Name;
+
+            NameTeamGuest.Text = TeamHome.Name;
+        }
     }
 
     protected override bool OnBackButtonPressed()

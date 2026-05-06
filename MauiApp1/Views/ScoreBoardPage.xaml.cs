@@ -22,8 +22,6 @@ public partial class ScoreBoardPage : ContentPage
 
     private Dictionary<string, int> EventCategories;
 
-    private bool ReverseFlag = false;
-
     public ScoreBoardPage(DatabaseService db)
 	{
 		InitializeComponent();
@@ -61,37 +59,115 @@ public partial class ScoreBoardPage : ContentPage
 
         EventCategories = EventCategory.ToDictionary(x => x.NameCategory, x => x.IdCategory);
 
-        await FillComponent();
+        await UpdateData();
     }
 
-    private Task FillComponent()
+    protected override async void OnDisappearing()
     {
-        NameTeamHome.Text = TeamHome.Name;
-        NameTeamGuest.Text = TeamGuest.Name;
+        ScoreHomeButton.Clicked -= OnScoreGuestClick;
+        ScoreHomeButton.Clicked -= OnScoreHomeClick;
 
-        CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
-        CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+        ScoreGuestButton.Clicked -= OnScoreHomeClick;
+        ScoreGuestButton.Clicked -= OnScoreGuestClick;
 
-        return Task.CompletedTask;
+        ButtonNowLineUpHome.Clicked -= OnNowLineUpGuestClick;
+        ButtonNowLineUpHome.Clicked -= OnNowLineUpHomeClick;
+
+        ButtonNowLineUpGuest.Clicked -= OnNowLineUpHomeClick;
+        ButtonNowLineUpGuest.Clicked -= OnNowLineUpGuestClick;
+
+        ButtonReplaceHome.Clicked -= OnReplaceGuestClick;
+        ButtonReplaceHome.Clicked -= OnReplaceHomeClick;
+
+        ButtonReplaceGuest.Clicked -= OnReplaceHomeClick;
+        ButtonReplaceGuest.Clicked -= OnReplaceGuestClick;
+
+        ButtonTimeOutHome.Clicked -= OnTimeOutGuestClick;
+        ButtonTimeOutHome.Clicked -= OnTimeOutHomeClick;
+
+        ButtonTimeOutGuest.Clicked -= OnTimeOutHomeClick;
+        ButtonTimeOutGuest.Clicked -= OnTimeOutGuestClick;
     }
 
-    private void UpdateData()
+    private async Task UpdateData()
     {
-        if(ReverseFlag)
+        if (TeamHome.IsLeft)
         {
-            ScoreHomeButton.Text = set.ScoreGuest.ToString();
-            ScoreGuestButton.Text = set.ScoreHome.ToString();
+            NameTeamHome.Text = TeamHome.Name;
+            NameTeamGuest.Text = TeamGuest.Name;
+
+            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
+            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+
+            ScoreHomeButton.Text = set.ScoreHome.ToString();
+            ScoreGuestButton.Text = set.ScoreGuest.ToString();
+
+            ScoreHomeButton.Clicked -= OnScoreGuestClick;
+            ScoreHomeButton.Clicked += OnScoreHomeClick;
+
+            ScoreGuestButton.Clicked -= OnScoreHomeClick;
+            ScoreGuestButton.Clicked += OnScoreGuestClick;
+
+            ButtonNowLineUpHome.Clicked -= OnNowLineUpGuestClick;
+            ButtonNowLineUpHome.Clicked += OnNowLineUpHomeClick;
+
+            ButtonNowLineUpGuest.Clicked -= OnNowLineUpHomeClick;
+            ButtonNowLineUpGuest.Clicked += OnNowLineUpGuestClick;
+
+            ButtonReplaceHome.Clicked -= OnReplaceGuestClick;
+            ButtonReplaceHome.Clicked += OnReplaceHomeClick;
+
+            ButtonReplaceGuest.Clicked -= OnReplaceHomeClick;
+            ButtonReplaceGuest.Clicked += OnReplaceGuestClick;
+
+            ButtonTimeOutHome.Clicked -= OnTimeOutGuestClick;
+            ButtonTimeOutHome.Clicked += OnTimeOutHomeClick;
+
+            ButtonTimeOutGuest.Clicked -= OnTimeOutHomeClick;
+            ButtonTimeOutGuest.Clicked += OnTimeOutGuestClick;
         }
         else
         {
-            ScoreHomeButton.Text = set.ScoreHome.ToString();
-            ScoreGuestButton.Text = set.ScoreGuest.ToString();
+            NameTeamHome.Text = TeamGuest.Name;
+            NameTeamGuest.Text = TeamHome.Name;
+
+            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
+            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+
+            ScoreHomeButton.Text = set.ScoreGuest.ToString();
+            ScoreGuestButton.Text = set.ScoreHome.ToString();
+
+            ScoreHomeButton.Clicked -= OnScoreHomeClick;
+            ScoreHomeButton.Clicked += OnScoreGuestClick;
+
+            ScoreGuestButton.Clicked -= OnScoreGuestClick;
+            ScoreGuestButton.Clicked += OnScoreHomeClick;
+
+            ButtonNowLineUpHome.Clicked -= OnNowLineUpHomeClick;
+            ButtonNowLineUpHome.Clicked += OnNowLineUpGuestClick;
+
+            ButtonNowLineUpGuest.Clicked -= OnNowLineUpGuestClick;
+            ButtonNowLineUpGuest.Clicked += OnNowLineUpHomeClick;
+
+            ButtonReplaceHome.Clicked -= OnReplaceHomeClick;
+            ButtonReplaceHome.Clicked += OnReplaceGuestClick;
+
+            ButtonReplaceGuest.Clicked -= OnReplaceGuestClick;
+            ButtonReplaceGuest.Clicked += OnReplaceHomeClick;
+
+            ButtonTimeOutHome.Clicked -= OnTimeOutHomeClick;
+            ButtonTimeOutHome.Clicked += OnTimeOutGuestClick;
+
+            ButtonTimeOutGuest.Clicked -= OnTimeOutGuestClick;
+            ButtonTimeOutGuest.Clicked += OnTimeOutHomeClick;
         }
     }
 
     private async void OnReverseClick(object sender, EventArgs e)
     {
-        ReverseFlag = !ReverseFlag;
+        TeamHome.IsLeft = !TeamHome.IsLeft;
+
+        await _db.UpdateTeamAsync(TeamHome);
 
         if (ButtonTimeOutHome.IsEnabled != ButtonTimeOutGuest.IsEnabled)
         {
@@ -107,82 +183,7 @@ public partial class ScoreBoardPage : ContentPage
             ButtonTimeOutGuest.Text = s1;
         }
 
-        string s2 = NameTeamHome.Text;
-        NameTeamHome.Text = NameTeamGuest.Text;
-        NameTeamGuest.Text = s2;
-
-        string s3 = ScoreHomeButton.Text;
-        ScoreHomeButton.Text = ScoreGuestButton.Text;
-        ScoreGuestButton.Text = s3;
-
-        if (ReverseFlag)
-        {
-            ScoreHomeButton.Clicked -= OnScoreHomeClick;
-
-            ScoreHomeButton.Clicked += OnScoreGuestClick;
-
-            ScoreGuestButton.Clicked -= OnScoreGuestClick;
-
-            ScoreGuestButton.Clicked += OnScoreHomeClick;
-
-            ButtonNowLineUpHome.Clicked -= OnNowLineUpHomeClick;
-
-            ButtonNowLineUpHome.Clicked += OnNowLineUpGuestClick;
-
-            ButtonNowLineUpGuest.Clicked -= OnNowLineUpGuestClick;
-
-            ButtonNowLineUpGuest.Clicked += OnNowLineUpHomeClick;
-
-            ButtonReplaceHome.Clicked -= OnReplaceHomeClick;
-
-            ButtonReplaceHome.Clicked += OnReplaceGuestClick;
-
-            ButtonReplaceGuest.Clicked -= OnReplaceGuestClick;
-
-            ButtonReplaceGuest.Clicked += OnReplaceHomeClick;
-
-            ButtonTimeOutHome.Clicked -= OnTimeOutHomeClick;
-
-            ButtonTimeOutHome.Clicked += OnTimeOutGuestClick;
-
-            ButtonTimeOutGuest.Clicked -= OnTimeOutGuestClick;
-
-            ButtonTimeOutGuest.Clicked += OnTimeOutHomeClick;
-        }
-        else
-        {
-            ScoreHomeButton.Clicked -= OnScoreGuestClick;
-
-            ScoreHomeButton.Clicked += OnScoreHomeClick;
-
-            ScoreGuestButton.Clicked -= OnScoreHomeClick;
-
-            ScoreGuestButton.Clicked += OnScoreGuestClick;
-
-            ButtonNowLineUpHome.Clicked -= OnNowLineUpGuestClick;
-
-            ButtonNowLineUpHome.Clicked += OnNowLineUpHomeClick;
-
-            ButtonNowLineUpGuest.Clicked -= OnNowLineUpHomeClick;
-
-            ButtonNowLineUpGuest.Clicked += OnNowLineUpGuestClick;
-
-            ButtonReplaceHome.Clicked -= OnReplaceGuestClick;
-
-            ButtonReplaceHome.Clicked += OnReplaceHomeClick;
-
-            ButtonReplaceGuest.Clicked -= OnReplaceHomeClick;
-
-            ButtonReplaceGuest.Clicked += OnReplaceGuestClick;
-
-            ButtonTimeOutHome.Clicked -= OnTimeOutGuestClick;
-
-            ButtonTimeOutHome.Clicked += OnTimeOutHomeClick;            
-
-            ButtonTimeOutGuest.Clicked -= OnTimeOutHomeClick;
-
-            ButtonTimeOutGuest.Clicked += OnTimeOutGuestClick;
-        }
+        await UpdateData();
     }
 
     private async void OnTimeOutHomeClick(object sender, EventArgs e)
@@ -281,12 +282,12 @@ public partial class ScoreBoardPage : ContentPage
 
     private async void OnNowLineUpHomeClick(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new LineupNowPage(_db, TeamHome, set));
+        await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));          
     }
 
     private async void OnNowLineUpGuestClick(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new LineupNowPage(_db, TeamGuest, set));
+        await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));         
     }
 
     private async void OnScoreHomeClick(object sender, EventArgs e)
@@ -303,7 +304,30 @@ public partial class ScoreBoardPage : ContentPage
 
         ++set.ScoreHome;
 
-        UpdateData();
+        await _db.UpdateSetAsync(set);
+
+        if (TeamHome.IsLeft)
+        {
+            NameTeamHome.Text = TeamHome.Name;
+            NameTeamGuest.Text = TeamGuest.Name;
+
+            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
+            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+
+            ScoreHomeButton.Text = set.ScoreHome.ToString();
+            ScoreGuestButton.Text = set.ScoreGuest.ToString();
+        }
+        else
+        {
+            NameTeamHome.Text = TeamGuest.Name;
+            NameTeamGuest.Text = TeamHome.Name;
+
+            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
+            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+
+            ScoreHomeButton.Text = set.ScoreGuest.ToString();
+            ScoreGuestButton.Text = set.ScoreHome.ToString();
+        }
     }
 
     private async void OnScoreGuestClick(object sender, EventArgs e)
@@ -320,7 +344,30 @@ public partial class ScoreBoardPage : ContentPage
 
         ++set.ScoreGuest;
 
-        UpdateData();
+        await _db.UpdateSetAsync(set);
+
+        if (TeamHome.IsLeft)
+        {
+            NameTeamHome.Text = TeamHome.Name;
+            NameTeamGuest.Text = TeamGuest.Name;
+
+            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
+            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+
+            ScoreHomeButton.Text = set.ScoreHome.ToString();
+            ScoreGuestButton.Text = set.ScoreGuest.ToString();
+        }
+        else
+        {
+            NameTeamHome.Text = TeamGuest.Name;
+            NameTeamGuest.Text = TeamHome.Name;
+
+            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
+            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+
+            ScoreHomeButton.Text = set.ScoreGuest.ToString();
+            ScoreGuestButton.Text = set.ScoreHome.ToString();
+        }
     }
 
     protected override bool OnBackButtonPressed()

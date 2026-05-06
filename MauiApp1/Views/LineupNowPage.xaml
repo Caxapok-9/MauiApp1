@@ -6,40 +6,106 @@
 
     <ScrollView>
 
-        <Grid RowDefinitions="*,*" ColumnDefinitions="*,*,*">
+        <Grid RowDefinitions="*,*" ColumnDefinitions="*,*,*,*">
 
-            <Label
-                Text="Зона 1"
-                Grid.Column="2"
-                Grid.Row="1"/>
+            <Border Grid.Column="2" Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
-            <Label
-                Text="Зона 2"
-                Grid.Column="2"
-                Grid.Row="0"/>
+                <Label
+                    x:Name="LabelZone1"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Title"
+                    TextColor="White"/>              
 
-            <Label
-                Text="Зона 3"
-                Grid.Column="1"
-                Grid.Row="1"/>
+            </Border>
 
-            <Label
-                Text="Зона 6"
-                Grid.Column="1"
-                Grid.Row="0"/>
+            <Border Grid.Column="2" Grid.Row="0" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
-            <Label
-                Text="Зона 4"
-                Grid.Column="0"
-                Grid.Row="0"/>
+                <Label
+                    x:Name="LabelZone2" 
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Title"
+                    TextColor="White"/>
 
-            <Label
-                Text="Зона 5"
-                Grid.Column="0"
-                Grid.Row="1"/>
+            </Border>
+
+            <Border Grid.Column="1" Grid.Row="0" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+
+                <Label
+                    x:Name="LabelZone3"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Title"
+                    TextColor="White"/>
+
+            </Border>
+
+            <Border Grid.Column="1" Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+
+                <Label
+                    x:Name="LabelZone6"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Title"
+                    TextColor="White"/>
+
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="0" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+
+                <Label
+                    x:Name="LabelZone4"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Title"
+                    TextColor="White"/>
+
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+
+                <Label
+                    x:Name="LabelZone5"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Title"
+                    TextColor="White"/>
+
+            </Border>
+
+            <Button
+                Grid.Row="0"
+                Grid.Column="3"
+                Text="Вернуться"
+                VerticalOptions="Start"
+                Margin="10"
+                BackgroundColor="BlueViolet"
+                TextColor="White"
+                Clicked="OnExitClick">
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <!-- Нормальное состояние -->
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters/>
+                            </VisualState>
+
+                            <!-- Наведение мыши (работает на Desktop) -->
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Button>
 
         </Grid>
-        
+
     </ScrollView>
     
 </ContentPage>

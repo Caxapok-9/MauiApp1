@@ -24,8 +24,14 @@ public partial class StartPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
-        await InizializeTables();
+        try
+        {
+            await InizializeTables();
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
 
 #if ANDROID
 
@@ -46,7 +52,6 @@ public partial class StartPage : ContentPage
         await _db.InitializeLineUpBeginAsync();
         await _db.InitializeEventAsync();
         await _db.InitializeTeamAsync();
-        await _db.DeleteAsync();
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
@@ -74,19 +79,19 @@ public partial class StartPage : ContentPage
             return;
         }
 
-        await _db.DeleteAsync();
-
         // 3. Код сохранения в базу данных (SQLite)
 
         Team TeamHome = new Team();
         TeamHome.Name = teamHome;
         TeamHome.IsHome = true;
+        TeamHome.IsLeft = true;
 
         await _db.SaveTeamAsync(TeamHome);        
 
         Team TeamGuest = new Team();
         TeamGuest.Name = teamGuest;
         TeamGuest.IsHome = false;
+        TeamGuest.IsLeft = false;
 
         await _db.SaveTeamAsync(TeamGuest);
 

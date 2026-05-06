@@ -1,3 +1,4 @@
+
 namespace MauiApp1.Views;
 
 public partial class LineupNowPage : ContentPage
@@ -6,15 +7,27 @@ public partial class LineupNowPage : ContentPage
 
 	Set _set;
 
-	Team _team;
+	Team _teamTarget;
 
-	Dictionary<string, int> EventsCategory;
+    Team _teamEnemy;
 
-	public LineupNowPage(DatabaseService db, Team team, Set set)
+    Dictionary<string, int> EventsCategory;
+
+	LineUpBegin BeginLineUp;
+
+	Dictionary<int, string> Roster;
+
+    public LineupNowPage(DatabaseService db, Team teamTarget, Team teamEnemy, Set set)
 	{
 		InitializeComponent();
 
 		_db = db;
+
+		_teamTarget = teamTarget;
+
+		_teamEnemy = teamEnemy;
+
+		_set = set;
 	}
 
     protected override async void OnAppearing()
@@ -23,7 +36,11 @@ public partial class LineupNowPage : ContentPage
 
 		var LineUp = await _db.GetLineUpAsync();
 
-		var BeginLineUp = LineUp.Where(x => x.SetId == _set.Id && x.TeamId == _team.Id).First();
+		BeginLineUp = LineUp.Where(x => x.SetId == _set.Id && x.TeamId == _teamTarget.Id).First();
+
+		var Rosters = await _db.GetRosterAsync();
+
+		Roster = Rosters.Where(x => x.TeamID == _teamTarget.Id).ToDictionary(x => x.Id, x => x.Number);
 
 		var EventCategories = await _db.GetEventCategoryAsync();
 
@@ -33,11 +50,118 @@ public partial class LineupNowPage : ContentPage
 
 		var SelectEvents = Events.Where(x => x.SetID == _set.Id && (x.EventID == EventsCategory["Очко"] || x.EventID == EventsCategory["Замена"])).ToList();
 
-		await Processing(BeginLineUp, SelectEvents);
+		await Processing(SelectEvents);
     }
 
-	private async Task Processing(LineUpBegin begin, List<Event> events)
+	private async Task Processing(List<Event> events)
 	{
-		
+		LineUpBegin line = new LineUpBegin();
+
+		line.PostPosition(BeginLineUp.GetPosition());
+
+		TeamL target = new TeamL();
+		target.Id = _teamTarget.Id;
+		target.IsServe = SetAnaliz(_teamTarget);
+
+        TeamL enemy = new TeamL();
+        enemy.Id = _teamEnemy.Id;
+        enemy.IsServe = !target.IsServe;
+
+		foreach (Event e in events)
+		{
+			if(e.EventID == EventsCategory["Очко"])
+			{
+				if(e.TeamID == target.Id)
+				{
+					if(!target.IsServe)
+					{
+						target.IsServe = true;
+						enemy.IsServe = false;
+
+						int server = line.Zone1PlayerID;
+                        line.Zone1PlayerID = line.Zone2PlayerID;
+                        line.Zone2PlayerID = line.Zone3PlayerID;
+                        line.Zone3PlayerID = line.Zone4PlayerID;
+                        line.Zone4PlayerID = line.Zone5PlayerID;
+						line.Zone5PlayerID = line.Zone6PlayerID;
+						line.Zone6PlayerID = server;
+                    }
+				}
+				else
+				{
+                    target.IsServe = false;
+                    enemy.IsServe = true;
+                }
+			}
+
+            if (e.EventID == EventsCategory["Замена"])
+			{
+
+			}
+        }
+
+		LabelZone1.Text = Roster[line.Zone1PlayerID];
+        LabelZone2.Text = Roster[line.Zone2PlayerID];
+        LabelZone3.Text = Roster[line.Zone3PlayerID];
+        LabelZone4.Text = Roster[line.Zone4PlayerID];
+        LabelZone5.Text = Roster[line.Zone5PlayerID];
+        LabelZone6.Text = Roster[line.Zone6PlayerID];
+    }
+
+	private bool SetAnaliz(Team team)
+	{
+		bool serv = team.FirstSetServ;
+
+		if(serv)
+		{
+			if (_set.NumberSet == 1 || _set.NumberSet == 3)
+				return true;
+			else if (_set.NumberSet == 2 || _set.NumberSet == 4)
+				return false;
+			else
+			{
+                bool serv2 = team.FinalySetServ;
+
+				if(serv2)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+            }
+        }
+		else
+		{
+            if (_set.NumberSet == 1 || _set.NumberSet == 3)
+                return false;
+            else if (_set.NumberSet == 2 || _set.NumberSet == 4)
+                return true;
+            else
+            {
+                bool serv2 = team.FinalySetServ;
+
+                if (serv2)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
 	}
+
+	private async void OnExitClick(object sender, EventArgs e)
+	{
+		await Navigation.PopModalAsync();
+	}
+}
+
+class TeamL
+{
+	public int Id {  get; set; }
+	public bool IsServe { get; set; }
 }
