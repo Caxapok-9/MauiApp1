@@ -52,12 +52,14 @@ public partial class RosterPage : ContentPage
 
     private void OnAddPlayerHomeClicked(object sender, EventArgs e)
     {
-        homePlayers.Add(new Player());
+        if(homePlayers.Count < 14)
+            homePlayers.Add(new Player());  
     }
 
     private void OnAddPlayerGuestClicked(object sender, EventArgs e)
     {
-        guestPlayers.Add(new Player());
+        if(guestPlayers.Count < 14)
+            guestPlayers.Add(new Player());
     }
 
     private void OnCaptainClicked(object sender, EventArgs e)
@@ -68,19 +70,35 @@ public partial class RosterPage : ContentPage
         if (player == null) 
             return;
 
-        var teamList = homePlayers.Contains(player) ? homePlayers : guestPlayers;
-
-        player.IsCaptain = !player.IsCaptain;
-
-        if(player.IsCaptain)
+        if(homePlayers.Contains(player))
         {
-            button.BackgroundColor = Color.FromArgb("#007ACC");
-            button.TextColor = Colors.White;
+            player.IsCaptain = !player.IsCaptain;
+
+            if (player.IsCaptain)
+            {
+                button.BackgroundColor = Color.FromArgb("#007ACC");
+                button.TextColor = Colors.White;
+            }
+            else
+            {
+                button.BackgroundColor = Colors.LightGray;
+                button.TextColor = Colors.Black;
+            }
         }
         else
         {
-            button.BackgroundColor = Colors.LightGray;
-            button.TextColor = Colors.Black;
+            player.IsCaptain = !player.IsCaptain;
+
+            if (player.IsCaptain)
+            {
+                button.BackgroundColor = Colors.Chocolate;
+                button.TextColor = Colors.White;
+            }
+            else
+            {
+                button.BackgroundColor = Colors.LightGray;
+                button.TextColor = Colors.Black;
+            }
         }
     }
 
@@ -147,7 +165,12 @@ public partial class RosterPage : ContentPage
                 await _db.SaveRosterAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamGuest.Id });
             }
 
-            string result = await DisplayActionSheet("Кто подаёт первым?", null, null, TeamHome.Name, TeamGuest.Name);
+            string result = null;
+            
+            while(string.IsNullOrWhiteSpace(result))
+            {
+                result = await DisplayActionSheet("Кто подаёт первым?", null, null, TeamHome.Name, TeamGuest.Name);
+            }
 
             if(result == TeamHome.Name)
             {
@@ -227,6 +250,8 @@ public partial class RosterPage : ContentPage
 
         int countEmptyHome = 0;
 
+        int countNumberLoongHome = 0;
+
         List<int> CheckNumberListHome = new List<int>();
 
         foreach (var player in homePlayers)
@@ -240,6 +265,12 @@ public partial class RosterPage : ContentPage
             if (string.IsNullOrWhiteSpace(player.Number))
             {
                 countEmptyHome++;
+                continue;
+            }
+
+            if(player.Number.Length > 2)
+            {
+                countNumberLoongHome++;
                 continue;
             }
 
@@ -257,6 +288,11 @@ public partial class RosterPage : ContentPage
         if(countEmptyHome > 0)
         {
             return $"у команды {TeamHome.Name}\nЕсть незаполненные поля";
+        }
+
+        if(countNumberLoongHome > 0)
+        {
+            return $"у команды {TeamHome.Name}\nНомера не должны быть больше 99";
         }
 
         if(CheckNumberListHome.GroupBy(x => x).Count() != CheckNumberListHome.Count)
@@ -325,6 +361,8 @@ public partial class RosterPage : ContentPage
 
         int countEmptyGuest = 0;
 
+        int countNumberLoongGuest = 0;
+
         List<int> CheckNumberListGuest = new List<int>();
 
         foreach (var player in guestPlayers)
@@ -338,6 +376,12 @@ public partial class RosterPage : ContentPage
             if (string.IsNullOrWhiteSpace(player.Number))
             {
                 countEmptyGuest++;
+                continue;
+            }
+
+            if (player.Number.Length > 2)
+            {
+                countNumberLoongGuest++;
                 continue;
             }
 
@@ -355,6 +399,11 @@ public partial class RosterPage : ContentPage
         if (countEmptyGuest > 0)
         {
             return $"у команды {TeamGuest.Name}\nЕсть незаполненные поля";
+        }
+
+        if (countNumberLoongGuest > 0)
+        {
+            return $"у команды {TeamGuest.Name}\nНомера не должны быть больше 99";
         }
 
         if (CheckNumberListGuest.GroupBy(x => x).Count() != CheckNumberListGuest.Count)

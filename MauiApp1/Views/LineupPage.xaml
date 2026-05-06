@@ -2,11 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.Views.LineupPage"
-             Title="Начальная расстановка">
+             Title="Начальные расстановки">
 
     <ScrollView>
 
-        <Grid RowDefinitions="10*,80*,10*" ColumnDefinitions="40*,10*,40*">
+        <Grid RowDefinitions="auto,*" ColumnDefinitions="35*,15*,35*">
 
             <Label x:Name="NameTeamHome" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" TextColor="White"/>
 
@@ -14,7 +14,7 @@
 
             <Grid RowDefinitions="*,*,*" ColumnDefinitions="*,*" Grid.Row="1" Grid.Column="0">
 
-                <Border Grid.Row="0" Grid.Column="0" Margin="20,5,0,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="0" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -23,7 +23,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="homePosPicker5"
@@ -57,7 +57,7 @@
 
                 </Border>
 
-                <Border Grid.Row="0" Grid.Column="1" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="0" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -66,7 +66,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="homePosPicker4"
@@ -100,7 +100,7 @@
 
                 </Border>
 
-                <Border Grid.Row="1" Grid.Column="0" Margin="20,5,0,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="1" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -109,7 +109,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="homePosPicker6"
@@ -143,7 +143,7 @@
 
                 </Border>
 
-                <Border Grid.Row="1" Grid.Column="1" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="1" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -152,7 +152,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="homePosPicker3"
@@ -186,7 +186,7 @@
 
                 </Border>
 
-                <Border Grid.Row="2" Grid.Column="0" Margin="20,5,0,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="2" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -195,7 +195,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="homePosPicker1"
@@ -229,7 +229,7 @@
 
                 </Border>
 
-                <Border Grid.Row="2" Grid.Column="1" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="2" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
 
                     <Grid>
 
@@ -238,7 +238,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="homePosPicker2"
@@ -276,7 +276,7 @@
 
             <Grid RowDefinitions="*,*,*" ColumnDefinitions="*,*" Grid.Row="1" Grid.Column="2">
 
-                <Border Grid.Row="0" Grid.Column="0" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="0" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="Chocolate">
 
                     <Grid>
 
@@ -285,7 +285,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="guestPosPicker2"
@@ -309,7 +309,7 @@
                                 <!--Наведение мыши (работает на Desktop)-->
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                        <Setter Property="BackgroundColor" Value="SandyBrown"/>
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -319,7 +319,7 @@
 
                 </Border>
 
-                <Border Grid.Row="0" Grid.Column="1" Margin="0,5,20,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="0" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="Chocolate">
 
                     <Grid>
 
@@ -328,7 +328,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="guestPosPicker1"
@@ -352,7 +352,7 @@
                                 <!--Наведение мыши (работает на Desktop)-->
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                        <Setter Property="BackgroundColor" Value="SandyBrown"/>
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -362,7 +362,7 @@
 
                 </Border>
 
-                <Border Grid.Row="1" Grid.Column="0" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="1" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="Chocolate">
 
                     <Grid>
 
@@ -371,7 +371,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="guestPosPicker3"
@@ -395,7 +395,7 @@
                                 <!--Наведение мыши (работает на Desktop)-->
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                        <Setter Property="BackgroundColor" Value="SandyBrown"/>
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -405,7 +405,7 @@
 
                 </Border>
 
-                <Border Grid.Row="1" Grid.Column="1" Margin="0,5,20,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="1" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="Chocolate">
 
                     <Grid>
 
@@ -414,7 +414,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="guestPosPicker6"
@@ -438,7 +438,7 @@
                                 <!--Наведение мыши (работает на Desktop)-->
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                        <Setter Property="BackgroundColor" Value="SandyBrown"/>
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -448,7 +448,7 @@
 
                 </Border>
 
-                <Border Grid.Row="2" Grid.Column="0" Margin="10,5,10,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="2" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="Chocolate">
 
                     <Grid>
 
@@ -457,7 +457,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="guestPosPicker4"
@@ -481,7 +481,7 @@
                                 <!--Наведение мыши (работает на Desktop)-->
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                        <Setter Property="BackgroundColor" Value="SandyBrown"/>
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -491,7 +491,7 @@
 
                 </Border>
 
-                <Border Grid.Row="2" Grid.Column="1" Margin="0,5,20,0" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+                <Border Grid.Row="2" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15" BackgroundColor="Chocolate">
 
                     <Grid>
 
@@ -500,7 +500,7 @@
                                     TextColor="White"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
-                                    FontSize="26">
+                                    FontSize="Title">
                         </Label>
 
                         <Picker x:Name="guestPosPicker5"
@@ -524,7 +524,7 @@
                                 <!--Наведение мыши (работает на Desktop)-->
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                        <Setter Property="BackgroundColor" Value="SandyBrown"/>
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -536,71 +536,77 @@
 
             </Grid>
 
-            <Button
-                Grid.Row="2" 
-                Grid.Column="0" 
-                Grid.ColumnSpan="3" 
-                BackgroundColor="#007ACC"
+
+
+            <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="*,*,*">
+
+                <Button
+                Grid.Row="0"
+                BackgroundColor="MediumPurple"
                 TextColor="White"
-                Text="Начать партию" 
-                FontSize="24"  
+                Text="Старт" 
+                FontSize="Title"  
                 HorizontalOptions="Fill" 
-                VerticalOptions="End" 
-                Margin="20,10,20,10"
-                Clicked="OnStartMatchClicked">
+                VerticalOptions="Fill"
+                Clicked="OnStartMatchClicked"
+                Margin="30,10,30,10">
 
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroupList>
-                        <VisualStateGroup x:Name="CommonStates">
-                            <!--Нормальное состояние-->
-                            <VisualState x:Name="Normal">
-                                <VisualState.Setters>                                    
-                                </VisualState.Setters>
-                            </VisualState>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!--Нормальное состояние-->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                            <!--Наведение мыши (работает на Desktop)-->
-                            <VisualState x:Name="PointerOver">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="Blue"/>
-                                </VisualState.Setters>
-                            </VisualState>
+                                <!--Наведение мыши (работает на Desktop)-->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="MediumOrchid"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                        </VisualStateGroup>
-                    </VisualStateGroupList>
-                </VisualStateManager.VisualStateGroups>
-            </Button>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                </Button>
 
-            <Button 
-                Grid.Row="0" 
-                Grid.Column="1" 
-                Text="Смена" 
-                BackgroundColor="#007ACC"
-                TextColor="White"
-                FontSize="20" 
-                HorizontalOptions="Center" 
-                VerticalOptions="Center"
-                Clicked="OnReverseClicked">
+                <Button 
+                    Grid.Row="1" 
+                    Text="⇄" 
+                    BackgroundColor="MediumPurple"
+                    TextColor="White"
+                    FontSize="30" 
+                    FontAttributes="Bold"
+                    HorizontalOptions="Fill" 
+                    VerticalOptions="Fill"
+                    Clicked="OnReverseClicked"
+                    Margin="30,20,30,20">
 
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroupList>
-                        <VisualStateGroup x:Name="CommonStates">
-                            <!--Нормальное состояние-->
-                            <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                </VisualState.Setters>
-                            </VisualState>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!--Нормальное состояние-->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                            <!--Наведение мыши (работает на Desktop)-->
-                            <VisualState x:Name="PointerOver">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="Blue"/>
-                                </VisualState.Setters>
-                            </VisualState>
+                                <!--Наведение мыши (работает на Desktop)-->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="MediumOrchid"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                        </VisualStateGroup>
-                    </VisualStateGroupList>
-                </VisualStateManager.VisualStateGroups>
-            </Button>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                </Button>
+
+            </Grid>
+            
         </Grid>    
 
     </ScrollView>

@@ -17,6 +17,8 @@ public partial class LineupNowPage : ContentPage
 
 	Dictionary<int, string> Roster;
 
+	List<Label> Labels;
+
     public LineupNowPage(DatabaseService db, Team teamTarget, Team teamEnemy, Set set)
 	{
 		InitializeComponent();
@@ -28,7 +30,9 @@ public partial class LineupNowPage : ContentPage
 		_teamEnemy = teamEnemy;
 
 		_set = set;
-	}
+
+		Labels = new List<Label> { LabelZone1, LabelZone2, LabelZone3, LabelZone4, LabelZone5, LabelZone6 };
+    }
 
     protected override async void OnAppearing()
 	{
@@ -106,6 +110,23 @@ public partial class LineupNowPage : ContentPage
         LabelZone4.Text = Roster[line.Zone4PlayerID];
         LabelZone5.Text = Roster[line.Zone5PlayerID];
         LabelZone6.Text = Roster[line.Zone6PlayerID];
+
+		if(_teamTarget.IsLeft)
+		{
+			foreach(Label l in Labels)
+			{
+				Border b = l.Parent as Border;
+				b.BackgroundColor = Color.FromArgb("#007ACC");
+			}
+		}
+		else
+		{
+            foreach (Label l in Labels)
+            {
+                Border b = l.Parent as Border;
+                b.BackgroundColor = Colors.Chocolate;
+            }
+        }
     }
 
 	private bool SetAnaliz(Team team)

@@ -52,7 +52,7 @@
                                                     <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
                                                         <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor" Value="Blue"/>
+                                                            <Setter Property="BackgroundColor" Value="DodgerBlue"/>
                                                             <Setter Property="TextColor" Value="White"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
@@ -137,7 +137,7 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-                    <Button Text="+ Добавить игрока (Хозяева)" 
+                    <Button Text="+ Добавить игрока" 
                             Clicked="OnAddPlayerHomeClicked"
                             BackgroundColor="#007ACC" TextColor="White">
 
@@ -152,7 +152,7 @@
                                     <!-- Наведение мыши (работает на Desktop) -->
                                     <VisualState x:Name="PointerOver">
                                         <VisualState.Setters>
-                                            <Setter Property="BackgroundColor" Value="Blue"/>
+                                            <Setter Property="BackgroundColor" Value="DodgerBlue"/>
                                         </VisualState.Setters>
                                     </VisualState>
 
@@ -163,7 +163,7 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <Frame BorderColor="#007ACC" BackgroundColor="#141414" CornerRadius="10" Padding="10">
+            <Frame BorderColor="Chocolate" BackgroundColor="#141414" CornerRadius="10" Padding="10">
                 <VerticalStackLayout>
                     <Label x:Name="NameTeamGuest" FontSize="18" FontAttributes="Bold" 
                TextColor="White"/>
@@ -209,7 +209,7 @@
                                                     <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
                                                         <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor" Value="Blue"/>
+                                                            <Setter Property="BackgroundColor" Value="Chocolate"/>
                                                             <Setter Property="TextColor" Value="White"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
@@ -293,9 +293,9 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-                    <Button Text="+ Добавить игрока (Гости)" 
+                    <Button Text="+ Добавить игрока" 
                             Clicked="OnAddPlayerGuestClicked"
-                            BackgroundColor="#007ACC" TextColor="White">
+                            BackgroundColor="Chocolate" TextColor="White">
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroupList>
@@ -309,7 +309,7 @@
                                     <!-- Наведение мыши (работает на Desktop) -->
                                     <VisualState x:Name="PointerOver">
                                         <VisualState.Setters>
-                                            <Setter Property="BackgroundColor" Value="Blue"/>
+                                            <Setter Property="BackgroundColor" Value="SandyBrown"/>
                                         </VisualState.Setters>
                                     </VisualState>
 
@@ -332,7 +332,7 @@
             <Button Text="🏐 Начать матч"
                 FontSize="18"
                 FontAttributes="Bold"
-                BackgroundColor="#007ACC"
+                BackgroundColor="MediumPurple"
                 TextColor="White"
                 HeightRequest="50"
                 CornerRadius="10"
@@ -346,15 +346,13 @@
                         <VisualStateGroup x:Name="CommonStates">
                             <!-- Нормальное состояние -->
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#007ACC"/>
-                                </VisualState.Setters>
+                                <VisualState.Setters/>
                             </VisualState>
 
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="Blue"/>
+                                    <Setter Property="BackgroundColor" Value="MediumOrchid"/>
                                 </VisualState.Setters>
                             </VisualState>
 

@@ -1,3 +1,5 @@
+using System.Threading;
+
 namespace MauiApp1.Views;
 
 public partial class ScoreBoardPage : ContentPage
@@ -58,108 +60,115 @@ public partial class ScoreBoardPage : ContentPage
         var EventCategory = await _db.GetEventCategoryAsync();
 
         EventCategories = EventCategory.ToDictionary(x => x.NameCategory, x => x.IdCategory);
-
-        await UpdateData();
+      
+        UpdateData();
     }
 
-    protected override async void OnDisappearing()
+    private async void UpdateData()
     {
-        ScoreHomeButton.Clicked -= OnScoreGuestClick;
-        ScoreHomeButton.Clicked -= OnScoreHomeClick;
+        var Events = await _db.GetEventAsync();
 
-        ScoreGuestButton.Clicked -= OnScoreHomeClick;
-        ScoreGuestButton.Clicked -= OnScoreGuestClick;
+        var TimeOutsHome = Events.Where(x => x.EventID == EventCategories["Тайм-аут"] && x.TeamID == TeamHome.Id && x.SetID == set.Id).ToList();
 
-        ButtonNowLineUpHome.Clicked -= OnNowLineUpGuestClick;
-        ButtonNowLineUpHome.Clicked -= OnNowLineUpHomeClick;
+        var TimeOutsGuest = Events.Where(x => x.EventID == EventCategories["Тайм-аут"] && x.TeamID == TeamGuest.Id && x.SetID == set.Id).ToList();
 
-        ButtonNowLineUpGuest.Clicked -= OnNowLineUpHomeClick;
-        ButtonNowLineUpGuest.Clicked -= OnNowLineUpGuestClick;
-
-        ButtonReplaceHome.Clicked -= OnReplaceGuestClick;
-        ButtonReplaceHome.Clicked -= OnReplaceHomeClick;
-
-        ButtonReplaceGuest.Clicked -= OnReplaceHomeClick;
-        ButtonReplaceGuest.Clicked -= OnReplaceGuestClick;
-
-        ButtonTimeOutHome.Clicked -= OnTimeOutGuestClick;
-        ButtonTimeOutHome.Clicked -= OnTimeOutHomeClick;
-
-        ButtonTimeOutGuest.Clicked -= OnTimeOutHomeClick;
-        ButtonTimeOutGuest.Clicked -= OnTimeOutGuestClick;
-    }
-
-    private async Task UpdateData()
-    {
         if (TeamHome.IsLeft)
         {
-            NameTeamHome.Text = TeamHome.Name;
-            NameTeamGuest.Text = TeamGuest.Name;
+            NameLeft.Text = TeamHome.Name;
+            NameRight.Text = TeamGuest.Name;
 
-            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
-            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+            CountSetLeft.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
+            CountSetRight.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
 
-            ScoreHomeButton.Text = set.ScoreHome.ToString();
-            ScoreGuestButton.Text = set.ScoreGuest.ToString();
+            ScoreLeftButton.Text = set.ScoreHome.ToString();
+            ScoreRightButton.Text = set.ScoreGuest.ToString();
 
-            ScoreHomeButton.Clicked -= OnScoreGuestClick;
-            ScoreHomeButton.Clicked += OnScoreHomeClick;
+            if (TimeOutsHome.Count < 1)
+            {
+                TimeOutLeftButton.Text = "Тайм-аут ( 2 )";
+                TimeOutLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
+                TimeOutLeftButton.IsEnabled = true;
+            }
+            else if (TimeOutsHome.Count < 2)
+            {
+                TimeOutLeftButton.Text = "Тайм-аут ( 1 )";
+                TimeOutLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
+                TimeOutLeftButton.IsEnabled = true;
+            }
+            else
+            {
+                TimeOutLeftButton.Text = "Тайм-аут ( 0 )";
+                TimeOutLeftButton.BackgroundColor = Colors.Gray;
+                TimeOutLeftButton.IsEnabled = false;
+            }
 
-            ScoreGuestButton.Clicked -= OnScoreHomeClick;
-            ScoreGuestButton.Clicked += OnScoreGuestClick;
-
-            ButtonNowLineUpHome.Clicked -= OnNowLineUpGuestClick;
-            ButtonNowLineUpHome.Clicked += OnNowLineUpHomeClick;
-
-            ButtonNowLineUpGuest.Clicked -= OnNowLineUpHomeClick;
-            ButtonNowLineUpGuest.Clicked += OnNowLineUpGuestClick;
-
-            ButtonReplaceHome.Clicked -= OnReplaceGuestClick;
-            ButtonReplaceHome.Clicked += OnReplaceHomeClick;
-
-            ButtonReplaceGuest.Clicked -= OnReplaceHomeClick;
-            ButtonReplaceGuest.Clicked += OnReplaceGuestClick;
-
-            ButtonTimeOutHome.Clicked -= OnTimeOutGuestClick;
-            ButtonTimeOutHome.Clicked += OnTimeOutHomeClick;
-
-            ButtonTimeOutGuest.Clicked -= OnTimeOutHomeClick;
-            ButtonTimeOutGuest.Clicked += OnTimeOutGuestClick;
+            if (TimeOutsGuest.Count < 1)
+            {
+                TimeOutRightButton.Text = "Тайм-аут ( 2 )";
+                TimeOutRightButton.BackgroundColor = Colors.Chocolate;
+                TimeOutRightButton.IsEnabled = true;
+            }
+            else if (TimeOutsGuest.Count < 2)
+            {
+                TimeOutRightButton.Text = "Тайм-аут ( 1 )";
+                TimeOutRightButton.BackgroundColor = Colors.Chocolate;
+                TimeOutRightButton.IsEnabled = true;
+            }
+            else
+            {
+                TimeOutRightButton.Text = "Тайм-аут ( 0 )";
+                TimeOutRightButton.BackgroundColor = Colors.Gray;
+                TimeOutRightButton.IsEnabled = false;
+            }
         }
         else
         {
-            NameTeamHome.Text = TeamGuest.Name;
-            NameTeamGuest.Text = TeamHome.Name;
+            NameLeft.Text = TeamGuest.Name;
+            NameRight.Text = TeamHome.Name;
 
-            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
-            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+            CountSetLeft.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
+            CountSetRight.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
 
-            ScoreHomeButton.Text = set.ScoreGuest.ToString();
-            ScoreGuestButton.Text = set.ScoreHome.ToString();
+            ScoreLeftButton.Text = set.ScoreGuest.ToString();
+            ScoreRightButton.Text = set.ScoreHome.ToString();
 
-            ScoreHomeButton.Clicked -= OnScoreHomeClick;
-            ScoreHomeButton.Clicked += OnScoreGuestClick;
+            if (TimeOutsHome.Count < 1)
+            {
+                TimeOutRightButton.Text = "Тайм-аут ( 2 )";
+                TimeOutRightButton.BackgroundColor = Colors.Chocolate;
+                TimeOutRightButton.IsEnabled = true;
+            }
+            else if (TimeOutsHome.Count < 2)
+            {
+                TimeOutRightButton.Text = "Тайм-аут ( 1 )";
+                TimeOutRightButton.BackgroundColor = Colors.Chocolate;
+                TimeOutRightButton.IsEnabled = true;
+            }
+            else
+            {
+                TimeOutRightButton.Text = "Тайм-аут ( 0 )";
+                TimeOutRightButton.BackgroundColor = Colors.Gray;
+                TimeOutRightButton.IsEnabled = false;
+            }
 
-            ScoreGuestButton.Clicked -= OnScoreGuestClick;
-            ScoreGuestButton.Clicked += OnScoreHomeClick;
-
-            ButtonNowLineUpHome.Clicked -= OnNowLineUpHomeClick;
-            ButtonNowLineUpHome.Clicked += OnNowLineUpGuestClick;
-
-            ButtonNowLineUpGuest.Clicked -= OnNowLineUpGuestClick;
-            ButtonNowLineUpGuest.Clicked += OnNowLineUpHomeClick;
-
-            ButtonReplaceHome.Clicked -= OnReplaceHomeClick;
-            ButtonReplaceHome.Clicked += OnReplaceGuestClick;
-
-            ButtonReplaceGuest.Clicked -= OnReplaceGuestClick;
-            ButtonReplaceGuest.Clicked += OnReplaceHomeClick;
-
-            ButtonTimeOutHome.Clicked -= OnTimeOutHomeClick;
-            ButtonTimeOutHome.Clicked += OnTimeOutGuestClick;
-
-            ButtonTimeOutGuest.Clicked -= OnTimeOutGuestClick;
-            ButtonTimeOutGuest.Clicked += OnTimeOutHomeClick;
+            if (TimeOutsGuest.Count < 1)
+            {
+                TimeOutLeftButton.Text = "Тайм-аут ( 2 )";
+                TimeOutLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
+                TimeOutLeftButton.IsEnabled = true;
+            }
+            else if (TimeOutsGuest.Count < 2)
+            {
+                TimeOutLeftButton.Text = "Тайм-аут ( 1 )";
+                TimeOutLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
+                TimeOutLeftButton.IsEnabled = true;
+            }
+            else
+            {
+                TimeOutLeftButton.Text = "Тайм-аут ( 0 )";                
+                TimeOutLeftButton.BackgroundColor = Colors.Gray;
+                TimeOutLeftButton.IsEnabled = false;
+            }
         }
     }
 
@@ -167,30 +176,18 @@ public partial class ScoreBoardPage : ContentPage
     {
         TeamHome.IsLeft = !TeamHome.IsLeft;
 
+        TeamGuest.IsLeft = !TeamGuest.IsLeft;
+
         await _db.UpdateTeamAsync(TeamHome);
 
-        if (ButtonTimeOutHome.IsEnabled != ButtonTimeOutGuest.IsEnabled)
-        {
-            ButtonTimeOutHome.IsEnabled = !ButtonTimeOutHome.IsEnabled;
-            ButtonTimeOutGuest.IsEnabled = !ButtonTimeOutGuest.IsEnabled;
+        await _db.UpdateTeamAsync(TeamGuest);
 
-            Color c = ButtonTimeOutHome.BackgroundColor;
-            ButtonTimeOutHome.BackgroundColor = ButtonTimeOutGuest.BackgroundColor;
-            ButtonTimeOutGuest.BackgroundColor = c;
-
-            string s1 = ButtonTimeOutHome.Text;
-            ButtonTimeOutHome.Text = ButtonTimeOutGuest.Text;
-            ButtonTimeOutGuest.Text = s1;
-        }
-
-        await UpdateData();
+        UpdateData();
     }
 
-    private async void OnTimeOutHomeClick(object sender, EventArgs e)
+    private async void OnTimeOutLeftClick(object sender, EventArgs e)
     {
-        var TimeOuts = await _db.GetEventAsync();
-
-        if(TimeOuts.Where(x => x.EventID == EventCategories["Тайм-аут"] && x.TeamID == TeamHome.Id).ToList().Count < 1)
+        if (TeamHome.IsLeft)
         {
             Event ev = new Event();
 
@@ -202,42 +199,34 @@ public partial class ScoreBoardPage : ContentPage
 
             await _db.SaveEventAsync(ev);
 
-            await DisplayAlert("Информация", "Тайм-аут записан!", "OK");
+            await DisplayAlert("Информация", "Тайм-аут взят!", "OK");           
         }
         else
         {
             Event ev = new Event();
 
             ev.SetID = set.Id;
-            ev.TeamID = TeamHome.Id;
+            ev.TeamID = TeamGuest.Id;
             ev.EventID = EventCategories["Тайм-аут"];
             ev.ScoreHome = set.ScoreHome;
             ev.ScoreGuest = set.ScoreGuest;
 
             await _db.SaveEventAsync(ev);
 
-            await DisplayAlert("Информация", "Тайм-аут записан!", "OK");
-
-            var but = sender as Button;
-
-            but.Text = "Нет";            
-
-            but.IsEnabled = false;
-
-            but.BackgroundColor = Colors.Gray;
+            await DisplayAlert("Информация", "Тайм-аут взят!", "OK");
         }
+
+        UpdateData();
     }
 
-    private async void OnTimeOutGuestClick(object sender, EventArgs e)
+    private async void OnTimeOutRightClick(object sender, EventArgs e)
     {
-        var TimeOuts = await _db.GetEventAsync();
-
-        if (TimeOuts.Where(x => x.EventID == EventCategories["Тайм-аут"] && x.TeamID == TeamGuest.Id).ToList().Count < 1)
+        if (!TeamHome.IsLeft)
         {
             Event ev = new Event();
 
             ev.SetID = set.Id;
-            ev.TeamID = TeamGuest.Id;
+            ev.TeamID = TeamHome.Id;
             ev.EventID = EventCategories["Тайм-аут"];
             ev.ScoreHome = set.ScoreHome;
             ev.ScoreGuest = set.ScoreGuest;
@@ -259,114 +248,122 @@ public partial class ScoreBoardPage : ContentPage
             await _db.SaveEventAsync(ev);
 
             await DisplayAlert("Информация", "Тайм-аут записан!", "OK");
-
-            var but = sender as Button;
-
-            but.Text = "Нет";            
-
-            but.IsEnabled = false;
-
-            but.BackgroundColor = Colors.Gray;
         }
+
+        UpdateData();
     }
 
-    private async void OnReplaceHomeClick(object sender, EventArgs e)
+    private async void OnReplaceLeftClick(object sender, EventArgs e)
     {
 
     }
 
-    private async void OnReplaceGuestClick(object sender, EventArgs e)
+    private async void OnReplaceRightClick(object sender, EventArgs e)
     {
 
     }
 
-    private async void OnNowLineUpHomeClick(object sender, EventArgs e)
+    private async void OnNowLineUpLeftClick(object sender, EventArgs e)
     {
-        await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));          
-    }
-
-    private async void OnNowLineUpGuestClick(object sender, EventArgs e)
-    {
-        await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));         
-    }
-
-    private async void OnScoreHomeClick(object sender, EventArgs e)
-    {
-        Event ev = new Event();
-
-        ev.TeamID = TeamHome.Id;
-        ev.SetID = set.Id;
-        ev.EventID = EventCategories["Очко"];
-        ev.ScoreHome = set.ScoreHome;
-        ev.ScoreGuest = set.ScoreGuest;
-
-        await _db.SaveEventAsync(ev);
-
-        ++set.ScoreHome;
-
-        await _db.UpdateSetAsync(set);
-
-        if (TeamHome.IsLeft)
+        if(TeamHome.IsLeft)
         {
-            NameTeamHome.Text = TeamHome.Name;
-            NameTeamGuest.Text = TeamGuest.Name;
-
-            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
-            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
-
-            ScoreHomeButton.Text = set.ScoreHome.ToString();
-            ScoreGuestButton.Text = set.ScoreGuest.ToString();
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
         }
         else
         {
-            NameTeamHome.Text = TeamGuest.Name;
-            NameTeamGuest.Text = TeamHome.Name;
-
-            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
-            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
-
-            ScoreHomeButton.Text = set.ScoreGuest.ToString();
-            ScoreGuestButton.Text = set.ScoreHome.ToString();
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
         }
     }
 
-    private async void OnScoreGuestClick(object sender, EventArgs e)
+    private async void OnNowLineUpRightClick(object sender, EventArgs e)
     {
-        Event ev = new Event();
-
-        ev.TeamID = TeamGuest.Id;
-        ev.SetID = set.Id;
-        ev.EventID = EventCategories["Очко"];
-        ev.ScoreHome = set.ScoreHome;
-        ev.ScoreGuest = set.ScoreGuest;
-
-        await _db.SaveEventAsync(ev);
-
-        ++set.ScoreGuest;
-
-        await _db.UpdateSetAsync(set);
-
-        if (TeamHome.IsLeft)
+        if (!TeamHome.IsLeft)
         {
-            NameTeamHome.Text = TeamHome.Name;
-            NameTeamGuest.Text = TeamGuest.Name;
-
-            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
-            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
-
-            ScoreHomeButton.Text = set.ScoreHome.ToString();
-            ScoreGuestButton.Text = set.ScoreGuest.ToString();
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
         }
         else
         {
-            NameTeamHome.Text = TeamGuest.Name;
-            NameTeamGuest.Text = TeamHome.Name;
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
+        }
+    }
 
-            CountSetTeamGuest.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
-            CountSetTeamHome.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+    private async void OnScoreLeftClick(object sender, EventArgs e)
+    {
+        if(TeamHome.IsLeft)
+        {
+            Event ev = new Event();
 
-            ScoreHomeButton.Text = set.ScoreGuest.ToString();
-            ScoreGuestButton.Text = set.ScoreHome.ToString();
+            ev.TeamID = TeamHome.Id;
+            ev.SetID = set.Id;
+            ev.EventID = EventCategories["Очко"];
+            ev.ScoreHome = set.ScoreHome;
+            ev.ScoreGuest = set.ScoreGuest;
+
+            await _db.SaveEventAsync(ev);
+
+            ++set.ScoreHome;
+
+            await _db.UpdateSetAsync(set);
+
+            ScoreLeftButton.Text = set.ScoreHome.ToString();
+        }
+        else
+        {
+            Event ev = new Event();
+
+            ev.TeamID = TeamGuest.Id;
+            ev.SetID = set.Id;
+            ev.EventID = EventCategories["Очко"];
+            ev.ScoreHome = set.ScoreHome;
+            ev.ScoreGuest = set.ScoreGuest;
+
+            await _db.SaveEventAsync(ev);
+
+            ++set.ScoreGuest;
+
+            await _db.UpdateSetAsync(set);
+
+            ScoreLeftButton.Text = set.ScoreGuest.ToString();
+        }
+    }
+
+    private async void OnScoreRightClick(object sender, EventArgs e)
+    {
+        if (!TeamHome.IsLeft)
+        {
+            Event ev = new Event();
+
+            ev.TeamID = TeamHome.Id;
+            ev.SetID = set.Id;
+            ev.EventID = EventCategories["Очко"];
+            ev.ScoreHome = set.ScoreHome;
+            ev.ScoreGuest = set.ScoreGuest;
+
+            await _db.SaveEventAsync(ev);
+
+            ++set.ScoreHome;
+
+            await _db.UpdateSetAsync(set);
+
+            ScoreRightButton.Text = set.ScoreHome.ToString();
+        }
+        else
+        {
+            Event ev = new Event();
+
+            ev.TeamID = TeamGuest.Id;
+            ev.SetID = set.Id;
+            ev.EventID = EventCategories["Очко"];
+            ev.ScoreHome = set.ScoreHome;
+            ev.ScoreGuest = set.ScoreGuest;
+
+            await _db.SaveEventAsync(ev);
+
+            ++set.ScoreGuest;
+
+            await _db.UpdateSetAsync(set);
+
+            ScoreRightButton.Text = set.ScoreGuest.ToString();
         }
     }
 

@@ -327,7 +327,11 @@ public partial class LineupPage : ContentPage
     {
         TeamHome.IsLeft = !TeamHome.IsLeft;
 
+        TeamGuest.IsLeft = !TeamGuest.IsLeft;
+
         await _db.UpdateTeamAsync(TeamHome);
+
+        await _db.UpdateTeamAsync(TeamGuest);
 
         if (TeamHome.IsLeft)
         {

@@ -64,7 +64,7 @@ public partial class StartPage : ContentPage
         referee = EntryReferee.Text;
         secretary = EntrySecretary.Text;
 
-        // 2. Проверка на пустоту
+        // 2. Проверки заполнения
         if 
         (
             string.IsNullOrWhiteSpace(teamHome) || 
@@ -78,6 +78,13 @@ public partial class StartPage : ContentPage
             await DisplayAlert("Ошибка", "Все поля должны быть заполнены!", "OK");
             return;
         }
+
+        if(teamHome.Length > 21 || teamGuest.Length > 21)
+        {
+            await DisplayAlert("Ошибка", "Кол-во символов в названиях команд не должно быть больше 21", "OK");
+            return;
+        }
+
 
         // 3. Код сохранения в базу данных (SQLite)
 

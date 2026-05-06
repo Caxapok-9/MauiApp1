@@ -8,101 +8,174 @@
 
         <Grid RowDefinitions="*,*" ColumnDefinitions="*,*,*,*">
 
-            <Border Grid.Column="2" Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+            <Grid RowDefinitions="auto,*" Grid.Column="2" Grid.Row="1">
 
-                <Label
-                    x:Name="LabelZone1"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
+                <Label 
+                    Grid.Row="0"
                     FontSize="Title"
-                    TextColor="White"/>              
+                    Text="Зона 1"
+                    TextColor="White"
+                    HorizontalOptions="Center"/>
 
-            </Border>
+                <Border Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15">
 
-            <Border Grid.Column="2" Grid.Row="0" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
-
-                <Label
-                    x:Name="LabelZone2" 
+                    <Label
+                    x:Name="LabelZone1"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     FontSize="Title"
                     TextColor="White"/>
 
-            </Border>
+                </Border>
 
-            <Border Grid.Column="1" Grid.Row="0" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+            </Grid>
 
-                <Label
+            <Grid RowDefinitions="auto,*" Grid.Column="2" Grid.Row="0">
+
+                <Label 
+                    Grid.Row="0"
+                    FontSize="Title"
+                    Text="Зона 2"
+                    TextColor="White"
+                    HorizontalOptions="Center"/>
+
+                <Border Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15">
+
+                    <Label
+                    x:Name="LabelZone2"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Title"
+                    TextColor="White"/>
+
+                </Border>
+
+            </Grid>
+            
+            <Grid RowDefinitions="auto,*" Grid.Column="1" Grid.Row="0">
+
+                <Label 
+                    Grid.Row="0"
+                    FontSize="Title"
+                    Text="Зона 3"
+                    TextColor="White"
+                    HorizontalOptions="Center"/>
+
+                <Border Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15">
+
+                    <Label
                     x:Name="LabelZone3"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     FontSize="Title"
                     TextColor="White"/>
 
-            </Border>
+                </Border>
 
-            <Border Grid.Column="1" Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+            </Grid>
 
-                <Label
+            <Grid RowDefinitions="auto,*" Grid.Column="1" Grid.Row="1">
+
+                <Label 
+                    Grid.Row="0"
+                    FontSize="Title"
+                    Text="Зона 6"
+                    TextColor="White"
+                    HorizontalOptions="Center"/>
+
+                <Border Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15">
+
+                    <Label
                     x:Name="LabelZone6"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     FontSize="Title"
                     TextColor="White"/>
 
-            </Border>
+                </Border>
 
-            <Border Grid.Column="0" Grid.Row="0" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+            </Grid>
 
-                <Label
+            <Grid RowDefinitions="auto,*" Grid.Column="0" Grid.Row="0">
+
+                <Label 
+                    Grid.Row="0"
+                    FontSize="Title"
+                    Text="Зона 4"
+                    TextColor="White"
+                    HorizontalOptions="Center"/>
+
+                <Border Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15">
+
+                    <Label
                     x:Name="LabelZone4"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     FontSize="Title"
                     TextColor="White"/>
 
-            </Border>
+                </Border>
 
-            <Border Grid.Column="0" Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15" BackgroundColor="#007ACC">
+            </Grid>
 
-                <Label
+            <Grid RowDefinitions="auto,*" Grid.Column="0" Grid.Row="1">
+
+                <Label 
+                    Grid.Row="0"
+                    FontSize="Title"
+                    Text="Зона 5"
+                    TextColor="White"
+                    HorizontalOptions="Center"/>
+
+                <Border Grid.Row="1" Margin="10,10,10,10" StrokeShape="RoundRectangle 15">
+
+                    <Label
                     x:Name="LabelZone5"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     FontSize="Title"
                     TextColor="White"/>
 
-            </Border>
+                </Border>
 
-            <Button
-                Grid.Row="0"
-                Grid.Column="3"
-                Text="Вернуться"
-                VerticalOptions="Start"
-                Margin="10"
-                BackgroundColor="BlueViolet"
-                TextColor="White"
-                Clicked="OnExitClick">
+            </Grid>
 
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroupList>
-                        <VisualStateGroup x:Name="CommonStates">
-                            <!-- Нормальное состояние -->
-                            <VisualState x:Name="Normal">
-                                <VisualState.Setters/>
-                            </VisualState>
+            <Grid Grid.Row="0" Grid.Column="3" RowDefinitions="auto,*">
 
-                            <!-- Наведение мыши (работает на Desktop) -->
-                            <VisualState x:Name="PointerOver">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DarkViolet"/>
-                                </VisualState.Setters>
-                            </VisualState>
+                <Label Grid.Row="0" FontSize="Title"/>
 
-                        </VisualStateGroup>
-                    </VisualStateGroupList>
-                </VisualStateManager.VisualStateGroups>
-            </Button>
+                <Button     
+                    Grid.Row="1"
+                    x:Name="BackButton"
+                    Text="Вернуться"
+                    VerticalOptions="Start"
+                    Margin="10"
+                    BackgroundColor="MediumPurple"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    Clicked="OnExitClick">
+
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <!-- Нормальное состояние -->
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters/>
+                                </VisualState>
+
+                                <!-- Наведение мыши (работает на Desktop) -->
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="MediumOrchid"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                </Button>
+
+            </Grid>   
 
         </Grid>
 

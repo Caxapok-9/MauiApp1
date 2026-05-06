@@ -1,79 +1,76 @@
-<?xml version="1.0" encoding="utf-8" ?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.Views.StartPage"
              Title="Общие данные о матче">
-    
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
+
+        <Grid RowDefinitions="*" VerticalOptions="Fill">
             
-            <!-- Турнир -->
-            <Label Text="Название турнира:" />
-            <Entry x:Name="EntryTournament" 
-                   Placeholder="Чемпионат города Твери" />
-
-            <!-- Команда А -->
-            <Label Text="Команда Хозяева:" />
-            <Entry x:Name="EntryTeamHome" 
-                   Placeholder="Название команды хозяев" />
-
-            <!-- Команда Б -->
-            <Label Text="Команда Гости:" />
-            <Entry x:Name="EntryTeamGuest" 
-                   Placeholder="Название команды гостей" />
-
-            <!-- Адрес / Арена -->
-            <Label Text="Место проведения:" />
-            <Entry x:Name="EntryLocation" 
-                   Placeholder="Адрес, зал" />
-
-            <!-- Судья -->
-            <Label Text="Главный судья:" />
-            <Entry x:Name="EntryReferee" 
-                   Placeholder="Фамилия И.О." />
-
-            <!-- Секретарь -->
-            <Label Text="Секретарь:" />
-            <Entry x:Name="EntrySecretary" 
-                   Placeholder="Фамилия И.О." />
-
-            <Label Text="⚠️ Проверяйте заполненные данные!&#10;Они отразятся в итоговом протоколе." 
-               TextColor="DarkOrange" 
-               FontAttributes="Italic"
-               FontSize="14"
-               HorizontalOptions="Center" 
-               Margin="0,20,0,10"
-               LineBreakMode="WordWrap"/>
+            <ScrollView Grid.Row="0" VerticalOptions="Fill">
+                
+                <VerticalStackLayout Padding="10">
             
-            <!-- Кнопка сохранения -->
-            <Button Text="Сохранить и продолжить" 
-                    Clicked="OnSaveClicked"
-                    BackgroundColor="#007ACC"
-                    TextColor="White"
-                    Margin="0,20,0,0"
-                    HeightRequest="50">
+                    <Label Text="Название турнира:" Margin="5,0,0,0"/>
+                    <Entry x:Name="EntryTournament" Placeholder="Чемпионат города Твери" Margin="0,0,0,15"/>
 
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroupList>
-                        <VisualStateGroup x:Name="CommonStates">
-                            <!-- Нормальное состояние -->
-                            <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#007ACC"/>
-                                </VisualState.Setters>
-                            </VisualState>
+                    <Label Text="Команда Хозяева:" Margin="5,0,0,0"/>
+                    <Entry x:Name="EntryTeamHome" Placeholder="Название команды хозяев" Margin="0,0,0,15"/>
 
-                            <!-- Наведение мыши (работает на Desktop) -->
-                            <VisualState x:Name="PointerOver">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="Blue"/>
-                                </VisualState.Setters>
-                            </VisualState>
 
-                        </VisualStateGroup>
-                    </VisualStateGroupList>
-                </VisualStateManager.VisualStateGroups>
-            </Button>
-        </VerticalStackLayout>
-    </ScrollView>
+                    <Label Text="Команда Гости:" Margin="5,0,0,0"/>
+                    <Entry x:Name="EntryTeamGuest" Placeholder="Название команды гостей" Margin="0,0,0,15"/>
+
+                    <Label Text="Место проведения:" Margin="5,0,0,0"/>
+                    <Entry x:Name="EntryLocation" Placeholder="Адрес, зал" Margin="0,0,0,15"/>
+
+
+                    <Label Text="Главный судья:" Margin="5,0,0,0"/>
+                    <Entry x:Name="EntryReferee" Placeholder="Фамилия И.О." Margin="0,0,0,15"/>
+
+                    <Label Text="Секретарь:" Margin="5,0,0,0"/>
+                    <Entry x:Name="EntrySecretary" Placeholder="Фамилия И.О." Margin="0,0,0,15"/>
+
+                    <Label
+                        Text="⚠️ Проверяйте заполненные данные!&#10;Они отразятся в итоговом протоколе." 
+                        TextColor="DarkOrange" 
+                        FontAttributes="Italic"
+                        FontSize="14"
+                        HorizontalOptions="Center" 
+                        Margin="0,20,0,10"
+                        LineBreakMode="WordWrap"/>
+
+                    <Button 
+                            Text="Сохранить и продолжить" 
+                            Clicked="OnSaveClicked"
+                            BackgroundColor="MediumPurple"
+                            TextColor="White"
+                            Margin="0,20,0,0"
+                            HeightRequest="50">
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <!-- Нормальное состояние -->
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters/>
+                                    </VisualState>
+
+                                    <!-- Наведение мыши (работает на Desktop) -->
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="MediumOrchid"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                    </Button>
+                    
+                </VerticalStackLayout>
+                
+            </ScrollView>
+            
+        </Grid>
+
 </ContentPage>
