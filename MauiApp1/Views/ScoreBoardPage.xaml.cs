@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 
 namespace MauiApp1.Views;
@@ -14,9 +15,9 @@ public partial class ScoreBoardPage : ContentPage
 
     private Set set;
 
-    private LineUpBegin LineupTeamHome;
+    private LineUp LineupTeamHome;
 
-    private LineUpBegin LineupTeamGuest;
+    private LineUp LineupTeamGuest;
 
     private List<Player> RosterTeamHome;
 
@@ -257,23 +258,67 @@ public partial class ScoreBoardPage : ContentPage
     {
         if (TeamHome.IsLeft)
         {
-            await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome));
+            var Events = await _db.GetEventAsync();
+
+            int countReplace = Events.Where(x => x.SetID == set.Id && x.TeamID == TeamHome.Id && x.EventID == EventCategories["Замена"]).Count();
+
+            if(countReplace < 6)
+            {
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set));
+            }
+            else
+            {
+                await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
+            }                
         }
         else
         {
-            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest));
+            var Events = await _db.GetEventAsync();
+
+            int countReplace = Events.Where(x => x.SetID == set.Id && x.TeamID == TeamGuest.Id && x.EventID == EventCategories["Замена"]).Count();
+
+            if (countReplace < 6)
+            {
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set));
+            }
+            else
+            {
+                await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
+            }
         }
     }
 
     private async void OnReplaceRightClick(object sender, EventArgs e)
     {
-        if (TeamHome.IsLeft)
+        if (!TeamHome.IsLeft)
         {
-            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest));
+            var Events = await _db.GetEventAsync();
+
+            int countReplace = Events.Where(x => x.SetID == set.Id && x.TeamID == TeamHome.Id && x.EventID == EventCategories["Замена"]).Count();
+
+            if (countReplace < 6)
+            {
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set));
+            }
+            else
+            {
+                await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
+            }
         }
         else
         {
-            await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome));
+            var Events = await _db.GetEventAsync();
+
+            int countReplace = Events.Where(x => x.SetID == set.Id && x.TeamID == TeamGuest.Id && x.EventID == EventCategories["Замена"]).Count();
+
+            if (countReplace < 6)
+            {
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set));
+            }
+            else
+            {
+                await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
+            }
         }
     }
 

@@ -13,7 +13,7 @@ public partial class LineupNowPage : ContentPage
 
     Dictionary<string, int> EventsCategory;
 
-	LineUpBegin BeginLineUp;
+	LineUp BeginLineUp;
 
 	Dictionary<int, string> Roster;
 
@@ -59,7 +59,7 @@ public partial class LineupNowPage : ContentPage
 
 	private async Task Processing(List<Event> events)
 	{
-		LineUpBegin line = new LineUpBegin();
+		LineUp line = new LineUp();
 
 		line.PostPosition(BeginLineUp.GetPosition());
 

@@ -201,7 +201,7 @@ public partial class LineupPage : ContentPage
         {
             if (TeamHome.IsLeft)
             {
-                LineUpBegin lineUpBeginHome = new LineUpBegin();
+                LineUp lineUpBeginHome = new LineUp();
 
                 lineUpBeginHome.SetId = set.Id;
                 lineUpBeginHome.TeamId = TeamHome.Id;
@@ -212,7 +212,7 @@ public partial class LineupPage : ContentPage
                 lineUpBeginHome.Zone5PlayerID = roster.Where(x => x.Number == homePosPicker5.SelectedItem.ToString()).First().Id;
                 lineUpBeginHome.Zone6PlayerID = roster.Where(x => x.Number == homePosPicker6.SelectedItem.ToString()).First().Id;                
 
-                LineUpBegin lineUpBeginGuest = new LineUpBegin();
+                LineUp lineUpBeginGuest = new LineUp();
 
                 lineUpBeginGuest.SetId = set.Id;
                 lineUpBeginGuest.TeamId = TeamGuest.Id;
@@ -229,7 +229,7 @@ public partial class LineupPage : ContentPage
             }
             else
             {
-                LineUpBegin lineUpBeginHome = new LineUpBegin();
+                LineUp lineUpBeginHome = new LineUp();
 
                 lineUpBeginHome.SetId = set.Id;
                 lineUpBeginHome.TeamId = TeamHome.Id;
@@ -240,7 +240,7 @@ public partial class LineupPage : ContentPage
                 lineUpBeginHome.Zone5PlayerID = roster.Where(x => x.Number == guestPosPicker5.SelectedItem.ToString()).First().Id;
                 lineUpBeginHome.Zone6PlayerID = roster.Where(x => x.Number == guestPosPicker6.SelectedItem.ToString()).First().Id;                
 
-                LineUpBegin lineUpBeginGuest = new LineUpBegin();
+                LineUp lineUpBeginGuest = new LineUp();
 
                 lineUpBeginGuest.SetId = set.Id;
                 lineUpBeginGuest.TeamId = TeamGuest.Id;

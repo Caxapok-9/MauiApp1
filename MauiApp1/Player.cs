@@ -25,6 +25,9 @@ namespace MauiApp1
         [ForeignKey(typeof(Team))]
         public int TeamID { get; set; }
 
+        [ForeignKey(typeof(Player))]
+        public int ReplaceID { get; set; } = 0;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Player()

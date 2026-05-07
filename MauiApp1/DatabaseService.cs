@@ -16,7 +16,7 @@ public class DatabaseService
         await _db.DeleteAllAsync<Event>()
         & await _db.DeleteAllAsync<Set>()
         & await _db.DeleteAllAsync<Player>()
-        & await _db.DeleteAllAsync<LineUpBegin>()
+        & await _db.DeleteAllAsync<LineUp>()
         & await _db.DeleteAllAsync<Team>()
         & await _db.DeleteAllAsync<MainInformation>()
         & await _db.DeleteAllAsync<EventCategory>();
@@ -121,16 +121,16 @@ public class DatabaseService
 
     public async Task InitializeLineUpBeginAsync()
     {
-        await _db.CreateTableAsync<LineUpBegin>();
+        await _db.CreateTableAsync<LineUp>();
 
-        await _db.DeleteAllAsync<LineUpBegin>();
+        await _db.DeleteAllAsync<LineUp>();
     }
 
-    public async Task<int> SaveLineUpAsync(LineUpBegin lineup) => await _db.InsertAsync(lineup);
+    public async Task<int> SaveLineUpAsync(LineUp lineup) => await _db.InsertAsync(lineup);
 
-    public async Task<List<LineUpBegin>> GetLineUpAsync() => await _db.Table<LineUpBegin>().ToListAsync();
+    public async Task<List<LineUp>> GetLineUpAsync() => await _db.Table<LineUp>().ToListAsync();
 
-    public async Task<int> DeleteLineUpAsync() => await _db.DeleteAllAsync<LineUpBegin>();
+    public async Task<int> DeleteLineUpAsync() => await _db.DeleteAllAsync<LineUp>();
 
     #endregion
 

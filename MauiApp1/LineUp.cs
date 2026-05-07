@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MauiApp1
 {
-    public class LineUpBegin
+    public class LineUp
     {
         [ForeignKey(typeof(Set))]
         public int SetId { get; set; }
