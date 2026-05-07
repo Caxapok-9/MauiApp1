@@ -15,16 +15,6 @@ public partial class ScoreBoardPage : ContentPage
 
     private Set set;
 
-    private LineUp LineupTeamHome;
-
-    private LineUp LineupTeamGuest;
-
-    private List<Player> RosterTeamHome;
-
-    private List<Player> RosterTeamGuest;
-
-    private Dictionary<string, int> EventCategories;
-
     public ScoreBoardPage(DatabaseService db)
 	{
 		InitializeComponent();
@@ -46,32 +36,14 @@ public partial class ScoreBoardPage : ContentPage
 
         TeamGuest = Teams.Where(x => !x.IsHome).First();
 
-        var LineUps = await _db.GetLineUpAsync();
-
-        LineupTeamHome = LineUps.Where(x => x.SetId == set.Id && x.TeamId == TeamHome.Id).First();
-
-        LineupTeamGuest = LineUps.Where(x => x.SetId == set.Id && x.TeamId == TeamGuest.Id).First();
-
-        var Roster = await _db.GetRosterAsync();
-
-        RosterTeamHome = Roster.Where(x => x.TeamID == TeamHome.Id).ToList();
-
-        RosterTeamGuest = Roster.Where(x => x.TeamID == TeamGuest.Id).ToList();
-
-        var EventCategory = await _db.GetEventCategoryAsync();
-
-        EventCategories = EventCategory.ToDictionary(x => x.NameCategory, x => x.IdCategory);
-      
         UpdateData();
     }
 
     private async void UpdateData()
     {
-        var Events = await _db.GetEventAsync();
+        var TimeOutsHome = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Тайм-аут"]);
 
-        var TimeOutsHome = Events.Where(x => x.EventID == EventCategories["Тайм-аут"] && x.TeamID == TeamHome.Id && x.SetID == set.Id).ToList();
-
-        var TimeOutsGuest = Events.Where(x => x.EventID == EventCategories["Тайм-аут"] && x.TeamID == TeamGuest.Id && x.SetID == set.Id).ToList();
+        var TimeOutsGuest = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Тайм-аут"]);
 
         if (TeamHome.IsLeft)
         {
@@ -194,7 +166,7 @@ public partial class ScoreBoardPage : ContentPage
 
             ev.SetID = set.Id;
             ev.TeamID = TeamHome.Id;
-            ev.EventID = EventCategories["Тайм-аут"];
+            ev.EventID = _db.EventsCategories["Тайм-аут"];
             ev.ScoreHome = set.ScoreHome;
             ev.ScoreGuest = set.ScoreGuest;
 
@@ -208,7 +180,7 @@ public partial class ScoreBoardPage : ContentPage
 
             ev.SetID = set.Id;
             ev.TeamID = TeamGuest.Id;
-            ev.EventID = EventCategories["Тайм-аут"];
+            ev.EventID = _db.EventsCategories["Тайм-аут"];
             ev.ScoreHome = set.ScoreHome;
             ev.ScoreGuest = set.ScoreGuest;
 
@@ -228,7 +200,7 @@ public partial class ScoreBoardPage : ContentPage
 
             ev.SetID = set.Id;
             ev.TeamID = TeamHome.Id;
-            ev.EventID = EventCategories["Тайм-аут"];
+            ev.EventID = _db.EventsCategories["Тайм-аут"];
             ev.ScoreHome = set.ScoreHome;
             ev.ScoreGuest = set.ScoreGuest;
 
@@ -242,7 +214,7 @@ public partial class ScoreBoardPage : ContentPage
 
             ev.SetID = set.Id;
             ev.TeamID = TeamGuest.Id;
-            ev.EventID = EventCategories["Тайм-аут"];
+            ev.EventID = _db.EventsCategories["Тайм-аут"];
             ev.ScoreHome = set.ScoreHome;
             ev.ScoreGuest = set.ScoreGuest;
 
@@ -258,9 +230,9 @@ public partial class ScoreBoardPage : ContentPage
     {
         if (TeamHome.IsLeft)
         {
-            var Events = await _db.GetEventAsync();
+            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
 
-            int countReplace = Events.Where(x => x.SetID == set.Id && x.TeamID == TeamHome.Id && x.EventID == EventCategories["Замена"]).Count();
+            int countReplace = Events.Count();
 
             if(countReplace < 6)
             {
@@ -273,9 +245,9 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            var Events = await _db.GetEventAsync();
+            var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
 
-            int countReplace = Events.Where(x => x.SetID == set.Id && x.TeamID == TeamGuest.Id && x.EventID == EventCategories["Замена"]).Count();
+            int countReplace = Events.Count();
 
             if (countReplace < 6)
             {
@@ -292,9 +264,9 @@ public partial class ScoreBoardPage : ContentPage
     {
         if (!TeamHome.IsLeft)
         {
-            var Events = await _db.GetEventAsync();
+            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
 
-            int countReplace = Events.Where(x => x.SetID == set.Id && x.TeamID == TeamHome.Id && x.EventID == EventCategories["Замена"]).Count();
+            int countReplace = Events.Count();
 
             if (countReplace < 6)
             {
@@ -307,9 +279,9 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            var Events = await _db.GetEventAsync();
+            var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
 
-            int countReplace = Events.Where(x => x.SetID == set.Id && x.TeamID == TeamGuest.Id && x.EventID == EventCategories["Замена"]).Count();
+            int countReplace = Events.Count();
 
             if (countReplace < 6)
             {
@@ -354,7 +326,7 @@ public partial class ScoreBoardPage : ContentPage
 
             ev.TeamID = TeamHome.Id;
             ev.SetID = set.Id;
-            ev.EventID = EventCategories["Очко"];
+            ev.EventID = _db.EventsCategories["Очко"];
             ev.ScoreHome = set.ScoreHome;
             ev.ScoreGuest = set.ScoreGuest;
 
@@ -372,7 +344,7 @@ public partial class ScoreBoardPage : ContentPage
 
             ev.TeamID = TeamGuest.Id;
             ev.SetID = set.Id;
-            ev.EventID = EventCategories["Очко"];
+            ev.EventID = _db.EventsCategories["Очко"];
             ev.ScoreHome = set.ScoreHome;
             ev.ScoreGuest = set.ScoreGuest;
 
@@ -394,7 +366,7 @@ public partial class ScoreBoardPage : ContentPage
 
             ev.TeamID = TeamHome.Id;
             ev.SetID = set.Id;
-            ev.EventID = EventCategories["Очко"];
+            ev.EventID = _db.EventsCategories["Очко"];
             ev.ScoreHome = set.ScoreHome;
             ev.ScoreGuest = set.ScoreGuest;
 
@@ -412,7 +384,7 @@ public partial class ScoreBoardPage : ContentPage
 
             ev.TeamID = TeamGuest.Id;
             ev.SetID = set.Id;
-            ev.EventID = EventCategories["Очко"];
+            ev.EventID = _db.EventsCategories["Очко"];
             ev.ScoreHome = set.ScoreHome;
             ev.ScoreGuest = set.ScoreGuest;
 

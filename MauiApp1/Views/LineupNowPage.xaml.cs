@@ -11,8 +11,6 @@ public partial class LineupNowPage : ContentPage
 
     Team _teamEnemy;
 
-    Dictionary<string, int> EventsCategory;
-
 	LineUp BeginLineUp;
 
 	Dictionary<int, string> Roster;
@@ -38,23 +36,17 @@ public partial class LineupNowPage : ContentPage
 	{
 		base.OnAppearing();
 
-		var LineUp = await _db.GetLineUpAsync();
+		BeginLineUp = _db.LineUpBegin[_teamTarget.Id];
 
-		BeginLineUp = LineUp.Where(x => x.SetId == _set.Id && x.TeamId == _teamTarget.Id).First();
+		var Rosters = await _db.GetRosterAsync(_teamTarget.Id);
 
-		var Rosters = await _db.GetRosterAsync();
-
-		Roster = Rosters.Where(x => x.TeamID == _teamTarget.Id).ToDictionary(x => x.Id, x => x.Number);
-
-		var EventCategories = await _db.GetEventCategoryAsync();
-
-		EventsCategory = EventCategories.ToDictionary(x => x.NameCategory, x => x.IdCategory);
+		Roster = Rosters.ToDictionary(x => x.Id, x => x.Number);
 
 		var Events = await _db.GetEventAsync();
 
-		var SelectEvents = Events.Where(x => x.SetID == _set.Id && (x.EventID == EventsCategory["Очко"] || x.EventID == EventsCategory["Замена"])).ToList();
+		var SelectEvents = Events.Where(x => x.SetID == _set.Id && (x.EventID == _db.EventsCategories["Очко"] || x.EventID == _db.EventsCategories["Замена"])).ToList();
 
-		await Processing(SelectEvents);
+        await Processing(SelectEvents);
     }
 
 	private async Task Processing(List<Event> events)
@@ -73,7 +65,7 @@ public partial class LineupNowPage : ContentPage
 
 		foreach (Event e in events)
 		{
-			if(e.EventID == EventsCategory["Очко"])
+			if(e.EventID == _db.EventsCategories["Очко"])
 			{
 				if(e.TeamID == target.Id)
 				{
@@ -98,10 +90,44 @@ public partial class LineupNowPage : ContentPage
                 }
 			}
 
-            if (e.EventID == EventsCategory["Замена"])
+            if (e.EventID == _db.EventsCategories["Замена"])
 			{
+                if (line.Zone1PlayerID == e.PlayerInID)
+                {
+                    line.Zone1PlayerID = (int)e.PlayerOutID;
+                    continue;
+                }
 
-			}
+                if (line.Zone2PlayerID == e.PlayerInID)
+                {
+                    line.Zone2PlayerID = (int)e.PlayerOutID;
+                    continue;
+                }
+
+                if (line.Zone3PlayerID == e.PlayerInID)
+                {
+                    line.Zone3PlayerID = (int)e.PlayerOutID;
+                    continue;
+                }
+
+                if (line.Zone4PlayerID == e.PlayerInID)
+                {
+                    line.Zone4PlayerID = (int)e.PlayerOutID;
+                    continue;
+                }
+
+                if (line.Zone5PlayerID == e.PlayerInID)
+                {
+                    line.Zone5PlayerID = (int)e.PlayerOutID;
+                    continue;
+                }
+
+                if (line.Zone6PlayerID == e.PlayerInID)
+                {
+                    line.Zone6PlayerID = (int)e.PlayerOutID;
+                    continue;
+                }
+            }
         }
 
 		LabelZone1.Text = Roster[line.Zone1PlayerID];

@@ -12,6 +12,10 @@ public class DatabaseService
         _db = new SQLiteAsyncConnection(dbPath);
     }
 
+    public Dictionary<string, int> EventsCategories;
+
+    public Dictionary<int, LineUp> LineUpBegin = new Dictionary<int, LineUp>();
+
     public async Task<int> DeleteAsync() =>
         await _db.DeleteAllAsync<Event>()
         & await _db.DeleteAllAsync<Set>()
@@ -54,6 +58,10 @@ public class DatabaseService
         };
 
         await _db.InsertAllAsync(list);
+
+        var l = await _db.Table<EventCategory>().ToListAsync();
+
+        EventsCategories = l.ToDictionary(x => x.NameCategory, x => x.IdCategory);
     }
 
     public async Task<List<EventCategory>> GetEventCategoryAsync() => await _db.Table<EventCategory>().ToListAsync();
@@ -73,9 +81,14 @@ public class DatabaseService
 
     public async Task<int> SaveRosterAsync(Player player) => await _db.InsertAsync(player);
 
-    public async Task<List<Player>> GetRosterAsync() => await _db.Table<Player>().ToListAsync();
+    public async Task<List<Player>> GetRosterAsync(int teamID)
+    {
+        return await _db.Table<Player>().Where(x => x.TeamID == teamID).ToListAsync();
+    }
 
     public async Task<int> DeleteRosterAsync() => await _db.DeleteAllAsync<Player>();
+
+    public async Task<int> UpdateRosterAsync(Player player) => await _db.UpdateAsync(player);
 
     #endregion
 
@@ -128,7 +141,10 @@ public class DatabaseService
 
     public async Task<int> SaveLineUpAsync(LineUp lineup) => await _db.InsertAsync(lineup);
 
-    public async Task<List<LineUp>> GetLineUpAsync() => await _db.Table<LineUp>().ToListAsync();
+    public async Task<List<LineUp>> GetLineUpAsync(int setID, int teamID)
+    {
+        return await _db.Table<LineUp>().Where(x => x.SetId == setID && x.TeamId == teamID).ToListAsync();
+    }
 
     public async Task<int> DeleteLineUpAsync() => await _db.DeleteAllAsync<LineUp>();
 
@@ -145,7 +161,20 @@ public class DatabaseService
 
     public async Task<int> SaveEventAsync(Event ev) => await _db.InsertAsync(ev);
 
-    public async Task<List<Event>> GetEventAsync() => await _db.Table<Event>().ToListAsync();
+    public async Task<List<Event>> GetEventAsync(int setID, int teamID, int eventID)
+    {
+        return await _db.Table<Event>().Where(x => x.SetID == setID && x.TeamID == teamID && x.EventID == eventID).ToListAsync();
+    }
+
+    public async Task<List<Event>> GetEventAsync(int setID, int eventID)
+    {
+        return await _db.Table<Event>().Where(x => x.SetID == setID && x.EventID == eventID).ToListAsync();
+    }
+
+    public async Task<List<Event>> GetEventAsync()
+    {
+        return await _db.Table<Event>().ToListAsync();
+    }
 
     public async Task<int> DeleteEventAsync() => await _db.DeleteAllAsync<Event>();
 

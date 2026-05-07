@@ -184,7 +184,7 @@ public partial class RosterPage : ContentPage
 
                 await _db.UpdateTeamAsync(TeamGuest);
             }
-            
+
             await Navigation.PushAsync(new LineupPage(_db));
         }            
     }
