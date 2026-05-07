@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MauiApp1.Views;
 
@@ -99,8 +100,8 @@ public partial class ScoreBoardPage : ContentPage
             NameLeft.Text = TeamGuest.Name;
             NameRight.Text = TeamHome.Name;
 
-            CountSetLeft.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
-            CountSetRight.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+            CountSetLeft.Text =  Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+            CountSetRight.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
 
             ScoreLeftButton.Text = set.ScoreGuest.ToString();
             ScoreRightButton.Text = set.ScoreHome.ToString();
@@ -337,6 +338,8 @@ public partial class ScoreBoardPage : ContentPage
             await _db.UpdateSetAsync(set);
 
             ScoreLeftButton.Text = set.ScoreHome.ToString();
+
+            CheckEndSet();
         }
         else
         {
@@ -355,6 +358,8 @@ public partial class ScoreBoardPage : ContentPage
             await _db.UpdateSetAsync(set);
 
             ScoreLeftButton.Text = set.ScoreGuest.ToString();
+
+            CheckEndSet();
         }
     }
 
@@ -377,6 +382,8 @@ public partial class ScoreBoardPage : ContentPage
             await _db.UpdateSetAsync(set);
 
             ScoreRightButton.Text = set.ScoreHome.ToString();
+
+            CheckEndSet();
         }
         else
         {
@@ -395,6 +402,80 @@ public partial class ScoreBoardPage : ContentPage
             await _db.UpdateSetAsync(set);
 
             ScoreRightButton.Text = set.ScoreGuest.ToString();
+
+            CheckEndSet();
+        }
+    }
+
+    private async void OnCancelScoreClick(object sender, EventArgs e)
+    {
+        var events = await _db.GetEventAsync();
+
+        if (events != null && events.Count > 0)
+        {
+            Event ev = events.Last();
+
+            if (ev.EventID == _db.EventsCategories["Очко"])
+            {
+                await _db.DeleteSelectEventAsync(ev);
+
+                if(ev.TeamID == TeamHome.Id)
+                {
+                    set.ScoreHome--;
+
+                    await _db.UpdateSetAsync(set);
+                }
+                else
+                {
+                    set.ScoreGuest--;
+
+                    await _db.UpdateSetAsync(set);
+                }
+
+                UpdateData();
+            }
+            else
+            {
+                await DisplayAlert("Информация", "Для последнего события в протоколе необходим счёт, поэтому дальше убирать очки нельзя!", "OK");
+            }
+        }
+    }
+
+    private async Task CheckEndSet()
+    {
+        if(set.ScoreHome > 24 || set.ScoreGuest > 24)
+        {
+            if(Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+            {
+                await DisplayAlert("Информация", "Партия окончена!", "OK");
+
+                if(set.ScoreHome > set.ScoreGuest)
+                {
+                    set.WinnerID = TeamHome.Id;
+                }
+                else
+                {
+                    set.WinnerID = TeamGuest.Id;
+                }
+
+                await _db.UpdateSetAsync(set);
+
+                Sets = await _db.GetSetAsync();
+
+                var WinTeams = Sets.GroupBy(x => x.WinnerID).ToList();
+
+                foreach(var team in WinTeams)
+                {
+                    if(team.Count() > 2)
+                    {
+                        await DisplayAlert("Информация", "Матч окончен!", "OK");
+
+                        // Переход на страницу формирования PDF и подписания
+                    }
+                }
+
+                await Navigation.PushAsync(new LineupPage(_db));
+            }
         }
     }
 

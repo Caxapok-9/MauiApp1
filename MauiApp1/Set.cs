@@ -10,7 +10,7 @@ namespace MauiApp1
 {
     public class Set
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
         public int NumberSet { get; set; }
@@ -21,5 +21,7 @@ namespace MauiApp1
 
         [ForeignKey(typeof(Team))]
         public int WinnerID { get; set; }
+
+        public bool IsShort { get; set; } = false;
     }
 }

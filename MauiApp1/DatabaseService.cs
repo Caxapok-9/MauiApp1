@@ -161,6 +161,8 @@ public class DatabaseService
 
     public async Task<int> SaveEventAsync(Event ev) => await _db.InsertAsync(ev);
 
+    public async Task<int> DeleteSelectEventAsync(Event ev) => await _db.DeleteAsync(ev);
+
     public async Task<List<Event>> GetEventAsync(int setID, int teamID, int eventID)
     {
         return await _db.Table<Event>().Where(x => x.SetID == setID && x.TeamID == teamID && x.EventID == eventID).ToListAsync();

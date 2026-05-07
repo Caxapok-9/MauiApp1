@@ -11,6 +11,9 @@ namespace MauiApp1
 {
     public class Event
     {
+        [PrimaryKey, AutoIncrement]
+        public int ID { get; set; }
+
         [ForeignKey(typeof(Set))]
         public int SetID {  get; set; }
 
