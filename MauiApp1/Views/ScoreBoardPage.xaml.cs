@@ -255,12 +255,26 @@ public partial class ScoreBoardPage : ContentPage
 
     private async void OnReplaceLeftClick(object sender, EventArgs e)
     {
-
+        if (TeamHome.IsLeft)
+        {
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome));
+        }
+        else
+        {
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest));
+        }
     }
 
     private async void OnReplaceRightClick(object sender, EventArgs e)
     {
-
+        if (TeamHome.IsLeft)
+        {
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest));
+        }
+        else
+        {
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome));
+        }
     }
 
     private async void OnNowLineUpLeftClick(object sender, EventArgs e)

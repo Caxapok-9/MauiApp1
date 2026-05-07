@@ -11,24 +11,24 @@
                 <VerticalStackLayout Padding="10">
             
                     <Label Text="Название турнира:" Margin="5,0,0,0"/>
-                    <Entry x:Name="EntryTournament" Placeholder="Чемпионат города Твери" Margin="0,0,0,15"/>
+                    <Entry x:Name="EntryTournament" Placeholder="Чемпионат города Твери" Margin="0,10,0,15"/>
 
                     <Label Text="Команда Хозяева:" Margin="5,0,0,0"/>
-                    <Entry x:Name="EntryTeamHome" Placeholder="Название команды хозяев" Margin="0,0,0,15"/>
+                    <Entry x:Name="EntryTeamHome" Placeholder="Название команды хозяев" Margin="0,10,0,15"/>
 
 
                     <Label Text="Команда Гости:" Margin="5,0,0,0"/>
-                    <Entry x:Name="EntryTeamGuest" Placeholder="Название команды гостей" Margin="0,0,0,15"/>
+                    <Entry x:Name="EntryTeamGuest" Placeholder="Название команды гостей" Margin="0,10,0,15"/>
 
                     <Label Text="Место проведения:" Margin="5,0,0,0"/>
-                    <Entry x:Name="EntryLocation" Placeholder="Адрес, зал" Margin="0,0,0,15"/>
+                    <Entry x:Name="EntryLocation" Placeholder="Адрес, зал" Margin="0,10,0,15"/>
 
 
                     <Label Text="Главный судья:" Margin="5,0,0,0"/>
-                    <Entry x:Name="EntryReferee" Placeholder="Фамилия И.О." Margin="0,0,0,15"/>
+                    <Entry x:Name="EntryReferee" Placeholder="Фамилия И.О." Margin="0,10,0,15"/>
 
                     <Label Text="Секретарь:" Margin="5,0,0,0"/>
-                    <Entry x:Name="EntrySecretary" Placeholder="Фамилия И.О." Margin="0,0,0,15"/>
+                    <Entry x:Name="EntrySecretary" Placeholder="Фамилия И.О." Margin="0,10,0,15"/>
 
                     <Label
                         Text="⚠️ Проверяйте заполненные данные!&#10;Они отразятся в итоговом протоколе." 
