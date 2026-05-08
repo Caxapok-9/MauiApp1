@@ -45,9 +45,7 @@ public partial class LineupPage : ContentPage
 
     protected override async void OnAppearing()
     {
-        this.Resources["CurrentColorLeft"] = Colors.DodgerBlue;
-
-        this.Resources["CurrentColorRight"] = Colors.SandyBrown;
+        await _db.ClearReplaceID();
 
         base.OnAppearing();
 
@@ -76,6 +74,31 @@ public partial class LineupPage : ContentPage
         int num = sets.Count > 0 ? sets.Last().NumberSet : 0;
         
         set.NumberSet = ++num;
+
+        if (set.NumberSet == Setting.MaxSet)
+        {
+            set.IsShort = true;
+
+            string result = null;
+
+            while (string.IsNullOrWhiteSpace(result))
+            {
+                result = await DisplayActionSheet("Кто подаёт первым в последней партии?", null, null, TeamHome.Name, TeamGuest.Name);
+            }
+
+            if (result == TeamHome.Name)
+            {
+                TeamHome.FinalySetServ = true;
+
+                await _db.UpdateTeamAsync(TeamHome);
+            }
+            else if (result == TeamGuest.Name)
+            {
+                TeamGuest.FinalySetServ = true;
+
+                await _db.UpdateTeamAsync(TeamGuest);
+            }
+        }
 
         await _db.SaveSetAsync(set);
     }
@@ -333,31 +356,9 @@ public partial class LineupPage : ContentPage
 
     private async void OnReverseClicked(object sender, EventArgs e)
     {
+        Setting.ReverseColor();
+
         await Reverse();
-
-        var c = this.Resources["CurrentColorLeft"];
-        this.Resources["CurrentColorLeft"] = this.Resources["CurrentColorRight"];
-        this.Resources["CurrentColorRight"] = c;
-
-        var bg = ListPickerGuest.First().Parent.Parent as Border;
-        Color cb = bg.BackgroundColor;
-
-        var bh = ListPickerHome.First().Parent.Parent as Border;
-        Color ch = bh.BackgroundColor;
-
-        foreach (Picker p in ListPickerHome)
-        {
-            var border = p.Parent.Parent as Border;
-
-            border.BackgroundColor = cb;
-        }
-
-        foreach (Picker p in ListPickerGuest)
-        {
-            var border = p.Parent.Parent as Border;
-
-            border.BackgroundColor = ch;
-        }
 
         await FillPickers();
     }

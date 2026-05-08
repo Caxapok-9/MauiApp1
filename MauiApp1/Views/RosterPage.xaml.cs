@@ -258,6 +258,12 @@ public partial class RosterPage : ContentPage
             return $"у команды {TeamHome.Name}\nЕсть дубли в номерах";
         }
 
+        foreach(var player in homePlayers)
+        {
+            if(!player.Name.All(char.IsLetter) || player.Name.Length > 50)
+                return $"у команды {TeamHome.Name}\nЕсть некорректные имена";
+        }
+
         #endregion
 
         #region Проверки команды Гостей
@@ -367,6 +373,12 @@ public partial class RosterPage : ContentPage
         if (CheckNumberListGuest.GroupBy(x => x).Count() != CheckNumberListGuest.Count)
         {
             return $"у команды {TeamGuest.Name}\nЕсть дубли в номерах";
+        }
+
+        foreach (var player in guestPlayers)
+        {
+            if (!player.Name.All(char.IsLetter) || player.Name.Length > 50)
+                return $"у команды {TeamGuest.Name}\nЕсть некорректные имена";
         }
 
         return null;

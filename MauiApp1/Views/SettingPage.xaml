@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.Views.SettingPage"
+             Title="Настройки">
+    
+    <VerticalStackLayout Padding="30">
+
+        <Grid ColumnDefinitions="*,*">
+
+            <Label Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center" Text="Максимальное количесто партий" FontSize="Subtitle" Margin="0,0,0,30"/>
+
+            <Picker Grid.Column="1" x:Name="PickerSet" HorizontalOptions="Center" VerticalOptions="Start"/>
+
+        </Grid>
+
+        <Grid ColumnDefinitions="*,*">
+
+            <Label Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center" Text="Максимальное количесто очков партий" FontSize="Subtitle" Margin="0,0,0,30"/>
+
+            <Entry Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Start" x:Name="MaxScoreEntry"/>
+
+        </Grid>
+
+        <Grid ColumnDefinitions="*,*">
+
+            <Label Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center" Text="Максимальное количесто очков в короткой партий" FontSize="Subtitle" Margin="0,0,0,30"/>
+
+            <Entry Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Start" x:Name="MaxScoreInShortSetEntry"/>
+
+        </Grid>
+
+        <Grid ColumnDefinitions="50*,30*">
+
+            <Button 
+                Grid.Column="0" 
+                Text="Сохранить" 
+                Clicked="OnSaveAsync" 
+                HorizontalOptions="End" 
+                VerticalOptions="End" 
+                WidthRequest="120" 
+                Margin="15"
+                TextColor="White">
+
+                <VisualStateManager.VisualStateGroups>
+
+                    <VisualStateGroupList>
+
+                        <VisualStateGroup x:Name="CommonStates">
+
+                            <VisualState x:Name="Normal">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+
+                                </VisualState.Setters>
+
+                            </VisualState>
+
+                            <VisualState x:Name="PointerOver">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColor}"/>
+
+                                </VisualState.Setters>
+
+                            </VisualState>
+
+                        </VisualStateGroup>
+
+                    </VisualStateGroupList>
+
+                </VisualStateManager.VisualStateGroups>
+
+            </Button>
+
+            <Button 
+                Grid.Column="1" 
+                Text="Отмена" 
+                Clicked="OnCancelAsync" 
+                HorizontalOptions="Start" 
+                VerticalOptions="End" 
+                WidthRequest="120" 
+                Margin="15"
+                TextColor="White">
+
+                <VisualStateManager.VisualStateGroups>
+
+                    <VisualStateGroupList>
+
+                        <VisualStateGroup x:Name="CommonStates">
+
+                            <VisualState x:Name="Normal">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+
+                                </VisualState.Setters>
+
+                            </VisualState>
+
+                            <VisualState x:Name="PointerOver">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColor}"/>
+
+                                </VisualState.Setters>
+
+                            </VisualState>
+
+                        </VisualStateGroup>
+
+                    </VisualStateGroupList>
+
+                </VisualStateManager.VisualStateGroups>
+
+            </Button>
+
+        </Grid>
+
+    </VerticalStackLayout>
+    
+</ContentPage>

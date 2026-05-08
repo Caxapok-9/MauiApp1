@@ -150,29 +150,42 @@
                     Text="Вернуться"
                     VerticalOptions="Start"
                     Margin="10"
-                    BackgroundColor="MediumPurple"
                     TextColor="White"
                     FontAttributes="Bold"
                     Clicked="OnExitClick">
 
                     <VisualStateManager.VisualStateGroups>
+                        
                         <VisualStateGroupList>
+                            
                             <VisualStateGroup x:Name="CommonStates">
-                                <!-- Нормальное состояние -->
+
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters/>
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource ExitColor}"/>
+
+                                    </VisualState.Setters>
+                                    
                                 </VisualState>
 
-                                <!-- Наведение мыши (работает на Desktop) -->
                                 <VisualState x:Name="PointerOver">
+                                    
                                     <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="MediumOrchid"/>
+                                        
+                                        <Setter Property="Background" Value="{DynamicResource PointExitColor}"/>
+                                        
                                     </VisualState.Setters>
+                                    
                                 </VisualState>
 
                             </VisualStateGroup>
+                            
                         </VisualStateGroupList>
+                        
                     </VisualStateManager.VisualStateGroups>
+                    
                 </Button>
 
             </Grid>   

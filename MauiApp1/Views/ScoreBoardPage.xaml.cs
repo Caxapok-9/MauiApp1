@@ -66,78 +66,56 @@ public partial class ScoreBoardPage : ContentPage
             CountSetLeft.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
             CountSetRight.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
 
-            this.Resources["CurrentColorLeft"] = Colors.DodgerBlue;
-            this.Resources["CurrentColorRight"] = Colors.SandyBrown;
-
             ScoreLeftButton.Text = set.ScoreHome.ToString();
-            ScoreLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
-
             ScoreRightButton.Text = set.ScoreGuest.ToString();
-            ScoreRightButton.BackgroundColor = Colors.Chocolate;
-
-            ReplaceLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
-            ReplaceRightButton.BackgroundColor = Colors.Chocolate;
-            
-            LineUpLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
-            LineUpRightButton.BackgroundColor = Colors.Chocolate;
 
             if (RosterHomeCheckReplace)
             {
                 ReplaceLeftButton.IsEnabled = false;
-                ReplaceLeftButton.Background = Colors.Gray;
-            }
-            else
-            {
-                ReplaceLeftButton.IsEnabled = true;
-                ReplaceLeftButton.Background = Color.FromRgba("#007ACC");
+
+                var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
+
+                int countReplace = Events.Count();
+
+                if (countReplace < 6 && !RosterGuestCheckReplace)
+                {
+                    ReplaceRightButton.IsEnabled = true;
+                }
             }
 
-            if(RosterGuestCheckReplace)
+            if (RosterGuestCheckReplace)
             {
                 ReplaceRightButton.IsEnabled = false;
-                ReplaceRightButton.Background = Colors.Gray;
-            }
-            else
-            {
-                ReplaceRightButton.IsEnabled = true;
-                ReplaceRightButton.Background = Colors.Chocolate;
+
+                var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
+
+                int countReplace = Events.Count();
+
+                if (countReplace < 6 && !RosterHomeCheckReplace)
+                {
+                    ReplaceLeftButton.IsEnabled = true;
+                }
             }
 
-            if (TimeOutsHome.Count < 1)
+            if (TimeOutsHome.Count < 2)
             {
-                TimeOutLeftButton.Text = "Тайм-аут ( 2 )";
-                TimeOutLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
-                TimeOutLeftButton.IsEnabled = true;
-            }
-            else if (TimeOutsHome.Count < 2)
-            {
-                TimeOutLeftButton.Text = "Тайм-аут ( 1 )";
-                TimeOutLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
+                TimeOutLeftButton.Text = $"Тайм-аут ( {2 - TimeOutsHome.Count} )";
                 TimeOutLeftButton.IsEnabled = true;
             }
             else
             {
                 TimeOutLeftButton.Text = "Тайм-аут ( 0 )";
-                TimeOutLeftButton.BackgroundColor = Colors.Gray;
                 TimeOutLeftButton.IsEnabled = false;
             }
 
-            if (TimeOutsGuest.Count < 1)
+            if (TimeOutsGuest.Count < 2)
             {
-                TimeOutRightButton.Text = "Тайм-аут ( 2 )";
-                TimeOutRightButton.BackgroundColor = Colors.Chocolate;
-                TimeOutRightButton.IsEnabled = true;
-            }
-            else if (TimeOutsGuest.Count < 2)
-            {
-                TimeOutRightButton.Text = "Тайм-аут ( 1 )";
-                TimeOutRightButton.BackgroundColor = Colors.Chocolate;
+                TimeOutRightButton.Text = $"Тайм-аут ( {2 - TimeOutsGuest.Count} )";
                 TimeOutRightButton.IsEnabled = true;
             }
             else
             {
                 TimeOutRightButton.Text = "Тайм-аут ( 0 )";
-                TimeOutRightButton.BackgroundColor = Colors.Gray;
                 TimeOutRightButton.IsEnabled = false;
             }
         }
@@ -149,78 +127,56 @@ public partial class ScoreBoardPage : ContentPage
             CountSetLeft.Text =  Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
             CountSetRight.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
 
-            this.Resources["CurrentColorLeft"] = Colors.SandyBrown;
-            this.Resources["CurrentColorRight"] = Colors.DodgerBlue;
-
             ScoreLeftButton.Text = set.ScoreGuest.ToString();
-            ScoreLeftButton.BackgroundColor = Colors.Chocolate;
-
             ScoreRightButton.Text = set.ScoreHome.ToString();
-            ScoreRightButton.BackgroundColor = Color.FromRgba("#007ACC");
-
-            ReplaceLeftButton.BackgroundColor = Colors.Chocolate;
-            ReplaceRightButton.BackgroundColor = Color.FromRgba("#007ACC");
-
-            LineUpLeftButton.BackgroundColor = Colors.Chocolate;
-            LineUpRightButton.BackgroundColor = Color.FromRgba("#007ACC");
 
             if (RosterHomeCheckReplace)
             {
                 ReplaceRightButton.IsEnabled = false;
-                ReplaceRightButton.Background = Colors.Gray;
-            }
-            else
-            {
-                ReplaceRightButton.IsEnabled = true;
-                ReplaceRightButton.Background = Color.FromRgba("#007ACC");
+
+                var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
+
+                int countReplace = Events.Count();
+
+                if (countReplace < 6 && !RosterGuestCheckReplace)
+                {
+                    ReplaceLeftButton.IsEnabled = true;
+                }
             }
 
             if (RosterGuestCheckReplace)
             {
                 ReplaceLeftButton.IsEnabled = false;
-                ReplaceLeftButton.Background = Colors.Gray;
-            }
-            else
-            {
-                ReplaceLeftButton.IsEnabled = true;
-                ReplaceLeftButton.Background = Colors.Chocolate;
+
+                var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
+
+                int countReplace = Events.Count();
+
+                if (countReplace < 6 && !RosterHomeCheckReplace)
+                {
+                    ReplaceRightButton.IsEnabled = true;
+                }
             }
 
-            if (TimeOutsHome.Count < 1)
+            if (TimeOutsHome.Count < 2)
             {
-                TimeOutRightButton.Text = "Тайм-аут ( 2 )";
-                TimeOutRightButton.BackgroundColor = Color.FromRgba("#007ACC");
-                TimeOutRightButton.IsEnabled = true;
-            }
-            else if (TimeOutsHome.Count < 2)
-            {
-                TimeOutRightButton.Text = "Тайм-аут ( 1 )";
-                TimeOutRightButton.BackgroundColor = Color.FromRgba("#007ACC");
+                TimeOutRightButton.Text = $"Тайм-аут ( { 2 - TimeOutsHome.Count } )";
                 TimeOutRightButton.IsEnabled = true;
             }
             else
             {
                 TimeOutRightButton.Text = "Тайм-аут ( 0 )";
-                TimeOutRightButton.BackgroundColor = Colors.Gray;
                 TimeOutRightButton.IsEnabled = false;
             }
 
-            if (TimeOutsGuest.Count < 1)
+            if (TimeOutsGuest.Count < 2)
             {
-                TimeOutLeftButton.Text = "Тайм-аут ( 2 )";
-                TimeOutLeftButton.BackgroundColor = Colors.Chocolate;
-                TimeOutLeftButton.IsEnabled = true;
-            }
-            else if (TimeOutsGuest.Count < 2)
-            {
-                TimeOutLeftButton.Text = "Тайм-аут ( 1 )";
-                TimeOutLeftButton.BackgroundColor = Colors.Chocolate;
+                TimeOutLeftButton.Text = $"Тайм-аут ( {2 - TimeOutsGuest.Count} )";
                 TimeOutLeftButton.IsEnabled = true;
             }
             else
             {
-                TimeOutLeftButton.Text = "Тайм-аут ( 0 )";                
-                TimeOutLeftButton.BackgroundColor = Colors.Gray;
+                TimeOutLeftButton.Text = "Тайм-аут ( 0 )";
                 TimeOutLeftButton.IsEnabled = false;
             }
         }
@@ -228,6 +184,8 @@ public partial class ScoreBoardPage : ContentPage
 
     private async void OnReverseClick(object sender, EventArgs e)
     {
+        Setting.ReverseColor();
+
         TeamHome.IsLeft = !TeamHome.IsLeft;
 
         TeamGuest.IsLeft = !TeamGuest.IsLeft;
@@ -309,6 +267,8 @@ public partial class ScoreBoardPage : ContentPage
 
     private async void OnReplaceLeftClick(object sender, EventArgs e)
     {
+        Button but = sender as Button;
+
         if (TeamHome.IsLeft)
         {
             var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
@@ -317,10 +277,21 @@ public partial class ScoreBoardPage : ContentPage
 
             if(countReplace < 6)
             {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set, Color.FromRgba("#007ACC"), Colors.Firebrick, Colors.MidnightBlue, Colors.Maroon));
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set));
+
+                var E = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
+                      
+                if (E.Count() == 6)
+                {
+                    but.IsEnabled = false;
+
+                    await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
+                }
             }
             else
             {
+                but.IsEnabled = false;
+
                 await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
             }                
         }
@@ -332,10 +303,21 @@ public partial class ScoreBoardPage : ContentPage
 
             if (countReplace < 6)
             {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set, Colors.Chocolate, Colors.Firebrick, Colors.SaddleBrown, Colors.Maroon));
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set));
+
+                var E = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
+
+                if (E.Count() == 6)
+                {
+                    but.IsEnabled = false;
+
+                    await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
+                }
             }
             else
             {
+                but.IsEnabled = false;
+
                 await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
             }
         }
@@ -343,22 +325,9 @@ public partial class ScoreBoardPage : ContentPage
 
     private async void OnReplaceRightClick(object sender, EventArgs e)
     {
+        Button but = sender as Button;
+
         if (!TeamHome.IsLeft)
-        {
-            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
-
-            int countReplace = Events.Count();
-
-            if (countReplace < 6)
-            {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set, Color.FromRgba("#007ACC"), Colors.Firebrick, Colors.MidnightBlue, Colors.Maroon));
-            }
-            else
-            {
-                await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
-            }
-        }
-        else
         {
             var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
 
@@ -366,10 +335,49 @@ public partial class ScoreBoardPage : ContentPage
 
             if (countReplace < 6)
             {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set, Colors.Chocolate, Colors.Firebrick, Colors.SaddleBrown, Colors.Maroon));
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set));
+
+                var E = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
+
+                if (E.Count() == 6)
+                {
+                    but.IsEnabled = false;
+
+                    await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
+                }
             }
             else
             {
+
+                but.IsEnabled = false;
+
+                await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
+            }
+        }
+        else
+        {
+            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
+
+            int countReplace = Events.Count();
+
+            if (countReplace < 6)
+            {
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set));
+
+                var E = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
+
+                if (E.Count() == 6)
+                {
+                    but.IsEnabled = false;
+
+                    await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
+                }
+            }
+            else
+            {
+
+                but.IsEnabled = false;
+
                 await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
             }
         }
@@ -379,11 +387,11 @@ public partial class ScoreBoardPage : ContentPage
     {
         if(TeamHome.IsLeft)
         {
-            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set, Color.FromRgba("#007ACC")));
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
         }
         else
         {
-            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set, Colors.Chocolate));
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
         }
     }
 
@@ -391,11 +399,11 @@ public partial class ScoreBoardPage : ContentPage
     {
         if (!TeamHome.IsLeft)
         {
-            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set, Color.FromRgba("#007ACC")));
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
         }
         else
         {
-            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set, Colors.Chocolate));
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
         }
     }
 
@@ -489,7 +497,7 @@ public partial class ScoreBoardPage : ContentPage
 
     private async void OnCancelScoreClick(object sender, EventArgs e)
     {
-        var events = await _db.GetEventAsync();
+        var events = await _db.GetEventAsync(set.Id);
 
         if (events != null && events.Count > 0)
         {
@@ -523,38 +531,131 @@ public partial class ScoreBoardPage : ContentPage
 
     private async Task CheckEndSet()
     {
-        if(set.ScoreHome > 24 || set.ScoreGuest > 24)
+        if (!set.IsShort)
         {
-            if(Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+            if (set.ScoreHome > (Setting.MaxScore - 1) || set.ScoreGuest > (Setting.MaxScore - 1))
             {
-                await DisplayAlert("Информация", "Партия окончена!", "OK");
-
-                if(set.ScoreHome > set.ScoreGuest)
+                if (Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
                 {
-                    set.WinnerID = TeamHome.Id;
-                }
-                else
-                {
-                    set.WinnerID = TeamGuest.Id;
-                }
+                    await DisplayAlert("Информация", "Партия окончена!", "OK");
 
-                await _db.UpdateSetAsync(set);
-
-                Sets = await _db.GetSetAsync();
-
-                var WinTeams = Sets.GroupBy(x => x.WinnerID).ToList();
-
-                foreach(var team in WinTeams)
-                {
-                    if(team.Count() > 2)
+                    if (set.ScoreHome > set.ScoreGuest)
                     {
-                        await DisplayAlert("Информация", "Матч окончен!", "OK");
-
-                        // Переход на страницу формирования PDF и подписания
+                        set.WinnerID = TeamHome.Id;
                     }
-                }
+                    else
+                    {
+                        set.WinnerID = TeamGuest.Id;
+                    }
 
-                await Navigation.PushAsync(new LineupPage(_db));
+                    await _db.UpdateSetAsync(set);
+
+                    Sets = await _db.GetSetAsync();
+
+                    var WinTeams = Sets.GroupBy(x => x.WinnerID).ToList();
+
+                    foreach (var team in WinTeams)
+                    {
+                        if (Setting.MaxSet == 5)
+                        {
+                            if (team.Count() > 2)
+                            {
+                                if (team.First().WinnerID == TeamHome.Id)
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
+                                }
+
+                                // Переход на страницу формирования PDF и подписания
+                            }
+                        }
+                        else
+                        {
+                            if (team.Count() > 1)
+                            {
+                                if (team.First().WinnerID == TeamHome.Id)
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
+                                }
+
+                                // Переход на страницу формирования PDF и подписания
+                            }
+                        }
+                    }
+
+                    await Navigation.PushAsync(new LineupPage(_db));
+                }
+            }
+        }
+        else
+        {
+            if (set.ScoreHome > (Setting.MaxScoreInShortSet - 1) || set.ScoreGuest > (Setting.MaxScoreInShortSet - 1))
+            {
+                if (Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+                {                    
+
+                    if (set.ScoreHome > set.ScoreGuest)
+                    {
+                        set.WinnerID = TeamHome.Id;
+                    }
+                    else
+                    {
+                        set.WinnerID = TeamGuest.Id;
+                    }
+
+                    await _db.UpdateSetAsync(set);
+
+                    Sets = await _db.GetSetAsync();
+
+                    var WinTeams = Sets.GroupBy(x => x.WinnerID).ToList();
+
+                    foreach (var team in WinTeams)
+                    {
+                        if (Setting.MaxSet == 5)
+                        {
+                            if (team.Count() > 2)
+                            {
+                                if (team.First().WinnerID == TeamHome.Id)
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
+                                }
+
+                                // Переход на страницу формирования PDF и подписания
+                            }
+                        }
+                        else
+                        {
+                            if (team.Count() > 1)
+                            {
+                                if (team.First().WinnerID == TeamHome.Id)
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
+                                }
+
+                                // Переход на страницу формирования PDF и подписания
+                            }
+                        }
+                    }
+
+                    await DisplayAlert("Информация", "Партия окончена!", "OK");
+
+                    await Navigation.PushAsync(new LineupPage(_db));
+                }
             }
         }
     }

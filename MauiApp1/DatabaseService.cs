@@ -79,6 +79,11 @@ public class DatabaseService
         await _db.DeleteAllAsync<Player>();
     }
 
+    public async Task ClearReplaceID()
+    {
+        await _db.ExecuteAsync("UPDATE Player SET ReplaceID = 0", false);
+    }
+
     public async Task<int> SaveRosterAsync(Player player) => await _db.InsertAsync(player);
 
     public async Task<List<Player>> GetRosterAsync(int teamID)
@@ -171,6 +176,11 @@ public class DatabaseService
     public async Task<List<Event>> GetEventAsync(int setID, int eventID)
     {
         return await _db.Table<Event>().Where(x => x.SetID == setID && x.EventID == eventID).ToListAsync();
+    }
+
+    public async Task<List<Event>> GetEventAsync(int setID)
+    {
+        return await _db.Table<Event>().Where(x => x.SetID == setID).ToListAsync();
     }
 
     public async Task<List<Event>> GetEventAsync()

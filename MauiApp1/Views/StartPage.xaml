@@ -45,32 +45,87 @@
                     <Button 
                             Text="Сохранить и продолжить" 
                             Clicked="OnSaveClicked"
-                            BackgroundColor="MediumPurple"
                             TextColor="White"
                             Margin="0,20,0,0"
                             HeightRequest="50">
 
                         <VisualStateManager.VisualStateGroups>
+                            
                             <VisualStateGroupList>
+                                
                                 <VisualStateGroup x:Name="CommonStates">
-                                    <!-- Нормальное состояние -->
+                                    
                                     <VisualState x:Name="Normal">
-                                        <VisualState.Setters/>
-                                    </VisualState>
 
-                                    <!-- Наведение мыши (работает на Desktop) -->
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
                                     <VisualState x:Name="PointerOver">
+                                        
                                         <VisualState.Setters>
-                                            <Setter Property="BackgroundColor" Value="MediumOrchid"/>
+
+                                        <Setter Property="Background" Value="{DynamicResource PointColor}"/>
+                                            
                                         </VisualState.Setters>
+                                        
                                     </VisualState>
 
                                 </VisualStateGroup>
+                                
                             </VisualStateGroupList>
+                            
                         </VisualStateManager.VisualStateGroups>
+                        
                     </Button>
-                    
-                </VerticalStackLayout>
+
+                <Button 
+                    Text="⚙️" 
+                    FontSize="Title"
+                    Clicked="OnSettingClicked"
+                    TextColor="White"
+                    Margin="0,20,0,0"
+                    HeightRequest="50">
+
+                    <VisualStateManager.VisualStateGroups>
+
+                        <VisualStateGroupList>
+
+                            <VisualStateGroup x:Name="CommonStates">
+
+                                <VisualState x:Name="Normal">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="Grey"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                                <VisualState x:Name="PointerOver">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="LightGrey"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                            </VisualStateGroup>
+
+                        </VisualStateGroupList>
+
+                    </VisualStateManager.VisualStateGroups>
+
+                </Button>
+
+            </VerticalStackLayout>
                 
             </ScrollView>
             

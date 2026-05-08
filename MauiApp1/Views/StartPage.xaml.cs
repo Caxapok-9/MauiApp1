@@ -17,6 +17,10 @@ public partial class StartPage : ContentPage
 
     public StartPage(DatabaseService db)
 	{
+        Setting.SaveColor();
+
+        Setting.GetSetting();
+
 		InitializeComponent();
 
         _db = db;
@@ -55,6 +59,11 @@ public partial class StartPage : ContentPage
         await _db.InitializeTeamAsync();
     }
 
+    private async void OnSettingClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new SettingPage());
+    }
+
     private async void OnSaveClicked(object sender, EventArgs e)
     {
         // 1. Получаем данные из полей
@@ -87,6 +96,11 @@ public partial class StartPage : ContentPage
             return;
         }
 
+        if(teamHome == teamGuest)
+        {
+            await DisplayAlert("Ошибка", "У команд должны быть разные названия", "OK");
+            return;
+        }
 
         // 3. Код сохранения в базу данных (SQLite)
 

@@ -4,36 +4,32 @@
              Title="Заявки команд">
 
     <ScrollView>
+        
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <Frame BorderColor="#007ACC" BackgroundColor="#141414" CornerRadius="10" Padding="10">
+            <Frame BorderColor="{DynamicResource MainColorLeft}" Background="#141414" CornerRadius="10" Padding="10">
+                
                 <VerticalStackLayout>
-                    <Label x:Name="NameTeamHome" FontSize="18" FontAttributes="Bold" 
-                           TextColor="White"/>
+                    
+                    <Label x:Name="NameTeamHome" FontSize="18" FontAttributes="Bold" TextColor="White"/>
 
-                    <!-- Список игроков -->
                     <CollectionView x:Name="TeamHomeList" HeightRequest="200">
+                        
                         <CollectionView.ItemTemplate>
+                            
                             <DataTemplate>
+                                
                                 <Grid ColumnDefinitions="40,*,Auto,Auto,40" Padding="5">
                                     
-                                    <!-- Номер -->
-                                    <Entry Grid.Column="0" Text="{Binding Number}" 
-                                           Keyboard="Numeric" Placeholder="№"
-                                           HorizontalTextAlignment="Center"/>
+                                    <Entry Grid.Column="0" Text="{Binding Number}" Keyboard="Numeric" Placeholder="№" HorizontalTextAlignment="Center"/>
                                     
-                                    <!-- ФИО -->
-                                    <Entry Grid.Column="1" Text="{Binding Name}" 
-                                           Placeholder="Фамилия И.О." Margin="5,0"/>
+                                    <Entry Grid.Column="1" Text="{Binding Name}" Placeholder="Фамилия И.О." Margin="5,0"/>
                                     
-                                    <!-- Капитан -->
                                     <Button Grid.Column="2" 
                                         Text="Cap" 
                                         FontAttributes="Bold"
-                                        BackgroundColor="LightGray"
                                         Clicked="OnCaptainClicked"
                                         CommandParameter="{Binding .}"
-                                        TextColor="Black"
                                         WidthRequest="40" 
                                         HeightRequest="40"
                                         CornerRadius="10"
@@ -42,45 +38,63 @@
                                         HorizontalOptions="Center">
 
                                         <VisualStateManager.VisualStateGroups>
+                                            
                                             <VisualStateGroupList>
+                                                
                                                 <VisualStateGroup x:Name="CommonStates">
-                                                    <!-- Нормальное состояние -->
+                                                    
                                                     <VisualState x:Name="Normal">
-                                                        <VisualState.Setters/>
+                                                        
+                                                        <VisualState.Setters>
+
+                                                            
+                                                            
+                                                        </VisualState.Setters>
+                                                        
                                                     </VisualState>
 
-                                                    <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
+                                                        
                                                         <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                                            
+                                                            <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
                                                             <Setter Property="TextColor" Value="White"/>
+                                                            
                                                         </VisualState.Setters>
+                                                        
                                                     </VisualState>
 
                                                 </VisualStateGroup>
+                                                
                                             </VisualStateGroupList>
+                                            
                                         </VisualStateManager.VisualStateGroups>
 
                                         <Button.Triggers>
+                                            
                                             <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="True">
-                                                <Setter Property="BackgroundColor" Value="#007ACC" />
+
+                                                <Setter Property="Background" Value="{DynamicResource MainColorLeft}" />
                                                 <Setter Property="TextColor" Value="White" />
+                                                
                                             </DataTrigger>
+                                            
                                             <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="False">
-                                                <Setter Property="BackgroundColor" Value="LightGray" />
+                                                
+                                                <Setter Property="Background" Value="LightGray" />
                                                 <Setter Property="TextColor" Value="Black" />
+                                                
                                             </DataTrigger>
+                                            
                                         </Button.Triggers>
+                                        
                                     </Button>
 
-                                    <!-- Либеро -->
                                     <Button Grid.Column="3" 
                                         Text="L" 
                                         FontAttributes="Bold"
                                         CommandParameter="{Binding .}"
                                         Clicked="OnLiberoClicked"
-                                        BackgroundColor="LightGray"
-                                        TextColor="Black"
                                         WidthRequest="40" 
                                         HeightRequest="40"
                                         CornerRadius="10"
@@ -90,130 +104,173 @@
                                         HorizontalOptions="Center">
 
                                         <VisualStateManager.VisualStateGroups>
+                                            
                                             <VisualStateGroupList>
+                                                
                                                 <VisualStateGroup x:Name="CommonStates">
-                                                    <!--Нормальное состояние-->
+                                                    
                                                     <VisualState x:Name="Normal">
-                                                        <VisualState.Setters/>
+
+                                                        <VisualState.Setters>
+
+                                                            
+
+                                                        </VisualState.Setters>
+
                                                     </VisualState>
 
-                                                    <!--Наведение мыши (работает на Desktop)-->
                                                     <VisualState x:Name="PointerOver">
+                                                        
                                                         <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor" Value="Green"/>
+                                                            
+                                                            <Setter Property="Background" Value="LimeGreen"/>
                                                             <Setter Property="TextColor" Value="White"/>
+                                                            
                                                         </VisualState.Setters>
+                                                        
                                                     </VisualState>
 
                                                 </VisualStateGroup>
+                                                
                                             </VisualStateGroupList>
+                                            
                                         </VisualStateManager.VisualStateGroups>
 
-
                                         <Button.Triggers>
+                                            
                                             <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="True">
-                                                <Setter Property="BackgroundColor" Value="Green" />
+                                                
+                                                <Setter Property="Background" Value="Green" />
                                                 <Setter Property="TextColor" Value="White" />
+                                                
                                             </DataTrigger>
+                                            
                                             <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="False">
-                                                <Setter Property="BackgroundColor" Value="LightGray" />
+                                                
+                                                <Setter Property="Background" Value="LightGray" />
                                                 <Setter Property="TextColor" Value="Black" />
+                                                
                                             </DataTrigger>
+                                            
                                         </Button.Triggers>
+                                        
                                     </Button>
                                     
-                                    <!-- Удалить -->
-                                    <Label Grid.Column="4" 
-                                           Text="❌"
-                                           BackgroundColor="#141414"
-                                           FontAttributes="None"
-                                           FontSize="18" 
-                                           VerticalOptions="Center" 
-                                           HorizontalOptions="Center">
+                                    <Label Grid.Column="4" Text="❌" FontAttributes="None" VerticalOptions="Center" HorizontalOptions="Center">
 
                                         <VisualStateManager.VisualStateGroups>
+                                            
                                             <VisualStateGroupList>
+                                                
                                                 <VisualStateGroup x:Name="CommonStates">
-                                                    <!-- Нормальное состояние -->
+
                                                     <VisualState x:Name="Normal">
-                                                        <VisualState.Setters/>
+                                                        
+                                                        <VisualState.Setters>
+
+                                                            <Setter Property="Background" Value="#141414"/>
+                                                            <Setter Property="FontSize" Value="18"/>
+
+                                                        </VisualState.Setters>
+                                                        
                                                     </VisualState>
 
-                                                    <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
+                                                        
                                                         <VisualState.Setters>
+                                                            
                                                             <Setter Property="FontSize" Value="22"/>
                                                             <Setter Property="FontAttributes" Value="Bold"/>
+                                                            
                                                         </VisualState.Setters>
+                                                        
                                                     </VisualState>
+                                                    
                                                 </VisualStateGroup>
+                                                
                                             </VisualStateGroupList>
+                                            
                                         </VisualStateManager.VisualStateGroups>
 
                                         <Label.GestureRecognizers>
+                                            
                                             <TapGestureRecognizer Tapped="DeletePlayerClicked"/>
+                                            
                                         </Label.GestureRecognizers>
+                                        
                                     </Label>
 
                                 </Grid>
+                                
                             </DataTemplate>
+                            
                         </CollectionView.ItemTemplate>
+                        
                     </CollectionView>
 
-                    <Button Text="+ Добавить игрока" 
-                            Clicked="OnAddPlayerHomeClicked"
-                            BackgroundColor="#007ACC" TextColor="White">
+                    <Button Text="+ Добавить игрока" Clicked="OnAddPlayerHomeClicked" TextColor="White">
 
                         <VisualStateManager.VisualStateGroups>
+                            
                             <VisualStateGroupList>
+                                
                                 <VisualStateGroup x:Name="CommonStates">
-                                    <!-- Нормальное состояние -->
+
                                     <VisualState x:Name="Normal">
-                                        <VisualState.Setters/>
+
+                                        <VisualState.Setters>
+
+                                            <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+
+                                        </VisualState.Setters>
+
                                     </VisualState>
 
-                                    <!-- Наведение мыши (работает на Desktop) -->
                                     <VisualState x:Name="PointerOver">
+                                        
                                         <VisualState.Setters>
-                                            <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+
+                                            <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                            
                                         </VisualState.Setters>
+                                        
                                     </VisualState>
 
                                 </VisualStateGroup>
+                                
                             </VisualStateGroupList>
+                            
                         </VisualStateManager.VisualStateGroups>
+                        
                     </Button>
+                    
                 </VerticalStackLayout>
+                
             </Frame>
 
-            <Frame BorderColor="Chocolate" BackgroundColor="#141414" CornerRadius="10" Padding="10">
+            <Frame BorderColor="{DynamicResource MainColorRight}" Background="#141414" CornerRadius="10" Padding="10">
+                
                 <VerticalStackLayout>
-                    <Label x:Name="NameTeamGuest" FontSize="18" FontAttributes="Bold" 
-               TextColor="White"/>
+                    
+                    <Label x:Name="NameTeamGuest" FontSize="18" FontAttributes="Bold" TextColor="White"/>
 
-                    <!-- Список игроков -->
                     <CollectionView x:Name="TeamGuestList" HeightRequest="200">
+                        
                         <CollectionView.ItemTemplate>
+                            
                             <DataTemplate>
+                                
                                 <Grid ColumnDefinitions="40,*,Auto,Auto,40" Padding="5">
 
-                                    <!-- Номер -->
-                                    <Entry Grid.Column="0" Text="{Binding Number}" 
-                                           Keyboard="Numeric" Placeholder="№"
-                                           HorizontalTextAlignment="Center"/>
+                                    <Entry Grid.Column="0" Text="{Binding Number}" Keyboard="Numeric" Placeholder="№" HorizontalTextAlignment="Center"/>
 
-                                    <!-- ФИО -->
-                                    <Entry Grid.Column="1" Text="{Binding Name}" 
-                                           Placeholder="Фамилия И.О." Margin="5,0"/>
+                                    <Entry Grid.Column="1" Text="{Binding Name}" Placeholder="Фамилия И.О." Margin="5,0"/>
 
-                                    <!-- Капитан -->
                                     <Button Grid.Column="2" 
                                         Text="Cap" 
                                         FontAttributes="Bold"                                        
                                         Clicked="OnCaptainClicked"
-                                        BackgroundColor="LightGray"
                                         CommandParameter="{Binding .}" 
-                                        TextColor="Black"
                                         WidthRequest="40" 
                                         HeightRequest="40"
                                         CornerRadius="10"
@@ -222,45 +279,63 @@
                                         HorizontalOptions="Center">
 
                                         <VisualStateManager.VisualStateGroups>
+                                            
                                             <VisualStateGroupList>
+                                                
                                                 <VisualStateGroup x:Name="CommonStates">
-                                                    <!-- Нормальное состояние -->
+
                                                     <VisualState x:Name="Normal">
-                                                        <VisualState.Setters/>
+
+                                                        <VisualState.Setters>
+                                                            
+
+
+                                                        </VisualState.Setters>
+
                                                     </VisualState>
 
-                                                    <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
+                                                        
                                                         <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor" Value="Chocolate"/>
+
+                                                            <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
                                                             <Setter Property="TextColor" Value="White"/>
+                                                            
                                                         </VisualState.Setters>
+                                                        
                                                     </VisualState>
 
                                                 </VisualStateGroup>
+                                                
                                             </VisualStateGroupList>
+                                            
                                         </VisualStateManager.VisualStateGroups>
 
                                         <Button.Triggers>
+                                            
                                             <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="True">
-                                                <Setter Property="BackgroundColor" Value="Chocolate" />
+
+                                                <Setter Property="Background" Value="{DynamicResource MainColorRight}" />
                                                 <Setter Property="TextColor" Value="White" />
+                                                
                                             </DataTrigger>
+                                            
                                             <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="False">
-                                                <Setter Property="BackgroundColor" Value="LightGray" />
+                                                
+                                                <Setter Property="Background" Value="LightGray" />
                                                 <Setter Property="TextColor" Value="Black" />
+                                                
                                             </DataTrigger>
+                                            
                                         </Button.Triggers>
+                                        
                                     </Button>
 
-                                    <!-- Либеро -->
                                     <Button Grid.Column="3" 
                                         Text="L" 
                                         FontAttributes="Bold"
                                         CommandParameter="{Binding .}"
                                         Clicked="OnLiberoClicked"
-                                        BackgroundColor="LightGrey" 
-                                        TextColor="Black"
                                         WidthRequest="40" 
                                         HeightRequest="40"
                                         CornerRadius="10"
@@ -270,99 +345,148 @@
                                         HorizontalOptions="Center">
 
                                         <VisualStateManager.VisualStateGroups>
+                                            
                                             <VisualStateGroupList>
+                                                
                                                 <VisualStateGroup x:Name="CommonStates">
-                                                    <!-- Нормальное состояние -->
+
                                                     <VisualState x:Name="Normal">
-                                                        <VisualState.Setters/>
+
+                                                        <VisualState.Setters>
+
+
+
+                                                        </VisualState.Setters>
+                                                        
                                                     </VisualState>
 
-                                                    <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
+                                                        
                                                         <VisualState.Setters>
-                                                            <Setter Property="BackgroundColor" Value="Green"/>
+                                                            
+                                                            <Setter Property="Background" Value="LimeGreen"/>
                                                             <Setter Property="TextColor" Value="White"/>
+                                                            
                                                         </VisualState.Setters>
+                                                        
                                                     </VisualState>
 
                                                 </VisualStateGroup>
+                                                
                                             </VisualStateGroupList>
+                                            
                                         </VisualStateManager.VisualStateGroups>
 
                                         <Button.Triggers>
+                                            
                                             <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="True">
-                                                <Setter Property="BackgroundColor" Value="Green" />
+                                                
+                                                <Setter Property="Background" Value="Green" />
                                                 <Setter Property="TextColor" Value="White" />
+                                                
                                             </DataTrigger>
+                                            
                                             <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="False">
-                                                <Setter Property="BackgroundColor" Value="LightGray" />
+                                                
+                                                <Setter Property="Background" Value="LightGray" />
                                                 <Setter Property="TextColor" Value="Black" />
+                                                
                                             </DataTrigger>
+                                            
                                         </Button.Triggers>
+                                        
                                     </Button>
 
-                                    <!-- Удалить -->
-                                    <Label Grid.Column="4" 
-                                           Text="❌"
-                                           BackgroundColor="#141414"
-                                           FontAttributes="None"
-                                           FontSize="18" 
-                                           VerticalOptions="Center" 
-                                           HorizontalOptions="Center">
+                                    <Label Grid.Column="4" Text="❌" FontAttributes="None" VerticalOptions="Center" HorizontalOptions="Center">
                                         
                                         <VisualStateManager.VisualStateGroups>
+                                            
                                             <VisualStateGroupList>
+                                                
                                                 <VisualStateGroup x:Name="CommonStates">
-                                                    <!-- Нормальное состояние -->
+
                                                     <VisualState x:Name="Normal">
-                                                        <VisualState.Setters/>
+
+                                                        <VisualState.Setters>
+
+                                                            <Setter Property="Background" Value="#141414" />
+                                                            <Setter Property="FontSize" Value="18"/>
+
+                                                        </VisualState.Setters>
+                                                        
                                                     </VisualState>
 
-                                                    <!-- Наведение мыши (работает на Desktop) -->
                                                     <VisualState x:Name="PointerOver">
+                                                        
                                                         <VisualState.Setters>
+                                                            
                                                             <Setter Property="FontSize" Value="22"/>
                                                             <Setter Property="FontAttributes" Value="Bold"/>
+                                                            
                                                         </VisualState.Setters>
+                                                        
                                                     </VisualState>
+                                                    
                                                 </VisualStateGroup>
+                                                
                                             </VisualStateGroupList>
+                                            
                                         </VisualStateManager.VisualStateGroups>
 
                                         <Label.GestureRecognizers>
+                                            
                                             <TapGestureRecognizer Tapped="DeletePlayerClicked"/>
+                                            
                                         </Label.GestureRecognizers>
+                                        
                                     </Label>
+                                    
                                 </Grid>
+                                
                             </DataTemplate>
+                            
                         </CollectionView.ItemTemplate>
+                        
                     </CollectionView>
 
-                    <Button Text="+ Добавить игрока" 
-                            Clicked="OnAddPlayerGuestClicked"
-                            BackgroundColor="Chocolate" TextColor="White">
+                    <Button Text="+ Добавить игрока" Clicked="OnAddPlayerGuestClicked" TextColor="White">
 
                         <VisualStateManager.VisualStateGroups>
+                            
                             <VisualStateGroupList>
+                                
                                 <VisualStateGroup x:Name="CommonStates">
-                                    <!-- Нормальное состояние -->
+
                                     <VisualState x:Name="Normal">
+                                        
                                         <VisualState.Setters>
+
+                                            <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
+
                                         </VisualState.Setters>
+                                        
                                     </VisualState>
 
-                                    <!-- Наведение мыши (работает на Desktop) -->
                                     <VisualState x:Name="PointerOver">
+                                        
                                         <VisualState.Setters>
-                                            <Setter Property="BackgroundColor" Value="SandyBrown"/>
+
+                                            <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+                                            
                                         </VisualState.Setters>
+                                        
                                     </VisualState>
 
                                 </VisualStateGroup>
+                                
                             </VisualStateGroupList>
+                            
                         </VisualStateManager.VisualStateGroups>
+                        
                     </Button>
+                    
                 </VerticalStackLayout>
+                
             </Frame>
 
             <Label Text="⚠️ Проверяйте заполненные данные!&#10;Они отразятся в итоговом протоколе." 
@@ -373,11 +497,9 @@
                Margin="0,20,0,10"
                LineBreakMode="WordWrap"/>
 
-            <!-- Кнопка начала матча -->
             <Button Text="🏐 Начать матч"
                 FontSize="18"
                 FontAttributes="Bold"
-                BackgroundColor="MediumPurple"
                 TextColor="White"
                 HeightRequest="50"
                 CornerRadius="10"
@@ -387,26 +509,42 @@
                 Clicked="NextPageClick">
 
                 <VisualStateManager.VisualStateGroups>
+                    
                     <VisualStateGroupList>
+                        
                         <VisualStateGroup x:Name="CommonStates">
-                            <!-- Нормальное состояние -->
+
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters/>
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+
+                                </VisualState.Setters>
+                                
                             </VisualState>
 
-                            <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
+                                
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="MediumOrchid"/>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColor}"/>
+                                    
                                 </VisualState.Setters>
+                                
                             </VisualState>
 
                         </VisualStateGroup>
+                        
                     </VisualStateGroupList>
+                    
                 </VisualStateManager.VisualStateGroups>
+                
             </Button>
 
         </VerticalStackLayout>
+        
     </ScrollView>
+    
 </ContentPage>
     

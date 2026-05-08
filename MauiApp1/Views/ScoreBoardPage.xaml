@@ -60,28 +60,41 @@
                     Clicked="OnScoreLeftClick"
                     Text="0"
                     TextColor="White"
-                    BackgroundColor="#007ACC"
                     FontSize="52" 
                     Margin="0,0,30,0">
 
                 <VisualStateManager.VisualStateGroups>
+                    
                     <VisualStateGroupList>
+                        
                         <VisualStateGroup x:Name="CommonStates">
-                            <!-- Нормальное состояние -->
+                            
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters/>
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+
+                                </VisualState.Setters>
+                                
                             </VisualState>
 
-                            <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
+                                
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorLeft}"/>
+                                    
+                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                    
                                 </VisualState.Setters>
+                                
                             </VisualState>
 
                         </VisualStateGroup>
+                        
                     </VisualStateGroupList>
+                    
                 </VisualStateManager.VisualStateGroups>
+                
             </Button>
 
             <Grid Grid.Column="1" RowDefinitions="*,*">
@@ -90,30 +103,43 @@
                     Text="Смена" 
                     FontAttributes="Bold"
                     Clicked="OnReverseClick"
-                    BackgroundColor="MediumPurple"
                     VerticalOptions="End"
                     HorizontalOptions="Fill"    
                     TextColor="White" 
-                    Margin="5,0,5,0"> 
+                    Margin="5,0,5,0">
 
                     <VisualStateManager.VisualStateGroups>
+
                         <VisualStateGroupList>
+
                             <VisualStateGroup x:Name="CommonStates">
-                                <!-- Нормальное состояние -->
+
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters/>
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+
+                                    </VisualState.Setters>
+
                                 </VisualState>
 
-                                <!-- Наведение мыши (работает на Desktop) -->
                                 <VisualState x:Name="PointerOver">
+
                                     <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="MediumOrchid"/>
+
+                                        <Setter Property="Background" Value="{DynamicResource PointColor}"/>
+
                                     </VisualState.Setters>
+
                                 </VisualState>
 
                             </VisualStateGroup>
+
                         </VisualStateGroupList>
+
                     </VisualStateManager.VisualStateGroups>
+                    
                 </Button>
 
                 <Button Grid.Row="1" 
@@ -123,27 +149,39 @@
                     FontAttributes="Bold"
                     TextColor="White"
                     VerticalOptions="Center"
-                    HorizontalOptions="Fill"  
-                    BackgroundColor="MediumPurple"
+                    HorizontalOptions="Fill"
                     Margin="5,0,5,0">
 
                     <VisualStateManager.VisualStateGroups>
+
                         <VisualStateGroupList>
+
                             <VisualStateGroup x:Name="CommonStates">
-                                <!-- Нормальное состояние -->
+
                                 <VisualState x:Name="Normal">
-                                    <VisualState.Setters/>
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+
+                                    </VisualState.Setters>
+
                                 </VisualState>
 
-                                <!-- Наведение мыши (работает на Desktop) -->
                                 <VisualState x:Name="PointerOver">
+
                                     <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="MediumOrchid"/>
+
+                                        <Setter Property="Background" Value="{DynamicResource PointColor}"/>
+
                                     </VisualState.Setters>
+
                                 </VisualState>
 
                             </VisualStateGroup>
+
                         </VisualStateGroupList>
+
                     </VisualStateManager.VisualStateGroups>
 
                 </Button>
@@ -155,28 +193,41 @@
                     Clicked="OnScoreRightClick"
                     Text="0"
                     TextColor="White"
-                    BackgroundColor="Chocolate"
                     FontSize="52" 
                     Margin="30,0,0,0">
-                
+
                 <VisualStateManager.VisualStateGroups>
+
                     <VisualStateGroupList>
+
                         <VisualStateGroup x:Name="CommonStates">
-                            <!-- Нормальное состояние -->
+
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters/>
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
+
+                                </VisualState.Setters>
+
                             </VisualState>
 
-                            <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
+
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorRight}"/>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+
                                 </VisualState.Setters>
+
                             </VisualState>
 
                         </VisualStateGroup>
+
                     </VisualStateGroupList>
+
                 </VisualStateManager.VisualStateGroups>
+                
             </Button>
 
         </Grid>
@@ -187,8 +238,7 @@
                     Grid.Column="0" 
                     x:Name="LineUpLeftButton"
                     Clicked="OnNowLineUpLeftClick"
-                    VerticalOptions="Center" 
-                    BackgroundColor="#007ACC"
+                    VerticalOptions="Center"
                     TextColor="White"
                     Margin="0,0,10,0" 
                     Text="Текущая расстановка"
@@ -196,23 +246,37 @@
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
+
                     <VisualStateGroupList>
+
                         <VisualStateGroup x:Name="CommonStates">
-                            <!-- Нормальное состояние -->
+
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters/>
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+
+                                </VisualState.Setters>
+
                             </VisualState>
 
-                            <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
+
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorLeft}"/>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+
                                 </VisualState.Setters>
+
                             </VisualState>
 
                         </VisualStateGroup>
+
                     </VisualStateGroupList>
+
                 </VisualStateManager.VisualStateGroups>
+                
             </Button>
 
             <Button Grid.Row="1" 
@@ -220,7 +284,6 @@
                     VerticalOptions="Center"
                     x:Name="TimeOutLeftButton"
                     Clicked="OnTimeOutLeftClick"
-                    BackgroundColor="#007ACC"
                     TextColor="White"
                     Margin="0,0,10,0" 
                     Text="Таймауты"
@@ -228,29 +291,52 @@
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
+
                     <VisualStateGroupList>
+
                         <VisualStateGroup x:Name="CommonStates">
-                            <!-- Нормальное состояние -->
+
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters/>
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+
+                                </VisualState.Setters>
+
                             </VisualState>
 
-                            <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
+
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorLeft}"/>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+
                                 </VisualState.Setters>
+
+                            </VisualState>
+
+                            <VisualState x:Name="Disabled">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="Gray"/>
+
+                                </VisualState.Setters>
+
                             </VisualState>
 
                         </VisualStateGroup>
+
                     </VisualStateGroupList>
+
                 </VisualStateManager.VisualStateGroups>
+
             </Button>
 
             <Button Grid.Row="1" 
                     Grid.Column="2" 
                     VerticalOptions="Center"
-                    BackgroundColor="#007ACC"
                     x:Name="ReplaceLeftButton"
                     Clicked="OnReplaceLeftClick"
                     TextColor="White"
@@ -260,29 +346,52 @@
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
+
                     <VisualStateGroupList>
+
                         <VisualStateGroup x:Name="CommonStates">
-                            <!-- Нормальное состояние -->
+
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters/>
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+
+                                </VisualState.Setters>
+
                             </VisualState>
 
-                            <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
+
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorLeft}"/>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+
                                 </VisualState.Setters>
+
+                            </VisualState>
+
+                            <VisualState x:Name="Disabled">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="Gray"/>
+
+                                </VisualState.Setters>
+
                             </VisualState>
 
                         </VisualStateGroup>
+
                     </VisualStateGroupList>
+
                 </VisualStateManager.VisualStateGroups>
+
             </Button>
 
             <Button Grid.Row="1" 
                     Grid.Column="3" 
                     VerticalOptions="Center"
-                    BackgroundColor="Chocolate"
                     x:Name="ReplaceRightButton"
                     Clicked="OnReplaceRightClick"
                     TextColor="White"
@@ -292,29 +401,52 @@
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
+
                     <VisualStateGroupList>
+
                         <VisualStateGroup x:Name="CommonStates">
-                            <!-- Нормальное состояние -->
+
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters/>
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
+
+                                </VisualState.Setters>
+
                             </VisualState>
 
-                            <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
+
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorRight}"/>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+
                                 </VisualState.Setters>
+
+                            </VisualState>
+
+                            <VisualState x:Name="Disabled">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="Gray"/>
+
+                                </VisualState.Setters>
+
                             </VisualState>
 
                         </VisualStateGroup>
+
                     </VisualStateGroupList>
+
                 </VisualStateManager.VisualStateGroups>
+
             </Button>
 
             <Button Grid.Row="1" 
                     Grid.Column="4" 
-                    VerticalOptions="Center" 
-                    BackgroundColor="Chocolate"
+                    VerticalOptions="Center"
                     x:Name="TimeOutRightButton"
                     Clicked="OnTimeOutRightClick"
                     TextColor="White"
@@ -324,29 +456,52 @@
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
+
                     <VisualStateGroupList>
+
                         <VisualStateGroup x:Name="CommonStates">
-                            <!-- Нормальное состояние -->
+
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters/>
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
+
+                                </VisualState.Setters>
+
                             </VisualState>
 
-                            <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
+
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorRight}"/>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+
                                 </VisualState.Setters>
+
+                            </VisualState>
+
+                            <VisualState x:Name="Disabled">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="Gray"/>
+
+                                </VisualState.Setters>
+
                             </VisualState>
 
                         </VisualStateGroup>
+
                     </VisualStateGroupList>
+
                 </VisualStateManager.VisualStateGroups>
+
             </Button>
 
             <Button Grid.Row="1" 
                     Grid.Column="5" 
-                    VerticalOptions="Center" 
-                    BackgroundColor="Chocolate"
+                    VerticalOptions="Center"
                     x:Name="LineUpRightButton"
                     Clicked="OnNowLineUpRightClick"
                     TextColor="White"
@@ -356,23 +511,37 @@
                     MinimumHeightRequest="80">
 
                 <VisualStateManager.VisualStateGroups>
+
                     <VisualStateGroupList>
+
                         <VisualStateGroup x:Name="CommonStates">
-                            <!-- Нормальное состояние -->
+
                             <VisualState x:Name="Normal">
-                                <VisualState.Setters/>
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
+
+                                </VisualState.Setters>
+
                             </VisualState>
 
-                            <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
+
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorRight}"/>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+
                                 </VisualState.Setters>
+
                             </VisualState>
-                            
+
                         </VisualStateGroup>
+
                     </VisualStateGroupList>
+
                 </VisualStateManager.VisualStateGroups>
+                
             </Button>
 
         </Grid>

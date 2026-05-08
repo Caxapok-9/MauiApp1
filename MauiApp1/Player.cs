@@ -28,6 +28,8 @@ namespace MauiApp1
         [ForeignKey(typeof(Player))]
         public int ReplaceID { get; set; } = 0;
 
+        private bool _IsSelected { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Player()
@@ -46,6 +48,19 @@ namespace MauiApp1
                 if (_IsCaptain != value) // Меняем только если значение другое
                 {
                     _IsCaptain = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+                }
+            }
+        }
+
+        public bool IsSelected
+        {
+            get => _IsSelected;
+            set
+            {
+                if (_IsSelected != value) // Меняем только если значение другое
+                {
+                    _IsSelected = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
                 }
             }

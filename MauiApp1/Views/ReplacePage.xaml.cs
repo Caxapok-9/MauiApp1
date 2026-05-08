@@ -12,15 +12,13 @@ public partial class ReplacePage : ContentPage
 
     List<Event> _eventsReplace;
 
-    Color _colorIn, _colorOut, _selectIn, _selectOut;
-
     Dictionary<int, Player> _roster;
 
     List<Player> _court = new List<Player>();
 
     List<Player> _bench = new List<Player>();
 
-    public ReplacePage(DatabaseService db, Team targetTeam, Set set, Color colorIn, Color colorOut, Color selectIn, Color selectOut)
+    public ReplacePage(DatabaseService db, Team targetTeam, Set set)
     {
         InitializeComponent();
 
@@ -30,25 +28,10 @@ public partial class ReplacePage : ContentPage
 
         _targetTeam = targetTeam;
 
-        _colorIn = colorIn;
-
-        _colorOut = colorOut;
-
-        _selectIn = selectIn;
-
-        _selectOut = selectOut;
     }
 
     protected override async void OnAppearing()
     {
-
-        this.Resources["ColorIn"] = _colorIn;
-
-        this.Resources["ColorOut"] = _colorOut;
-
-        this.Resources["ColorSelectIn"] = _selectIn;
-
-        this.Resources["ColorSelectOut"] = _selectOut;
 
         base.OnAppearing();
 

@@ -11,15 +11,11 @@ public partial class LineupNowPage : ContentPage
 
     Team _teamEnemy;
 
-    Color _color;
-
 	LineUp BeginLineUp;
 
 	Dictionary<int, string> Roster;
 
-	List<Label> Labels;
-
-    public LineupNowPage(DatabaseService db, Team teamTarget, Team teamEnemy, Set set, Color color)
+    public LineupNowPage(DatabaseService db, Team teamTarget, Team teamEnemy, Set set)
 	{
         InitializeComponent();
 
@@ -30,16 +26,10 @@ public partial class LineupNowPage : ContentPage
 		_teamEnemy = teamEnemy;
 
 		_set = set;
-
-        _color = color;
-
-        Labels = new List<Label> { LabelZone1, LabelZone2, LabelZone3, LabelZone4, LabelZone5, LabelZone6 };
     }
 
     protected override async void OnAppearing()
 	{
-        this.Resources["MainColor"] = _color;
-
         base.OnAppearing();
               
         BeginLineUp = _db.LineUpBegin[_teamTarget.Id];
@@ -63,7 +53,7 @@ public partial class LineupNowPage : ContentPage
 
 		TeamL target = new TeamL();
 		target.Id = _teamTarget.Id;
-		target.IsServe = SetAnaliz(_teamTarget);
+		target.IsServe = _set.IsShort ? _teamTarget.FinalySetServ : SetAnaliz(_teamTarget);
 
         TeamL enemy = new TeamL();
         enemy.Id = _teamEnemy.Id;
@@ -142,23 +132,6 @@ public partial class LineupNowPage : ContentPage
         LabelZone4.Text = Roster[line.Zone4PlayerID];
         LabelZone5.Text = Roster[line.Zone5PlayerID];
         LabelZone6.Text = Roster[line.Zone6PlayerID];
-
-		if(_teamTarget.IsLeft)
-		{
-			foreach(Label l in Labels)
-			{
-				Border b = l.Parent as Border;
-				b.BackgroundColor = Color.FromArgb("#007ACC");
-			}
-		}
-		else
-		{
-            foreach (Label l in Labels)
-            {
-                Border b = l.Parent as Border;
-                b.BackgroundColor = Colors.Chocolate;
-            }
-        }
     }
 
 	private bool SetAnaliz(Team team)
@@ -167,43 +140,17 @@ public partial class LineupNowPage : ContentPage
 
 		if(serv)
 		{
-			if (_set.NumberSet == 1 || _set.NumberSet == 3)
+			if (_set.NumberSet % 2 != 0)
 				return true;
-			else if (_set.NumberSet == 2 || _set.NumberSet == 4)
+			else 
 				return false;
-			else
-			{
-                bool serv2 = team.FinalySetServ;
-
-				if(serv2)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-            }
         }
 		else
 		{
-            if (_set.NumberSet == 1 || _set.NumberSet == 3)
-                return false;
-            else if (_set.NumberSet == 2 || _set.NumberSet == 4)
+            if (_set.NumberSet % 2 == 0)
                 return true;
             else
-            {
-                bool serv2 = team.FinalySetServ;
-
-                if (serv2)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+                return false;
         }
 	}
 
