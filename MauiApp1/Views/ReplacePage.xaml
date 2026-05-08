@@ -12,7 +12,7 @@
         
                 <Label Text="Игроки на поле" FontSize="Title" Margin="0,20,0,0" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="White"/>
 
-                <Frame BorderColor="#007ACC" BackgroundColor="#141414" CornerRadius="10" Padding="10" Margin="15">
+                <Frame BorderColor="{DynamicResource ColorIn}" BackgroundColor="#141414" CornerRadius="10" Padding="10" Margin="15">
 
                     <CollectionView x:Name="ListPlayerIn" SelectionMode="Single">
 
@@ -25,6 +25,16 @@
                                                 <VisualState.Setters>
                                                     <Setter Property="BackgroundColor" Value="Transparent" />
                                                 </VisualState.Setters>
+                                            </VisualState>
+
+                                            <VisualState x:Name="PointerOver">
+
+                                                <VisualState.Setters>
+
+                                                    <Setter Property="BackgroundColor" Value="{DynamicResource ColorSelectIn}"/>
+
+                                                </VisualState.Setters>
+
                                             </VisualState>
                                         </VisualStateGroup>
                                     </VisualStateGroupList>
@@ -42,7 +52,7 @@
 
                             <DataTemplate>
 
-                                <Border Stroke="#007ACC" BackgroundColor="#141414" Padding="10">
+                                <Border Stroke="{DynamicResource ColorIn}" BackgroundColor="#141414" Padding="10">
 
                                     <VisualStateManager.VisualStateGroups>
 
@@ -64,12 +74,12 @@
 
                                                     <VisualState.Setters>
 
-                                                        <Setter Property="BackgroundColor" Value="MidnightBlue"/>
+                                                        <Setter Property="BackgroundColor" Value="{DynamicResource ColorSelectIn}"/>
 
                                                     </VisualState.Setters>
-                                                    
+
                                                 </VisualState>
-                                                
+
                                             </VisualStateGroup>
                                             
                                         </VisualStateGroupList>
@@ -109,7 +119,7 @@
 
                 <Label Text="Игроки на замене" FontSize="Title" Margin="0,20,0,0" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="White"/>
 
-                <Frame BorderColor="Chocolate" BackgroundColor="#141414" CornerRadius="10" Padding="10" Margin="15">
+                <Frame BorderColor="{DynamicResource ColorOut}" BackgroundColor="#141414" CornerRadius="10" Padding="10" Margin="15">
 
                     <CollectionView x:Name="ListPlayerOut" SelectionMode="Single">
 
@@ -122,6 +132,16 @@
                                                 <VisualState.Setters>
                                                     <Setter Property="BackgroundColor" Value="Transparent" />
                                                 </VisualState.Setters>
+                                            </VisualState>
+
+                                            <VisualState x:Name="PointerOver">
+
+                                                <VisualState.Setters>
+
+                                                    <Setter Property="BackgroundColor" Value="{DynamicResource ColorSelectOut}"/>
+
+                                                </VisualState.Setters>
+
                                             </VisualState>
                                         </VisualStateGroup>
                                     </VisualStateGroupList>
@@ -139,7 +159,7 @@
 
                             <DataTemplate>
 
-                                <Border Stroke="Chocolate" BackgroundColor="#141414" Padding="10">
+                                <Border Stroke="{DynamicResource ColorOut}" BackgroundColor="#141414" Padding="10">
 
                                     <VisualStateManager.VisualStateGroups>
 
@@ -161,7 +181,7 @@
 
                                                     <VisualState.Setters>
 
-                                                        <Setter Property="BackgroundColor" Value="Peru"/>
+                                                        <Setter Property="BackgroundColor" Value="{DynamicResource ColorSelectOut}"/>
 
                                                     </VisualState.Setters>
 
@@ -201,10 +221,52 @@
         </ScrollView>
 
         <VerticalStackLayout Grid.Column="2" VerticalOptions="Start">
-            
-            <Button x:Name="ButtonReplace" Clicked="OnReplaceButtonClick" Text="Замена" TextColor="White" VerticalOptions="Start" Margin="20,70,20,20" BackgroundColor="#007ACC"/>
 
-            <Button x:Name="ButtonExit" Clicked="OnExitButtonClick" Text="Отмена" TextColor="White" VerticalOptions="Center" Margin="20,10,20,20" BackgroundColor="Chocolate"/>
+            <Button x:Name="ButtonReplace" Clicked="OnReplaceButtonClick" Text="Замена" TextColor="White" VerticalOptions="Start" Margin="20,70,20,20" BackgroundColor="{DynamicResource ColorIn}">
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <!-- Нормальное состояние -->
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters/>
+                            </VisualState>
+
+                            <!-- Наведение мыши (работает на Desktop) -->
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource ColorSelectIn}"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Button>
+
+
+            <Button x:Name="ButtonExit" Clicked="OnExitButtonClick" Text="Отмена" TextColor="White" VerticalOptions="Center" Margin="20,10,20,20" BackgroundColor="MediumPurple">
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <!-- Нормальное состояние -->
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters/>
+                            </VisualState>
+
+                            <!-- Наведение мыши (работает на Desktop) -->
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="MediumOrchid"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+
+            </Button>
         
         </VerticalStackLayout>
 

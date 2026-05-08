@@ -19,7 +19,9 @@ namespace MauiApp1
 
         public string Location { get; set; }
 
-        public string Referee { get; set; }
+        public string FirstReferee { get; set; }
+
+        public string? ToReferee { get; set; }
 
         public string Secretary { get; set; }
     }

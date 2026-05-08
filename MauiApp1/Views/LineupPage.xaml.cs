@@ -45,6 +45,10 @@ public partial class LineupPage : ContentPage
 
     protected override async void OnAppearing()
     {
+        this.Resources["CurrentColorLeft"] = Colors.DodgerBlue;
+
+        this.Resources["CurrentColorRight"] = Colors.SandyBrown;
+
         base.OnAppearing();
 
         await GetData();
@@ -330,6 +334,30 @@ public partial class LineupPage : ContentPage
     private async void OnReverseClicked(object sender, EventArgs e)
     {
         await Reverse();
+
+        var c = this.Resources["CurrentColorLeft"];
+        this.Resources["CurrentColorLeft"] = this.Resources["CurrentColorRight"];
+        this.Resources["CurrentColorRight"] = c;
+
+        var bg = ListPickerGuest.First().Parent.Parent as Border;
+        Color cb = bg.BackgroundColor;
+
+        var bh = ListPickerHome.First().Parent.Parent as Border;
+        Color ch = bh.BackgroundColor;
+
+        foreach (Picker p in ListPickerHome)
+        {
+            var border = p.Parent.Parent as Border;
+
+            border.BackgroundColor = cb;
+        }
+
+        foreach (Picker p in ListPickerGuest)
+        {
+            var border = p.Parent.Parent as Border;
+
+            border.BackgroundColor = ch;
+        }
 
         await FillPickers();
     }

@@ -11,7 +11,8 @@ public partial class StartPage : ContentPage
     string teamHome = "";
     string teamGuest = "";
     string location = "";
-    string referee = "";
+    string freferee = "";
+    string treferee = "";
     string secretary = "";
 
     public StartPage(DatabaseService db)
@@ -61,7 +62,8 @@ public partial class StartPage : ContentPage
         teamHome = EntryTeamHome.Text;
         teamGuest = EntryTeamGuest.Text;
         location = EntryLocation.Text;
-        referee = EntryReferee.Text;
+        freferee = EntryFirstReferee.Text;
+        treferee = EntryToReferee.Text;
         secretary = EntrySecretary.Text;
 
         // 2. Проверки заполнения
@@ -71,7 +73,7 @@ public partial class StartPage : ContentPage
             string.IsNullOrWhiteSpace(teamGuest) || 
             string.IsNullOrWhiteSpace(tournament) || 
             string.IsNullOrWhiteSpace(location) ||
-            string.IsNullOrWhiteSpace(referee) ||
+            string.IsNullOrWhiteSpace(freferee) ||
             string.IsNullOrWhiteSpace(secretary)
         )
         {
@@ -110,7 +112,8 @@ public partial class StartPage : ContentPage
         information.TeamHome = ListTeam.Where(x => x.IsHome).First().Id;
         information.TeamGuest = ListTeam.Where(x => !x.IsHome).First().Id;
         information.Location = location;
-        information.Referee = referee;
+        information.FirstReferee = freferee;
+        information.ToReferee = string.IsNullOrWhiteSpace(treferee) ? null : treferee;
         information.Secretary = secretary;        
 
         await _db.SaveMainInfoAsync(information);

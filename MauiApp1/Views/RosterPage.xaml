@@ -60,6 +60,17 @@
                                                 </VisualStateGroup>
                                             </VisualStateGroupList>
                                         </VisualStateManager.VisualStateGroups>
+
+                                        <Button.Triggers>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="#007ACC" />
+                                                <Setter Property="TextColor" Value="White" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="False">
+                                                <Setter Property="BackgroundColor" Value="LightGray" />
+                                                <Setter Property="TextColor" Value="Black" />
+                                            </DataTrigger>
+                                        </Button.Triggers>
                                     </Button>
 
                                     <!-- Либеро -->
@@ -97,6 +108,18 @@
                                                 </VisualStateGroup>
                                             </VisualStateGroupList>
                                         </VisualStateManager.VisualStateGroups>
+
+
+                                        <Button.Triggers>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="Green" />
+                                                <Setter Property="TextColor" Value="White" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="False">
+                                                <Setter Property="BackgroundColor" Value="LightGray" />
+                                                <Setter Property="TextColor" Value="Black" />
+                                            </DataTrigger>
+                                        </Button.Triggers>
                                     </Button>
                                     
                                     <!-- Удалить -->
@@ -217,6 +240,17 @@
                                                 </VisualStateGroup>
                                             </VisualStateGroupList>
                                         </VisualStateManager.VisualStateGroups>
+
+                                        <Button.Triggers>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="Chocolate" />
+                                                <Setter Property="TextColor" Value="White" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="False">
+                                                <Setter Property="BackgroundColor" Value="LightGray" />
+                                                <Setter Property="TextColor" Value="Black" />
+                                            </DataTrigger>
+                                        </Button.Triggers>
                                     </Button>
 
                                     <!-- Либеро -->
@@ -254,6 +288,17 @@
                                                 </VisualStateGroup>
                                             </VisualStateGroupList>
                                         </VisualStateManager.VisualStateGroups>
+
+                                        <Button.Triggers>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="Green" />
+                                                <Setter Property="TextColor" Value="White" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="False">
+                                                <Setter Property="BackgroundColor" Value="LightGray" />
+                                                <Setter Property="TextColor" Value="Black" />
+                                            </DataTrigger>
+                                        </Button.Triggers>
                                     </Button>
 
                                     <!-- Удалить -->

@@ -16,6 +16,10 @@ public partial class ScoreBoardPage : ContentPage
 
     private Set set;
 
+    private bool RosterHomeCheckReplace;
+
+    private bool RosterGuestCheckReplace;
+
     public ScoreBoardPage(DatabaseService db)
 	{
 		InitializeComponent();
@@ -37,6 +41,14 @@ public partial class ScoreBoardPage : ContentPage
 
         TeamGuest = Teams.Where(x => !x.IsHome).First();
 
+        var Roster = await _db.GetRosterAsync(TeamHome.Id);
+
+        RosterHomeCheckReplace = Roster.Where(x => !x.IsLibero).Count() < 7 ? true : false;
+
+        Roster = await _db.GetRosterAsync(TeamGuest.Id);
+
+        RosterGuestCheckReplace = Roster.Where(x => !x.IsLibero).Count() < 7 ? true : false;
+
         UpdateData();
     }
 
@@ -54,8 +66,42 @@ public partial class ScoreBoardPage : ContentPage
             CountSetLeft.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
             CountSetRight.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
 
+            this.Resources["CurrentColorLeft"] = Colors.DodgerBlue;
+            this.Resources["CurrentColorRight"] = Colors.SandyBrown;
+
             ScoreLeftButton.Text = set.ScoreHome.ToString();
+            ScoreLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
+
             ScoreRightButton.Text = set.ScoreGuest.ToString();
+            ScoreRightButton.BackgroundColor = Colors.Chocolate;
+
+            ReplaceLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
+            ReplaceRightButton.BackgroundColor = Colors.Chocolate;
+            
+            LineUpLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
+            LineUpRightButton.BackgroundColor = Colors.Chocolate;
+
+            if (RosterHomeCheckReplace)
+            {
+                ReplaceLeftButton.IsEnabled = false;
+                ReplaceLeftButton.Background = Colors.Gray;
+            }
+            else
+            {
+                ReplaceLeftButton.IsEnabled = true;
+                ReplaceLeftButton.Background = Color.FromRgba("#007ACC");
+            }
+
+            if(RosterGuestCheckReplace)
+            {
+                ReplaceRightButton.IsEnabled = false;
+                ReplaceRightButton.Background = Colors.Gray;
+            }
+            else
+            {
+                ReplaceRightButton.IsEnabled = true;
+                ReplaceRightButton.Background = Colors.Chocolate;
+            }
 
             if (TimeOutsHome.Count < 1)
             {
@@ -103,19 +149,53 @@ public partial class ScoreBoardPage : ContentPage
             CountSetLeft.Text =  Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
             CountSetRight.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
 
+            this.Resources["CurrentColorLeft"] = Colors.SandyBrown;
+            this.Resources["CurrentColorRight"] = Colors.DodgerBlue;
+
             ScoreLeftButton.Text = set.ScoreGuest.ToString();
+            ScoreLeftButton.BackgroundColor = Colors.Chocolate;
+
             ScoreRightButton.Text = set.ScoreHome.ToString();
+            ScoreRightButton.BackgroundColor = Color.FromRgba("#007ACC");
+
+            ReplaceLeftButton.BackgroundColor = Colors.Chocolate;
+            ReplaceRightButton.BackgroundColor = Color.FromRgba("#007ACC");
+
+            LineUpLeftButton.BackgroundColor = Colors.Chocolate;
+            LineUpRightButton.BackgroundColor = Color.FromRgba("#007ACC");
+
+            if (RosterHomeCheckReplace)
+            {
+                ReplaceRightButton.IsEnabled = false;
+                ReplaceRightButton.Background = Colors.Gray;
+            }
+            else
+            {
+                ReplaceRightButton.IsEnabled = true;
+                ReplaceRightButton.Background = Color.FromRgba("#007ACC");
+            }
+
+            if (RosterGuestCheckReplace)
+            {
+                ReplaceLeftButton.IsEnabled = false;
+                ReplaceLeftButton.Background = Colors.Gray;
+            }
+            else
+            {
+                ReplaceLeftButton.IsEnabled = true;
+                ReplaceLeftButton.Background = Colors.Chocolate;
+            }
 
             if (TimeOutsHome.Count < 1)
             {
                 TimeOutRightButton.Text = "Тайм-аут ( 2 )";
-                TimeOutRightButton.BackgroundColor = Colors.Chocolate;
+                TimeOutRightButton.BackgroundColor = Color.FromRgba("#007ACC");
                 TimeOutRightButton.IsEnabled = true;
             }
             else if (TimeOutsHome.Count < 2)
             {
                 TimeOutRightButton.Text = "Тайм-аут ( 1 )";
-                TimeOutRightButton.BackgroundColor = Colors.Chocolate;
+                TimeOutRightButton.BackgroundColor = Color.FromRgba("#007ACC");
                 TimeOutRightButton.IsEnabled = true;
             }
             else
@@ -128,13 +208,13 @@ public partial class ScoreBoardPage : ContentPage
             if (TimeOutsGuest.Count < 1)
             {
                 TimeOutLeftButton.Text = "Тайм-аут ( 2 )";
-                TimeOutLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
+                TimeOutLeftButton.BackgroundColor = Colors.Chocolate;
                 TimeOutLeftButton.IsEnabled = true;
             }
             else if (TimeOutsGuest.Count < 2)
             {
                 TimeOutLeftButton.Text = "Тайм-аут ( 1 )";
-                TimeOutLeftButton.BackgroundColor = Color.FromRgba("#007ACC");
+                TimeOutLeftButton.BackgroundColor = Colors.Chocolate;
                 TimeOutLeftButton.IsEnabled = true;
             }
             else
@@ -237,7 +317,7 @@ public partial class ScoreBoardPage : ContentPage
 
             if(countReplace < 6)
             {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set));
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set, Color.FromRgba("#007ACC"), Colors.Firebrick, Colors.MidnightBlue, Colors.Maroon));
             }
             else
             {
@@ -252,7 +332,7 @@ public partial class ScoreBoardPage : ContentPage
 
             if (countReplace < 6)
             {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set));
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set, Colors.Chocolate, Colors.Firebrick, Colors.SaddleBrown, Colors.Maroon));
             }
             else
             {
@@ -271,7 +351,7 @@ public partial class ScoreBoardPage : ContentPage
 
             if (countReplace < 6)
             {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set));
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set, Color.FromRgba("#007ACC"), Colors.Firebrick, Colors.MidnightBlue, Colors.Maroon));
             }
             else
             {
@@ -286,7 +366,7 @@ public partial class ScoreBoardPage : ContentPage
 
             if (countReplace < 6)
             {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set));
+                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set, Colors.Chocolate, Colors.Firebrick, Colors.SaddleBrown, Colors.Maroon));
             }
             else
             {
@@ -299,11 +379,11 @@ public partial class ScoreBoardPage : ContentPage
     {
         if(TeamHome.IsLeft)
         {
-            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set, Color.FromRgba("#007ACC")));
         }
         else
         {
-            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set, Colors.Chocolate));
         }
     }
 
@@ -311,11 +391,11 @@ public partial class ScoreBoardPage : ContentPage
     {
         if (!TeamHome.IsLeft)
         {
-            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set, Color.FromRgba("#007ACC")));
         }
         else
         {
-            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set, Colors.Chocolate));
         }
     }
 

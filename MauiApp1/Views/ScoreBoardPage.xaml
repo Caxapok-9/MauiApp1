@@ -75,7 +75,7 @@
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorLeft}"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -170,7 +170,7 @@
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="SandyBrown"/>
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorRight}"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -206,7 +206,7 @@
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorLeft}"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -238,7 +238,7 @@
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorLeft}"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -270,7 +270,7 @@
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorLeft}"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -302,7 +302,7 @@
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="SandyBrown"/>
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorRight}"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -334,7 +334,7 @@
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="SandyBrown"/>
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorRight}"/>
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -366,7 +366,7 @@
                             <!-- Наведение мыши (работает на Desktop) -->
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="SandyBrown"/>
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource CurrentColorRight}"/>
                                 </VisualState.Setters>
                             </VisualState>
                             

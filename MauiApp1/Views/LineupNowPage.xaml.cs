@@ -11,15 +11,17 @@ public partial class LineupNowPage : ContentPage
 
     Team _teamEnemy;
 
+    Color _color;
+
 	LineUp BeginLineUp;
 
 	Dictionary<int, string> Roster;
 
 	List<Label> Labels;
 
-    public LineupNowPage(DatabaseService db, Team teamTarget, Team teamEnemy, Set set)
+    public LineupNowPage(DatabaseService db, Team teamTarget, Team teamEnemy, Set set, Color color)
 	{
-		InitializeComponent();
+        InitializeComponent();
 
 		_db = db;
 
@@ -29,14 +31,18 @@ public partial class LineupNowPage : ContentPage
 
 		_set = set;
 
-		Labels = new List<Label> { LabelZone1, LabelZone2, LabelZone3, LabelZone4, LabelZone5, LabelZone6 };
+        _color = color;
+
+        Labels = new List<Label> { LabelZone1, LabelZone2, LabelZone3, LabelZone4, LabelZone5, LabelZone6 };
     }
 
     protected override async void OnAppearing()
 	{
-		base.OnAppearing();
+        this.Resources["MainColor"] = _color;
 
-		BeginLineUp = _db.LineUpBegin[_teamTarget.Id];
+        base.OnAppearing();
+              
+        BeginLineUp = _db.LineUpBegin[_teamTarget.Id];
 
 		var Rosters = await _db.GetRosterAsync(_teamTarget.Id);
 

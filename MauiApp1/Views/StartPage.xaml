@@ -25,7 +25,10 @@
 
 
                     <Label Text="Главный судья:" Margin="5,0,0,0"/>
-                    <Entry x:Name="EntryReferee" Placeholder="Фамилия И.О." Margin="0,10,0,15"/>
+                    <Entry x:Name="EntryFirstReferee" Placeholder="Фамилия И.О." Margin="0,10,0,15"/>
+
+                    <Label Text="Второй судья:" Margin="5,0,0,0"/>
+                    <Entry x:Name="EntryToReferee" Placeholder="Фамилия И.О. (Необязательно)" Margin="0,10,0,15"/>
 
                     <Label Text="Секретарь:" Margin="5,0,0,0"/>
                     <Entry x:Name="EntrySecretary" Placeholder="Фамилия И.О." Margin="0,10,0,15"/>

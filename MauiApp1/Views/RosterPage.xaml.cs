@@ -70,36 +70,7 @@ public partial class RosterPage : ContentPage
         if (player == null) 
             return;
 
-        if(homePlayers.Contains(player))
-        {
-            player.IsCaptain = !player.IsCaptain;
-
-            if (player.IsCaptain)
-            {
-                button.BackgroundColor = Color.FromArgb("#007ACC");
-                button.TextColor = Colors.White;
-            }
-            else
-            {
-                button.BackgroundColor = Colors.LightGray;
-                button.TextColor = Colors.Black;
-            }
-        }
-        else
-        {
-            player.IsCaptain = !player.IsCaptain;
-
-            if (player.IsCaptain)
-            {
-                button.BackgroundColor = Colors.Chocolate;
-                button.TextColor = Colors.White;
-            }
-            else
-            {
-                button.BackgroundColor = Colors.LightGray;
-                button.TextColor = Colors.Black;
-            }
-        }
+        player.IsCaptain = !player.IsCaptain;
     }
 
     private void OnLiberoClicked(object sender, EventArgs e)
@@ -110,20 +81,7 @@ public partial class RosterPage : ContentPage
         if (player == null)
             return;
 
-        var teamList = homePlayers.Contains(player) ? homePlayers : guestPlayers;
-
         player.IsLibero = !player.IsLibero;
-
-        if (player.IsLibero)
-        {
-            button.BackgroundColor = Colors.LimeGreen;
-            button.TextColor = Colors.White;
-        }
-        else
-        {
-            button.BackgroundColor = Colors.LightGray;
-            button.TextColor = Colors.Black;
-        }
     }
 
     private void DeletePlayerClicked(object sender, EventArgs e)
