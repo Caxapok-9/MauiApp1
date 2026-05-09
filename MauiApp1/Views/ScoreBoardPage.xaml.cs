@@ -57,169 +57,151 @@ public partial class ScoreBoardPage : ContentPage
 
         RosterGuestCheckReplace = Roster.Where(x => !x.IsLibero).Count() < 7 ? true : false;
 
-        UpdateData();
-    }
+        ReverseCheck();
 
-    private async void UpdateData()
-    {
-        var TimeOutsHome = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Тайм-аут"]);
-
-        var TimeOutsGuest = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Тайм-аут"]);
-
-        var EventReplaceHome = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
-
-        var EventReplaceGuest = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
-
-        if (TeamHome.IsLeft)
-        {
-            NameLeft.Text = TeamHome.Name;
-            NameRight.Text = TeamGuest.Name;
-
-            CountSetLeft.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
-            CountSetRight.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
-
-            ScoreLeftButton.Text = set.ScoreHome.ToString();
-            ScoreRightButton.Text = set.ScoreGuest.ToString();
-
-            if (EventReplaceHome.Count() == 6 || RosterHomeCheckReplace)
-            {
-                ReplaceLeftButton.IsEnabled = false;
-                ReplaceLeftButton.Text = $"Замены (0)";
-            }
-            else
-            {
-                ReplaceLeftButton.IsEnabled = true;
-                ReplaceLeftButton.Text = $"Замены ({6 - EventReplaceHome.Count()})";
-            }
-
-            if (EventReplaceGuest.Count() == 6 || RosterGuestCheckReplace)
-            {
-                ReplaceRightButton.IsEnabled = false;
-                ReplaceRightButton.Text = $"Замены (0)";
-            }
-            else
-            {
-                ReplaceRightButton.IsEnabled = true;
-                ReplaceRightButton.Text = $"Замены ({6 - EventReplaceGuest.Count()})";
-            }
-
-            if (TimeOutsHome.Count < 2)
-            {
-                TimeOutLeftButton.Text = $"Тайм-аут ( {2 - TimeOutsHome.Count} )";
-                TimeOutLeftButton.IsEnabled = true;
-            }
-            else
-            {
-                TimeOutLeftButton.Text = "Тайм-аут ( 0 )";
-                TimeOutLeftButton.IsEnabled = false;
-            }
-
-            if (TimeOutsGuest.Count < 2)
-            {
-                TimeOutRightButton.Text = $"Тайм-аут ( {2 - TimeOutsGuest.Count} )";
-                TimeOutRightButton.IsEnabled = true;
-            }
-            else
-            {
-                TimeOutRightButton.Text = "Тайм-аут ( 0 )";
-                TimeOutRightButton.IsEnabled = false;
-            }
-        }
-        else
-        {
-            NameLeft.Text = TeamGuest.Name;
-            NameRight.Text = TeamHome.Name;
-
-            CountSetLeft.Text =  Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
-            CountSetRight.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
-
-            ScoreLeftButton.Text = set.ScoreGuest.ToString();
-            ScoreRightButton.Text = set.ScoreHome.ToString();
-
-
-            if (EventReplaceHome.Count() == 6 || RosterHomeCheckReplace)
-            {
-                ReplaceRightButton.IsEnabled = false;
-                ReplaceRightButton.Text = $"Замены (0)";
-            }
-            else
-            {
-                ReplaceRightButton.IsEnabled = true;
-                ReplaceRightButton.Text = $"Замены ({6 - EventReplaceHome.Count()})";
-            }
-
-            if (EventReplaceGuest.Count() == 6 || RosterGuestCheckReplace)
-            {
-                ReplaceLeftButton.IsEnabled = false;
-                ReplaceLeftButton.Text = $"Замены (0)";
-            }
-            else
-            {
-                ReplaceLeftButton.IsEnabled = true;
-                ReplaceLeftButton.Text = $"Замены ({6 - EventReplaceGuest.Count()})";
-            }
-
-            if (TimeOutsHome.Count < 2)
-            {
-                TimeOutRightButton.Text = $"Тайм-аут ( { 2 - TimeOutsHome.Count } )";
-                TimeOutRightButton.IsEnabled = true;
-            }
-            else
-            {
-                TimeOutRightButton.Text = "Тайм-аут ( 0 )";
-                TimeOutRightButton.IsEnabled = false;
-            }
-
-            if (TimeOutsGuest.Count < 2)
-            {
-                TimeOutLeftButton.Text = $"Тайм-аут ( {2 - TimeOutsGuest.Count} )";
-                TimeOutLeftButton.IsEnabled = true;
-            }
-            else
-            {
-                TimeOutLeftButton.Text = "Тайм-аут ( 0 )";
-                TimeOutLeftButton.IsEnabled = false;
-            }
-        }
+        await UpdateData();
     }
 
     private async void OnReverseClick(object sender, EventArgs e)
     {
-        Setting.ReverseColor();
+        if (IsBusy)
+            return;
 
-        TeamHome.IsLeft = !TeamHome.IsLeft;
+        try
+        {
+            IsBusy = true;
 
-        TeamGuest.IsLeft = !TeamGuest.IsLeft;
+            TeamHome.IsLeft = !TeamHome.IsLeft;
 
-        await _db.UpdateTeamAsync(TeamHome);
+            TeamGuest.IsLeft = !TeamGuest.IsLeft;
 
-        await _db.UpdateTeamAsync(TeamGuest);
+            await _db.UpdateTeamAsync(TeamHome);
 
-        UpdateData();
+            await _db.UpdateTeamAsync(TeamGuest);
+
+            ReverseCheck();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
-    private async void OnTimeOutLeftClick(object sender, EventArgs e)
+    private async Task UpdateData()
     {
-        if (TeamHome.IsLeft)
+        NameHome.Text = TeamHome.Name;
+        NameGuest.Text = TeamGuest.Name;
+
+        CountSetHome.Text = Sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
+        CountSetGuest.Text = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+
+        ScoreHomeButton.Text = set.ScoreHome.ToString();
+        ScoreGuestButton.Text = set.ScoreGuest.ToString();
+
+        if(RosterHomeCheckReplace)
         {
+            ReplaceHomeButton.IsEnabled = false;
+            ReplaceHomeButton.BackgroundColor = Colors.Grey;
+            ReplaceHomeButton.Text = "Замен нет";
+        }
+        else
+        {
+            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
+
+            if (Events.Count > 5)
+            {
+                ReplaceHomeButton.IsEnabled = false;
+                ReplaceHomeButton.BackgroundColor = Colors.Grey;
+                ReplaceHomeButton.Text = "Замен нет";
+            }
+        }
+
+        if (RosterGuestCheckReplace)
+        {
+            ReplaceGuestButton.IsEnabled = false;
+            ReplaceGuestButton.BackgroundColor = Colors.Grey;
+            ReplaceGuestButton.Text = "Замен нет";
+        }
+        else
+        {
+            var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
+
+            if (Events.Count > 5)
+            {
+                ReplaceGuestButton.IsEnabled = false;
+                ReplaceGuestButton.BackgroundColor = Colors.Grey;
+                ReplaceGuestButton.Text = "Замен нет";
+            }
+        }
+    }
+
+    private void ReverseCheck()
+    {
+        if(TeamHome.IsLeft)
+        {
+            GridUp.SetColumn(NameHomeBorder, 0);
+            GridUp.SetColumn(CountSetHome, 1);
+            
+            GridUp.SetColumn(CountSetGuest, 3);
+            GridUp.SetColumn(NameGuestBorder, 4);
+
+            GridCenter.SetColumn(ScoreHomeButton, 0);
+
+            GridCenter.SetColumn(ScoreGuestButton, 2);
+
+            GridDown.SetColumn(LineUpHomeButton, 0);
+            GridDown.SetColumn(TimeOutHomeButton, 1);
+            GridDown.SetColumn(ReplaceHomeButton, 2);
+
+            GridDown.SetColumn(ReplaceGuestButton, 3);
+            GridDown.SetColumn(TimeOutGuestButton, 4);
+            GridDown.SetColumn(LineUpGuestButton, 5);
+
+            LineUpHomeButton.Margin = new Thickness(15, 0, 5, 0);
+            ReplaceHomeButton.Margin = new Thickness(5, 0, 10, 0);
+            ReplaceGuestButton.Margin = new Thickness(10, 0, 5, 0);
+            LineUpGuestButton.Margin = new Thickness(5, 0, 15, 0);
+        }
+        else
+        {
+            GridUp.SetColumn(NameHomeBorder, 4);
+            GridUp.SetColumn(CountSetHome, 3);
+
+            GridUp.SetColumn(CountSetGuest, 1);
+            GridUp.SetColumn(NameGuestBorder, 0);
+
+            GridCenter.SetColumn(ScoreHomeButton, 2);
+
+            GridCenter.SetColumn(ScoreGuestButton, 0);
+
+            GridDown.SetColumn(LineUpHomeButton, 5);
+            GridDown.SetColumn(TimeOutHomeButton, 4);
+            GridDown.SetColumn(ReplaceHomeButton, 3);
+
+            GridDown.SetColumn(ReplaceGuestButton, 2);
+            GridDown.SetColumn(TimeOutGuestButton, 1);
+            GridDown.SetColumn(LineUpGuestButton, 0);
+
+            LineUpHomeButton.Margin = new Thickness(5, 0, 15, 0);
+            ReplaceHomeButton.Margin = new Thickness(10, 0, 5, 0);
+            ReplaceGuestButton.Margin = new Thickness(5, 0, 10, 0);
+            LineUpGuestButton.Margin = new Thickness(15, 0, 5, 0);
+        }
+    }
+
+    private async void OnTimeOutHomeClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+
             Event ev = new Event();
 
             ev.SetID = set.Id;
             ev.TeamID = TeamHome.Id;
-            ev.EventID = _db.EventsCategories["Тайм-аут"];
-            ev.ScoreHome = set.ScoreHome;
-            ev.ScoreGuest = set.ScoreGuest;
-
-            await _db.SaveEventAsync(ev);
-
-            await DisplayAlert("Информация", "Тайм-аут взят!", "OK");           
-        }
-        else
-        {
-            Event ev = new Event();
-
-            ev.SetID = set.Id;
-            ev.TeamID = TeamGuest.Id;
             ev.EventID = _db.EventsCategories["Тайм-аут"];
             ev.ScoreHome = set.ScoreHome;
             ev.ScoreGuest = set.ScoreGuest;
@@ -228,28 +210,30 @@ public partial class ScoreBoardPage : ContentPage
 
             await DisplayAlert("Информация", "Тайм-аут взят!", "OK");
         }
+        finally
+        {
+            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Тайм-аут"]);
 
-        UpdateData();
+            if(Events.Count > 1)
+            {
+                TimeOutHomeButton.IsEnabled = false;
+                TimeOutHomeButton.BackgroundColor = Colors.Grey;
+                TimeOutHomeButton.Text = "Тайм-аутов нет";
+            }
+
+            IsBusy = false;
+        }
     }
 
-    private async void OnTimeOutRightClick(object sender, EventArgs e)
+    private async void OnTimeOutGuestClick(object sender, EventArgs e)
     {
-        if (!TeamHome.IsLeft)
+        if (IsBusy)
+            return;
+
+        try
         {
-            Event ev = new Event();
+            IsBusy = true;
 
-            ev.SetID = set.Id;
-            ev.TeamID = TeamHome.Id;
-            ev.EventID = _db.EventsCategories["Тайм-аут"];
-            ev.ScoreHome = set.ScoreHome;
-            ev.ScoreGuest = set.ScoreGuest;
-
-            await _db.SaveEventAsync(ev);
-
-            await DisplayAlert("Информация", "Тайм-аут записан!", "OK");
-        }
-        else
-        {
             Event ev = new Event();
 
             ev.SetID = set.Id;
@@ -262,66 +246,102 @@ public partial class ScoreBoardPage : ContentPage
 
             await DisplayAlert("Информация", "Тайм-аут записан!", "OK");
         }
+        finally
+        {
+            var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Тайм-аут"]);
 
-        UpdateData();
+            if (Events.Count > 1)
+            {
+                TimeOutGuestButton.IsEnabled = false;
+                TimeOutGuestButton.BackgroundColor = Colors.Grey;
+                TimeOutGuestButton.Text = "Тайм-аутов нет";
+            }
+
+            IsBusy = false;
+        }
     }
 
-    private async void OnReplaceLeftClick(object sender, EventArgs e)
+    private async void OnReplaceHomeClick(object sender, EventArgs e)
     {
-        if (TeamHome.IsLeft)
-        {
-            await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set, RosterHome));              
-        }
-        else
-        {
-            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set, RosterGuest));
-        }
+        if (IsBusy)
+            return;
 
-        UpdateData();
-    }
-
-    private async void OnReplaceRightClick(object sender, EventArgs e)
-    {
-        if (!TeamHome.IsLeft)
+        try
         {
+            IsBusy = true;
+
             await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set, RosterHome));
         }
-        else
+        finally
         {
+            UpdateData();
+
+            IsBusy = false;
+        }
+    }
+
+    private async void OnReplaceGuestClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+
             await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set, RosterGuest));
         }
+        finally
+        {
+            UpdateData();
 
-        UpdateData();
+            IsBusy = false;
+        }
     }
 
-    private async void OnNowLineUpLeftClick(object sender, EventArgs e)
+    private async void OnNowLineUpHomeClick(object sender, EventArgs e)
     {
-        if(TeamHome.IsLeft)
+        if (IsBusy)
+            return;
+
+        try
         {
+            IsBusy = true;
+
             await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
         }
-        else
+        finally
         {
-            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
+            IsBusy = false;
         }
     }
 
-    private async void OnNowLineUpRightClick(object sender, EventArgs e)
+    private async void OnNowLineUpGuestClick(object sender, EventArgs e)
     {
-        if (!TeamHome.IsLeft)
+        if (IsBusy)
+            return;
+
+        try
         {
-            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
-        }
-        else
-        {
+            IsBusy = true;
+
             await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
-    private async void OnScoreLeftClick(object sender, EventArgs e)
+    private async void OnScoreHomeClick(object sender, EventArgs e)
     {
-        if(TeamHome.IsLeft)
+        if (IsBusy)
+            return;
+
+        try
         {
+            IsBusy = true;
+
             Event ev = new Event();
 
             ev.TeamID = TeamHome.Id;
@@ -336,56 +356,25 @@ public partial class ScoreBoardPage : ContentPage
 
             await _db.UpdateSetAsync(set);
 
-            ScoreLeftButton.Text = set.ScoreHome.ToString();
-
             CheckEndSet();
+
+            ScoreHomeButton.Text = set.ScoreHome.ToString();
         }
-        else
+        finally
         {
-            Event ev = new Event();
-
-            ev.TeamID = TeamGuest.Id;
-            ev.SetID = set.Id;
-            ev.EventID = _db.EventsCategories["Очко"];
-            ev.ScoreHome = set.ScoreHome;
-            ev.ScoreGuest = set.ScoreGuest;
-
-            await _db.SaveEventAsync(ev);
-
-            ++set.ScoreGuest;
-
-            await _db.UpdateSetAsync(set);
-
-            ScoreLeftButton.Text = set.ScoreGuest.ToString();
-
-            CheckEndSet();
+            IsBusy = false;
         }
     }
 
-    private async void OnScoreRightClick(object sender, EventArgs e)
+    private async void OnScoreGuestClick(object sender, EventArgs e)
     {
-        if (!TeamHome.IsLeft)
+        if (IsBusy)
+            return;
+
+        try
         {
-            Event ev = new Event();
+            IsBusy = true;
 
-            ev.TeamID = TeamHome.Id;
-            ev.SetID = set.Id;
-            ev.EventID = _db.EventsCategories["Очко"];
-            ev.ScoreHome = set.ScoreHome;
-            ev.ScoreGuest = set.ScoreGuest;
-
-            await _db.SaveEventAsync(ev);
-
-            ++set.ScoreHome;
-
-            await _db.UpdateSetAsync(set);
-
-            ScoreRightButton.Text = set.ScoreHome.ToString();
-
-            CheckEndSet();
-        }
-        else
-        {
             Event ev = new Event();
 
             ev.TeamID = TeamGuest.Id;
@@ -400,43 +389,59 @@ public partial class ScoreBoardPage : ContentPage
 
             await _db.UpdateSetAsync(set);
 
-            ScoreRightButton.Text = set.ScoreGuest.ToString();
-
             CheckEndSet();
+
+            ScoreGuestButton.Text = set.ScoreGuest.ToString();
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
     private async void OnCancelScoreClick(object sender, EventArgs e)
     {
-        var events = await _db.GetEventAsync(set.Id);
+        if (IsBusy)
+            return;
 
-        if (events != null && events.Count > 0)
+        try
         {
-            Event ev = events.Last();
+            IsBusy = true;
 
-            if (ev.EventID == _db.EventsCategories["Очко"])
+            var events = await _db.GetEventAsync(set.Id);
+
+            if (events != null && events.Count > 0)
             {
-                await _db.DeleteSelectEventAsync(ev);
+                Event ev = events.Last();
 
-                if(ev.TeamID == TeamHome.Id)
+                if (ev.EventID == _db.EventsCategories["Очко"])
                 {
-                    set.ScoreHome--;
+                    await _db.DeleteSelectEventAsync(ev);
 
-                    await _db.UpdateSetAsync(set);
+                    if (ev.TeamID == TeamHome.Id)
+                    {
+                        set.ScoreHome--;
+
+                        await _db.UpdateSetAsync(set);
+                    }
+                    else
+                    {
+                        set.ScoreGuest--;
+
+                        await _db.UpdateSetAsync(set);
+                    }
                 }
                 else
                 {
-                    set.ScoreGuest--;
-
-                    await _db.UpdateSetAsync(set);
+                    await DisplayAlert("Информация", "Для последнего события в протоколе необходим счёт, поэтому дальше убирать очки нельзя!", "OK");
                 }
+            }
+        }
+        finally
+        {
+            UpdateData();
 
-                UpdateData();
-            }
-            else
-            {
-                await DisplayAlert("Информация", "Для последнего события в протоколе необходим счёт, поэтому дальше убирать очки нельзя!", "OK");
-            }
+            IsBusy = false;
         }
     }
 

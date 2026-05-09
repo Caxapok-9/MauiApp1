@@ -4,98 +4,33 @@
              x:Class="MauiApp1.Views.ReplacePage"
              Title="ReplacePage">
 
-    <Grid ColumnDefinitions="*,*,*">
+    <Grid ColumnDefinitions="*,*,*" RowDefinitions="auto,*">
 
-        <Frame Grid.Column="0" BorderColor="{DynamicResource MainColor}" Background="Transparent" CornerRadius="10" Padding="10" Margin="15">
+        <Label Grid.Column="0" Grid.Row="0" Text="Игроки на поле" FontSize="Title" Margin="0,15,0,0" HorizontalOptions="Center" VerticalOptions="Start" FontAttributes="Bold" TextColor="White"/>
 
-            <VerticalStackLayout>
+        <Border Grid.Column="0" Grid.Row="1" Stroke="{DynamicResource MainColor}" Background="Transparent" Padding="5" Margin="15">
 
-                <Label Text="Игроки на поле" FontSize="Title" Margin="0,0,0,10" HorizontalOptions="Center" VerticalOptions="Start" FontAttributes="Bold" TextColor="White"/>
+            <Border.StrokeShape>
 
-                <CollectionView x:Name="ListPlayerIn" SelectionMode="Single">
+                <RoundRectangle CornerRadius="10"/>
 
-                    <CollectionView.ItemsLayout>
+            </Border.StrokeShape>
 
-                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
+            <CollectionView x:Name="ListPlayerIn" SelectionMode="Single" ItemSizingStrategy="MeasureFirstItem">
 
-                    </CollectionView.ItemsLayout>                    
+                <CollectionView.ItemsLayout>
 
-                    <CollectionView.ItemTemplate>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
 
-                        <DataTemplate>
+                </CollectionView.ItemsLayout>
 
-                            <Border Stroke="{DynamicResource MainColor}" Padding="10">
+                <CollectionView.ItemTemplate>
 
-                                <VisualStateManager.VisualStateGroups>
+                    <DataTemplate>
 
-                                    <VisualStateGroupList>
+                        <Border Stroke="{DynamicResource MainColor}">
 
-                                        <VisualStateGroup x:Name="CommonStates">
-
-                                            <VisualState x:Name="Normal">
-
-                                                <VisualState.Setters>
-
-                                                    <Setter Property="Background" Value="#141414"/>
-
-                                                </VisualState.Setters>
-
-                                            </VisualState>
-
-                                            <VisualState x:Name="Selected">
-
-                                                <VisualState.Setters>
-
-                                                    <Setter Property="Background" Value="{DynamicResource ReplaceSelectColor}"/>
-
-                                                </VisualState.Setters>
-
-                                            </VisualState>
-
-                                        </VisualStateGroup>
-
-                                    </VisualStateGroupList>
-
-                                </VisualStateManager.VisualStateGroups>
-
-                                <Border.StrokeShape>
-
-                                    <RoundRectangle CornerRadius="10"/>
-
-                                </Border.StrokeShape>
-
-                                <Grid ColumnDefinitions="auto,*">
-
-                                    <Label Grid.Column="0" Text="{Binding Number}" Margin="0,0,10,0"/>
-                                    <Label Grid.Column="1" Text="{Binding Name}" Margin="10,0,0,0"/>
-
-                                </Grid>
-
-                            </Border>
-
-                        </DataTemplate>
-
-                    </CollectionView.ItemTemplate>
-
-                </CollectionView>
-
-            </VerticalStackLayout>                     
-
-        </Frame>
-
-        <Frame Grid.Column="1" BorderColor="{DynamicResource ExitColor}" Background="Transparent" CornerRadius="10" Padding="10" Margin="15">
-
-            <VerticalStackLayout>
-
-                <Label Text="Игроки на замене" FontSize="Title" Margin="0,0,0,10" HorizontalOptions="Center" VerticalOptions="Start" FontAttributes="Bold" TextColor="White"/>
-
-                <CollectionView x:Name="ListPlayerOut" SelectionMode="Single">
-
-                    <CollectionView.Resources>
-
-                        <Style TargetType="Border">
-
-                            <Setter Property="VisualStateManager.VisualStateGroups">
+                            <VisualStateManager.VisualStateGroups>
 
                                 <VisualStateGroupList>
 
@@ -105,7 +40,7 @@
 
                                             <VisualState.Setters>
 
-                                                <Setter Property="Background" Value="Transparent" />
+                                                <Setter Property="Background" Value="#141414"/>
 
                                             </VisualState.Setters>
 
@@ -115,7 +50,7 @@
 
                                             <VisualState.Setters>
 
-                                                <Setter Property="Background" Value="Transparent" />
+                                                <Setter Property="Background" Value="{DynamicResource PointColor}"/>
 
                                             </VisualState.Setters>
 
@@ -125,84 +60,113 @@
 
                                 </VisualStateGroupList>
 
-                            </Setter>
+                            </VisualStateManager.VisualStateGroups>
 
-                        </Style>
+                            <Border.StrokeShape>
 
-                    </CollectionView.Resources>
+                                <RoundRectangle CornerRadius="10"/>
 
-                    <CollectionView.ItemsLayout>
+                            </Border.StrokeShape>
 
-                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
+                            <Grid ColumnDefinitions="auto,*" Margin="4" VerticalOptions="Center">
 
-                    </CollectionView.ItemsLayout>
+                                <Label Grid.Column="0" Text="{Binding Number}" Margin="10,5,10,5" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Subtitle"/>
+                                <Label Grid.Column="1" Text="{Binding Name}" Margin="10,5,0,5" VerticalOptions="Center" HorizontalOptions="Start" FontSize="Subtitle"/>
 
-                    <CollectionView.ItemTemplate>
+                            </Grid>
 
-                        <DataTemplate>
+                        </Border>
 
-                            <Border Stroke="{DynamicResource ExitColor}" Padding="10">
+                    </DataTemplate>
 
-                                <VisualStateManager.VisualStateGroups>
+                </CollectionView.ItemTemplate>
 
-                                    <VisualStateGroupList>
+            </CollectionView>
+            
+        </Border>
 
-                                        <VisualStateGroup x:Name="CommonStates">
+        <Label Grid.Column="1" Grid.Row="0" Text="Игроки на замене" FontSize="Title" Margin="0,15,0,0" HorizontalOptions="Center" VerticalOptions="Start" FontAttributes="Bold" TextColor="White"/>
 
-                                            <VisualState x:Name="Normal">
+        <Border Grid.Column="1" Grid.Row="1" Stroke="{DynamicResource ExitColor}" Background="Transparent" Padding="5" Margin="15">
 
-                                                <VisualState.Setters>
+            <Border.StrokeShape>
 
-                                                    <Setter Property="Background" Value="#141414"/>
+                <RoundRectangle CornerRadius="10"/>
 
-                                                </VisualState.Setters>
+            </Border.StrokeShape>
 
-                                            </VisualState>
+            <CollectionView x:Name="ListPlayerOut" SelectionMode="Single" ItemSizingStrategy="MeasureFirstItem">
 
-                                            <VisualState x:Name="Selected">
+                <CollectionView.ItemsLayout>
 
-                                                <VisualState.Setters>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
 
-                                                    <Setter Property="Background" Value="{DynamicResource PointExitColor}"/>
+                </CollectionView.ItemsLayout>
 
-                                                </VisualState.Setters>
+                <CollectionView.ItemTemplate>
 
-                                            </VisualState>
+                    <DataTemplate>
 
-                                        </VisualStateGroup>
+                        <Border Stroke="{DynamicResource ExitColor}">
 
-                                    </VisualStateGroupList>
+                            <VisualStateManager.VisualStateGroups>
 
-                                </VisualStateManager.VisualStateGroups>
+                                <VisualStateGroupList>
 
-                                <Border.StrokeShape>
+                                    <VisualStateGroup x:Name="CommonStates">
 
-                                    <RoundRectangle CornerRadius="10"/>
+                                        <VisualState x:Name="Normal">
 
-                                </Border.StrokeShape>
+                                            <VisualState.Setters>
 
-                                <Grid ColumnDefinitions="auto,*">
+                                                <Setter Property="Background" Value="#141414"/>
 
-                                    <Label Grid.Column="0" Text="{Binding Number}" Margin="0,0,10,0"/>
-                                    <Label Grid.Column="1" Text="{Binding Name}" Margin="10,0,0,0"/>
+                                            </VisualState.Setters>
 
-                                </Grid>
+                                        </VisualState>
 
-                            </Border>
+                                        <VisualState x:Name="Selected">
 
-                        </DataTemplate>
+                                            <VisualState.Setters>
 
-                    </CollectionView.ItemTemplate>
+                                                <Setter Property="Background" Value="{DynamicResource PointExitColor}"/>
 
-                </CollectionView>
+                                            </VisualState.Setters>
 
-            </VerticalStackLayout>
+                                        </VisualState>
 
-        </Frame>
+                                    </VisualStateGroup>
 
-        <VerticalStackLayout Grid.Column="2" VerticalOptions="Start">
+                                </VisualStateGroupList>
 
-            <Button x:Name="ButtonReplace" Clicked="OnReplaceButtonClick" Text="Замена" TextColor="White" VerticalOptions="Start" Margin="20,70,20,20">
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Border.StrokeShape>
+
+                                <RoundRectangle CornerRadius="10"/>
+
+                            </Border.StrokeShape>
+
+                            <Grid ColumnDefinitions="auto,*" Margin="4" VerticalOptions="Center">
+
+                                <Label Grid.Column="0" Text="{Binding Number}" Margin="10,5,10,5" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Subtitle"/>
+                                <Label Grid.Column="1" Text="{Binding Name}" Margin="10,5,0,5" VerticalOptions="Center" HorizontalOptions="Start" FontSize="Subtitle"/>
+
+                            </Grid>
+
+                        </Border>
+
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+        </Border>
+
+        <Grid Grid.Column="2" Grid.Row="1" VerticalOptions="Start" RowDefinitions="*,*">
+
+            <Button Grid.Row="0" x:Name="ButtonReplace" Clicked="OnReplaceButtonClick" Text="Замена" TextColor="White" VerticalOptions="Start" Margin="20,70,20,20">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -238,7 +202,7 @@
                 
             </Button>
 
-            <Button x:Name="ButtonExit" Clicked="OnExitButtonClick" Text="Отмена" TextColor="White" VerticalOptions="Center" Margin="20,10,20,20">
+            <Button Grid.Row="1" x:Name="ButtonExit" Clicked="OnExitButtonClick" Text="Отмена" TextColor="White" VerticalOptions="Center" Margin="20,10,20,20">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -274,7 +238,7 @@
 
             </Button>
         
-        </VerticalStackLayout>
+        </Grid>
 
     </Grid>
     

@@ -33,11 +33,13 @@ public partial class ReplacePage : ContentPage
 
     protected override async void OnAppearing()
     {
+        base.OnAppearing();
+
         _line = _db.LineUpBegin[_targetTeam.Id];
 
         _eventsReplace = await _db.GetEventAsync(_set.Id, _targetTeam.Id, _db.EventsCategories["Замена"]);
 
-        if(_eventsReplace != null && _eventsReplace.Count > 0)
+        if (_eventsReplace != null && _eventsReplace.Count > 0)
         {
             foreach (var ev in _eventsReplace)
             {
@@ -77,39 +79,17 @@ public partial class ReplacePage : ContentPage
                     continue;
                 }
             }
-
-            CourtAdd(_line);
-
-            foreach (var p in _roster)
-            {
-                if (!_court.Contains(p.Value))
-                {
-                    _bench.Add(p.Value);
-                }
-            }
-
-            ListPlayerIn.ItemsSource = _court;
-
-            ListPlayerOut.ItemsSource = _bench;
-        }
-        else
-        {
-            CourtAdd(_line);
-
-            foreach (var p in _roster)
-            {
-                if (!_court.Contains(p.Value))
-                {
-                    _bench.Add(p.Value);
-                }
-            }
-
-            ListPlayerIn.ItemsSource = _court;
-
-            ListPlayerOut.ItemsSource = _bench;
         }
 
-        base.OnAppearing();
+        CourtAdd(_line);
+
+        var l = _court.Select(c => c.Id).ToHashSet();
+
+        _bench.AddRange(_roster.Values.Where(p => !l.Contains(p.Id)));
+
+        ListPlayerIn.ItemsSource = _court;
+
+        ListPlayerOut.ItemsSource = _bench;     
     }
 
     private void CourtAdd(LineUp l)
@@ -124,85 +104,97 @@ public partial class ReplacePage : ContentPage
 
     private async void OnReplaceButtonClick(object sender, EventArgs e)
     {
-        Player courtPlayer = ListPlayerIn.SelectedItem as Player;
+        if (IsBusy)
+            return;
 
-        Player benchPlayer = ListPlayerOut.SelectedItem as Player;
-
-        if( courtPlayer != null && benchPlayer != null )
+        try
         {
-            if(courtPlayer.ReplaceID == 0)
+            IsBusy = true;
+
+            Player courtPlayer = ListPlayerIn.SelectedItem as Player;
+
+            Player benchPlayer = ListPlayerOut.SelectedItem as Player;
+
+            if (courtPlayer != null && benchPlayer != null)
             {
-                if(benchPlayer.ReplaceID != 0)
+                if (courtPlayer.ReplaceID == 0)
                 {
-                    if(benchPlayer.ReplaceID == courtPlayer.Id)
+                    if (benchPlayer.ReplaceID != 0)
                     {
-                        Event ev = new Event();
-
-                        ev.SetID = _set.Id;
-                        ev.TeamID = _targetTeam.Id;
-                        ev.EventID = _db.EventsCategories["Замена"];
-                        ev.ScoreGuest = _set.ScoreGuest;
-                        ev.ScoreHome = _set.ScoreHome;
-                        ev.PlayerInID = courtPlayer.Id;
-                        ev.PlayerOutID = benchPlayer.Id;
-
-                        await _db.SaveEventAsync(ev);
-
-                        courtPlayer.ReplaceID = (int)benchPlayer.Id;
-
-                        await _db.SaveRosterAsync(courtPlayer);
-
-                        await Navigation.PopModalAsync();
-                    }
-                    else
-                    {
-                        if(_court.Where(x => x.ReplaceID == benchPlayer.Id).Count() == 0)
+                        if (benchPlayer.ReplaceID == courtPlayer.Id)
                         {
-                            await DisplayAlert("Ошибка", $"Игрока {benchPlayer.Number} можно выпустить только вместо игрока {_roster[benchPlayer.ReplaceID].Number}, в рамках обратной замены!", "OK");
+                            Event ev = new Event();
+
+                            ev.SetID = _set.Id;
+                            ev.TeamID = _targetTeam.Id;
+                            ev.EventID = _db.EventsCategories["Замена"];
+                            ev.ScoreGuest = _set.ScoreGuest;
+                            ev.ScoreHome = _set.ScoreHome;
+                            ev.PlayerInID = courtPlayer.Id;
+                            ev.PlayerOutID = benchPlayer.Id;
+
+                            await _db.SaveEventAsync(ev);
+
+                            courtPlayer.ReplaceID = (int)benchPlayer.Id;
+
+                            await _db.SaveRosterAsync(courtPlayer);
+
+                            await Navigation.PopModalAsync();
                         }
                         else
                         {
-                            await DisplayAlert("Ошибка", $"Игрока {benchPlayer.Number} нельзя выпустить, так как он уже участвовал в обратной замене!", "OK");
+                            if (_court.Where(x => x.ReplaceID == benchPlayer.Id).Count() == 0)
+                            {
+                                await DisplayAlert("Ошибка", $"Игрока {benchPlayer.Number} можно выпустить только вместо игрока {_roster[benchPlayer.ReplaceID].Number}, в рамках обратной замены!", "OK");
+                            }
+                            else
+                            {
+                                await DisplayAlert("Ошибка", $"Игрока {benchPlayer.Number} нельзя выпустить, так как он уже участвовал в обратной замене!", "OK");
+                            }
+
                         }
-                            
+                    }
+                    else
+                    {
+                        if (_bench.Where(x => x.ReplaceID == courtPlayer.Id).Count() == 0)
+                        {
+                            Event ev = new Event();
+
+                            ev.SetID = _set.Id;
+                            ev.TeamID = _targetTeam.Id;
+                            ev.EventID = _db.EventsCategories["Замена"];
+                            ev.ScoreGuest = _set.ScoreGuest;
+                            ev.ScoreHome = _set.ScoreHome;
+                            ev.PlayerInID = courtPlayer.Id;
+                            ev.PlayerOutID = benchPlayer.Id;
+
+                            await _db.SaveEventAsync(ev);
+
+                            courtPlayer.ReplaceID = (int)benchPlayer.Id;
+
+                            await _db.SaveRosterAsync(courtPlayer);
+
+                            await Navigation.PopModalAsync();
+                        }
+                        else
+                        {
+                            await DisplayAlert("Ошибка", $"Игрока {courtPlayer.Number} можно заменить только на игрока {_bench.Where(x => x.ReplaceID == courtPlayer.Id).First().Number}, в рамках обратной замены!", "OK");
+                        }
                     }
                 }
                 else
                 {
-                    if(_bench.Where(x => x.ReplaceID == courtPlayer.Id).Count() == 0)
-                    {
-                        Event ev = new Event();
-
-                        ev.SetID = _set.Id;
-                        ev.TeamID = _targetTeam.Id;
-                        ev.EventID = _db.EventsCategories["Замена"];
-                        ev.ScoreGuest = _set.ScoreGuest;
-                        ev.ScoreHome = _set.ScoreHome;
-                        ev.PlayerInID = courtPlayer.Id;
-                        ev.PlayerOutID = benchPlayer.Id;
-
-                        await _db.SaveEventAsync(ev);
-
-                        courtPlayer.ReplaceID = (int)benchPlayer.Id;
-
-                        await _db.SaveRosterAsync(courtPlayer);
-
-                        await Navigation.PopModalAsync();
-                    }
-                    else
-                    {
-                        await DisplayAlert("Ошибка", $"Игрока { courtPlayer.Number } можно заменить только на игрока { _bench.Where(x => x.ReplaceID == courtPlayer.Id).First().Number }, в рамках обратной замены!", "OK");
-                    }
+                    await DisplayAlert("Ошибка", $"Нельзя убирать игрока {courtPlayer.Number} с поля, так как он уже участвовал в обратной замене!", "OK");
                 }
             }
             else
             {
-                await DisplayAlert("Ошибка", $"Нельзя убирать игрока { courtPlayer.Number } с поля, так как он уже участвовал в обратной замене!", "OK");
+                await DisplayAlert("Ошибка", "Нужно выбрать игрока на поле и игрока на замене!", "OK");
             }
         }
-        else
+        finally
         {
-            await DisplayAlert("Ошибка", "Нужно выбрать игрока на поле и игрока на замене!", "OK");
+            IsBusy = false;
         }
     }
 

@@ -18,7 +18,7 @@
                Padding="15"
                Margin="20"
                VerticalOptions="Start" 
-               BorderColor="{DynamicResource MainColorLeft}" 
+               BorderColor="{DynamicResource MainColorHome}" 
                Background="#141414" 
                CornerRadius="10">
 
@@ -66,7 +66,7 @@
 
                                                 <VisualState.Setters>
 
-                                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                                    <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
                                                     <Setter Property="TextColor" Value="White"/>
 
                                                 </VisualState.Setters>
@@ -83,7 +83,7 @@
 
                                     <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="True">
 
-                                        <Setter Property="Background" Value="{DynamicResource MainColorLeft}" />
+                                        <Setter Property="Background" Value="{DynamicResource MainColorHome}" />
                                         <Setter Property="TextColor" Value="White" />
 
                                     </DataTrigger>
@@ -233,7 +233,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MainColorHome}"/>
 
                                 </VisualState.Setters>
 
@@ -243,7 +243,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
 
                                 </VisualState.Setters>
 

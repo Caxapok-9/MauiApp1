@@ -9,11 +9,11 @@
           RowSpacing="10">
 
         <!-- ВЕРХНЯЯ ЧАСТЬ: ПАРТИИ И НАЗВАНИЯ -->
-        <Grid Grid.Row="0" ColumnDefinitions="*, Auto, Auto, Auto, *" RowDefinitions="auto" VerticalOptions="Start">
+        <Grid x:Name="GridUp" Grid.Row="0" ColumnDefinitions="*, Auto, Auto, Auto, *" RowDefinitions="auto" VerticalOptions="Start">
 
-            <Border Grid.Column="0" StrokeShape="RoundRectangle 15" Margin="0,0,50,0">
+            <Border x:Name="NameHomeBorder" Grid.Column="0" StrokeShape="RoundRectangle 15" Margin="25,0,25,0">
                 
-                <Label x:Name="NameLeft"                        
+                <Label x:Name="NameHome"                        
                        FontSize="Title" 
                        TextColor="White" 
                        VerticalOptions="Center" 
@@ -22,46 +22,48 @@
                 
             </Border>
             
-            <Label x:Name="CountSetLeft" 
+            <Label x:Name="CountSetHome" 
                    Grid.Column="1" 
                    FontSize="Title" 
                    FontAttributes="Bold" 
                    TextColor="White" 
                    VerticalTextAlignment="Center"
-                   Margin="0,0,30,0">
+                   Margin="15,0,15,0">
             </Label>
 
             <Label Grid.Column="2" Text=":" VerticalOptions="Center" FontSize="Title"/>
 
-            <Label x:Name="CountSetRight"
+            <Label x:Name="CountSetGuest"
                    Grid.Column="3" 
                    FontSize="Title" 
                    FontAttributes="Bold" 
                    TextColor="White" 
                    VerticalTextAlignment="Center"
-                   Margin="30,0,0,0">
+                   Margin="15,0,15,0">
             </Label>
             
-            <Border Grid.Column="4" StrokeShape="RoundRectangle 15" Margin="50,0,0,0">
-                <Label x:Name="NameRight"                    
+            <Border x:Name="NameGuestBorder" Grid.Column="4" StrokeShape="RoundRectangle 15" Margin="25,0,25,0">
+                
+                <Label x:Name="NameGuest"                    
                        FontSize="Title" 
                        TextColor="White" 
                        VerticalOptions="Center" 
                        HorizontalOptions="Center">
                 </Label>
+                
             </Border>
 
         </Grid>
 
-        <Grid Grid.Row="1" ColumnDefinitions="*, auto, *" RowDefinitions="*">
+        <Grid x:Name="GridCenter" Grid.Row="1" ColumnDefinitions="*, auto, *" RowDefinitions="*">
 
             <Button Grid.Column="0" 
-                    x:Name="ScoreLeftButton"
-                    Clicked="OnScoreLeftClick"
+                    x:Name="ScoreHomeButton"
+                    Clicked="OnScoreHomeClick"
                     Text="0"
                     TextColor="White"
                     FontSize="52" 
-                    Margin="0,0,30,0">
+                    Margin="15,0,15,0">
 
                 <VisualStateManager.VisualStateGroups>
                     
@@ -73,7 +75,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MainColorHome}"/>
 
                                 </VisualState.Setters>
                                 
@@ -83,7 +85,7 @@
                                 
                                 <VisualState.Setters>
                                     
-                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
                                     
                                 </VisualState.Setters>
                                 
@@ -189,12 +191,12 @@
             </Grid>            
             
             <Button Grid.Column="2" 
-                    x:Name="ScoreRightButton"
-                    Clicked="OnScoreRightClick"
+                    x:Name="ScoreGuestButton"
+                    Clicked="OnScoreGuestClick"
                     Text="0"
                     TextColor="White"
                     FontSize="52" 
-                    Margin="30,0,0,0">
+                    Margin="15,0,15,0">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -206,7 +208,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MainColorGuest}"/>
 
                                 </VisualState.Setters>
 
@@ -216,7 +218,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
 
                                 </VisualState.Setters>
 
@@ -232,18 +234,18 @@
 
         </Grid>
 
-        <Grid Grid.Row="2" ColumnDefinitions="10*, 7*, 7*, 7*, 7*, 10*" RowDefinitions="*">
+        <Grid x:Name="GridDown" Grid.Row="2" ColumnDefinitions="10*, 7*, 7*, 7*, 7*, 10*" RowDefinitions="*">
 
             <Button Grid.Row="1" 
                     Grid.Column="0" 
-                    x:Name="LineUpLeftButton"
-                    Clicked="OnNowLineUpLeftClick"
+                    x:Name="LineUpHomeButton"
+                    Clicked="OnNowLineUpHomeClick"
                     VerticalOptions="Center"
                     TextColor="White"
-                    Margin="0,0,10,0" 
-                    Text="Текущая расстановка"
+                    Margin="15,0,5,0" 
+                    Text="Расстановка"
                     FontAttributes="Bold"
-                    MinimumHeightRequest="80">
+                    MinimumHeightRequest="60">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -255,7 +257,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MainColorHome}"/>
 
                                 </VisualState.Setters>
 
@@ -265,7 +267,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
 
                                 </VisualState.Setters>
 
@@ -282,13 +284,13 @@
             <Button Grid.Row="1" 
                     Grid.Column="1" 
                     VerticalOptions="Center"
-                    x:Name="TimeOutLeftButton"
-                    Clicked="OnTimeOutLeftClick"
+                    x:Name="TimeOutHomeButton"
+                    Clicked="OnTimeOutHomeClick"
                     TextColor="White"
-                    Margin="0,0,10,0" 
-                    Text="Таймауты"
+                    Margin="5,0,5,0" 
+                    Text="Таймаут"
                     FontAttributes="Bold"
-                    MinimumHeightRequest="80">
+                    MinimumHeightRequest="60">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -300,7 +302,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MainColorHome}"/>
 
                                 </VisualState.Setters>
 
@@ -310,7 +312,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
 
                                 </VisualState.Setters>
 
@@ -337,13 +339,13 @@
             <Button Grid.Row="1" 
                     Grid.Column="2" 
                     VerticalOptions="Center"
-                    x:Name="ReplaceLeftButton"
-                    Clicked="OnReplaceLeftClick"
+                    x:Name="ReplaceHomeButton"
+                    Clicked="OnReplaceHomeClick"
                     TextColor="White"
-                    Margin="0,0,30,0" 
-                    Text="Замены"
+                    Margin="5,0,10,0" 
+                    Text="Замена"
                     FontAttributes="Bold"
-                    MinimumHeightRequest="80">
+                    MinimumHeightRequest="60">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -355,7 +357,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MainColorHome}"/>
 
                                 </VisualState.Setters>
 
@@ -365,7 +367,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
 
                                 </VisualState.Setters>
 
@@ -392,13 +394,13 @@
             <Button Grid.Row="1" 
                     Grid.Column="3" 
                     VerticalOptions="Center"
-                    x:Name="ReplaceRightButton"
-                    Clicked="OnReplaceRightClick"
+                    x:Name="ReplaceGuestButton"
+                    Clicked="OnReplaceGuestClick"
                     TextColor="White"
-                    Margin="30,0,0,0" 
-                    Text="Замены"
+                    Margin="10,0,5,0" 
+                    Text="Замена"
                     FontAttributes="Bold"
-                    MinimumHeightRequest="80">
+                    MinimumHeightRequest="60">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -410,7 +412,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MainColorGuest}"/>
 
                                 </VisualState.Setters>
 
@@ -420,7 +422,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
 
                                 </VisualState.Setters>
 
@@ -447,13 +449,13 @@
             <Button Grid.Row="1" 
                     Grid.Column="4" 
                     VerticalOptions="Center"
-                    x:Name="TimeOutRightButton"
-                    Clicked="OnTimeOutRightClick"
+                    x:Name="TimeOutGuestButton"
+                    Clicked="OnTimeOutGuestClick"
                     TextColor="White"
-                    Margin="10,0,0,0" 
-                    Text="Таймауты"
+                    Margin="5,0,5,0" 
+                    Text="Таймаут"
                     FontAttributes="Bold"
-                    MinimumHeightRequest="80">
+                    MinimumHeightRequest="60">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -465,7 +467,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MainColorGuest}"/>
 
                                 </VisualState.Setters>
 
@@ -475,7 +477,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
 
                                 </VisualState.Setters>
 
@@ -502,13 +504,13 @@
             <Button Grid.Row="1" 
                     Grid.Column="5" 
                     VerticalOptions="Center"
-                    x:Name="LineUpRightButton"
-                    Clicked="OnNowLineUpRightClick"
+                    x:Name="LineUpGuestButton"
+                    Clicked="OnNowLineUpGuestClick"
                     TextColor="White"
-                    Margin="10,0,0,0" 
-                    Text="Текущая расстановка"
+                    Margin="5,0,15,0" 
+                    Text="Расстановка"
                     FontAttributes="Bold"
-                    MinimumHeightRequest="80">
+                    MinimumHeightRequest="60">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -520,7 +522,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MainColorGuest}"/>
 
                                 </VisualState.Setters>
 
@@ -530,7 +532,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
 
                                 </VisualState.Setters>
 

@@ -14,18 +14,6 @@ namespace MauiApp1
 
         static public int MaxScoreInShortSet;
 
-        static public void ReverseColor()
-        {
-            Color c1 = Application.Current.Resources["MainColorLeft"] as Color;
-            Color c2 = Application.Current.Resources["PointColorLeft"] as Color;
-
-            Application.Current.Resources["MainColorLeft"] = Application.Current.Resources["MainColorRight"];
-            Application.Current.Resources["PointColorLeft"] = Application.Current.Resources["PointColorRight"];
-
-            Application.Current.Resources["MainColorRight"] = c1;
-            Application.Current.Resources["PointColorRight"] = c2;
-        }
-
         static public void GetSetting()
         {
             MaxSet = Preferences.Default.Get("MaxCountSet", 5);
@@ -35,11 +23,11 @@ namespace MauiApp1
 
         static public void SaveColor()
         {
-            Application.Current.Resources["MainColorLeft"] = Color.FromRgba("#007ACC");
-            Application.Current.Resources["PointColorLeft"] = Colors.DodgerBlue;
+            Application.Current.Resources["MainColorHome"] = Color.FromRgba("#007ACC");
+            Application.Current.Resources["PointColorHome"] = Colors.DodgerBlue;
 
-            Application.Current.Resources["MainColorRight"] = Colors.Chocolate;
-            Application.Current.Resources["PointColorRight"] = Colors.SandyBrown;
+            Application.Current.Resources["MainColorGuest"] = Colors.Chocolate;
+            Application.Current.Resources["PointColorGuest"] = Colors.SandyBrown;
 
             Application.Current.Resources["MainColor"] = Colors.DarkSlateBlue;
             Application.Current.Resources["PointColor"] = Colors.MediumSlateBlue;

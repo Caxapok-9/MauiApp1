@@ -6,66 +6,77 @@
 
     <ScrollView>
 
-        <Grid RowDefinitions="auto,*" ColumnDefinitions="35*,15*,35*">
+        <Grid x:Name="MainGrid" RowDefinitions="auto,*" ColumnDefinitions="35*,15*,35*">
 
             <Label x:Name="NameTeamHome" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" TextColor="White"/>
 
-            <Label x:Name="NameTeamGuest" Grid.Row="0" Grid.Column="2" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" TextColor="White"/>
-
-            <Grid RowDefinitions="*,*,*" ColumnDefinitions="*,*" Grid.Row="1" Grid.Column="0">
+            <Grid x:Name="GridHome" RowDefinitions="*,*,*" ColumnDefinitions="*,*" Grid.Row="1" Grid.Column="0">
 
                 <Border Grid.Row="0" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15">
 
                     <Grid>
 
-                        <Label x:Name="homePosLabel5"
-                                    Text="Зона 5"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference homePosPicker5}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference homePosPicker5}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 5" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
                         </Label>
 
                         <Picker x:Name="homePosPicker5"
-                                    Title="Выберите игрока"
-                                    Opacity="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedHome">
+                                ClassId="Left"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
                         </Picker>
 
                     </Grid>
 
                     <VisualStateManager.VisualStateGroups>
-                        
+
                         <VisualStateGroupList>
-                            
+
                             <VisualStateGroup x:Name="CommonStates">
 
                                 <VisualState x:Name="Normal">
 
                                     <VisualState.Setters>
 
-                                        <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+                                        <Setter Property="Background" Value="{DynamicResource MainColorHome}"/>
 
                                     </VisualState.Setters>
-                                    
+
                                 </VisualState>
 
                                 <VisualState x:Name="PointerOver">
-                                    
+
                                     <VisualState.Setters>
-                                        
-                                        <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
-                                        
+
+                                        <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
+
                                     </VisualState.Setters>
-                                    
+
                                 </VisualState>
 
                             </VisualStateGroup>
-                            
+
                         </VisualStateGroupList>
-                        
+
                     </VisualStateManager.VisualStateGroups>
 
                 </Border>
@@ -74,20 +85,33 @@
 
                     <Grid>
 
-                        <Label x:Name="homePosLabel4"
-                                    Text="Зона 4"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference homePosPicker4}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference homePosPicker4}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 4" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
                         </Label>
 
                         <Picker x:Name="homePosPicker4"
-                                    Title="Выберите игрока"
-                                    Opacity="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedHome">
+                                ClassId="Left"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
                         </Picker>
 
                     </Grid>
@@ -102,7 +126,7 @@
 
                                     <VisualState.Setters>
 
-                                        <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+                                        <Setter Property="Background" Value="{DynamicResource MainColorHome}"/>
 
                                     </VisualState.Setters>
 
@@ -112,7 +136,7 @@
 
                                     <VisualState.Setters>
 
-                                        <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                        <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
 
                                     </VisualState.Setters>
 
@@ -130,20 +154,33 @@
 
                     <Grid>
 
-                        <Label x:Name="homePosLabel6"
-                                    Text="Зона 6"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference homePosPicker6}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference homePosPicker6}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 6" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
                         </Label>
 
                         <Picker x:Name="homePosPicker6"
-                                    Title="Выберите игрока"
-                                    Opacity="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedHome">
+                                ClassId="Left"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
                         </Picker>
 
                     </Grid>
@@ -158,7 +195,7 @@
 
                                     <VisualState.Setters>
 
-                                        <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+                                        <Setter Property="Background" Value="{DynamicResource MainColorHome}"/>
 
                                     </VisualState.Setters>
 
@@ -168,7 +205,7 @@
 
                                     <VisualState.Setters>
 
-                                        <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                        <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
 
                                     </VisualState.Setters>
 
@@ -186,20 +223,33 @@
 
                     <Grid>
 
-                        <Label x:Name="homePosLabel3"
-                                    Text="Зона 3"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference homePosPicker3}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference homePosPicker3}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 3" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
                         </Label>
 
                         <Picker x:Name="homePosPicker3"
-                                    Title="Выберите игрока"
-                                    Opacity="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedHome">
+                                ClassId="Left"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
                         </Picker>
 
                     </Grid>
@@ -214,7 +264,7 @@
 
                                     <VisualState.Setters>
 
-                                        <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+                                        <Setter Property="Background" Value="{DynamicResource MainColorHome}"/>
 
                                     </VisualState.Setters>
 
@@ -224,7 +274,7 @@
 
                                     <VisualState.Setters>
 
-                                        <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                        <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
 
                                     </VisualState.Setters>
 
@@ -242,20 +292,33 @@
 
                     <Grid>
 
-                        <Label x:Name="homePosLabel1"
-                                    Text="Зона 1"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference homePosPicker1}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference homePosPicker1}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 1" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
                         </Label>
 
                         <Picker x:Name="homePosPicker1"
-                                    Title="Выберите игрока"
-                                    Opacity="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedHome">
+                                ClassId="Left"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
                         </Picker>
 
                     </Grid>
@@ -270,7 +333,7 @@
 
                                     <VisualState.Setters>
 
-                                        <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+                                        <Setter Property="Background" Value="{DynamicResource MainColorHome}"/>
 
                                     </VisualState.Setters>
 
@@ -280,7 +343,7 @@
 
                                     <VisualState.Setters>
 
-                                        <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                        <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
 
                                     </VisualState.Setters>
 
@@ -298,20 +361,33 @@
 
                     <Grid>
 
-                        <Label x:Name="homePosLabel2"
-                                    Text="Зона 2"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference homePosPicker2}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference homePosPicker2}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 2" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
                         </Label>
 
                         <Picker x:Name="homePosPicker2"
-                                    Title="Выберите игрока"
-                                    Opacity="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedHome">
+                                ClassId="Left"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
                         </Picker>
 
                     </Grid>
@@ -326,7 +402,7 @@
 
                                     <VisualState.Setters>
 
-                                        <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+                                        <Setter Property="Background" Value="{DynamicResource MainColorHome}"/>
 
                                     </VisualState.Setters>
 
@@ -336,347 +412,7 @@
 
                                     <VisualState.Setters>
 
-                                        <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                            </VisualStateGroup>
-
-                        </VisualStateGroupList>
-
-                    </VisualStateManager.VisualStateGroups>
-
-                </Border>
-
-            </Grid>
-
-            <Grid RowDefinitions="*,*,*" ColumnDefinitions="*,*" Grid.Row="1" Grid.Column="2">
-
-                <Border Grid.Row="0" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15">
-
-                    <Grid>
-
-                        <Label x:Name="guestPosLabel2"
-                                    Text="Зона 2"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
-                        </Label>
-
-                        <Picker x:Name="guestPosPicker2"
-                                    Title="Выберите игрока"
-                                    Opacity="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedGuest">
-                        </Picker>
-
-                    </Grid>
-
-                    <VisualStateManager.VisualStateGroups>
-
-                        <VisualStateGroupList>
-
-                            <VisualStateGroup x:Name="CommonStates">
-
-                                <VisualState x:Name="Normal">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                                <VisualState x:Name="PointerOver">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                            </VisualStateGroup>
-
-                        </VisualStateGroupList>
-
-                    </VisualStateManager.VisualStateGroups>
-
-                </Border>
-
-                <Border Grid.Row="0" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15">
-
-                    <Grid>
-
-                        <Label x:Name="guestPosLabel1"
-                                    Text="Зона 1"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
-                        </Label>
-
-                        <Picker x:Name="guestPosPicker1"
-                                    Title="Выберите игрока"
-                                    Opacity="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedGuest">
-                        </Picker>
-
-                    </Grid>
-
-                    <VisualStateManager.VisualStateGroups>
-
-                        <VisualStateGroupList>
-
-                            <VisualStateGroup x:Name="CommonStates">
-
-                                <VisualState x:Name="Normal">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                                <VisualState x:Name="PointerOver">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                            </VisualStateGroup>
-
-                        </VisualStateGroupList>
-
-                    </VisualStateManager.VisualStateGroups>
-
-                </Border>
-
-                <Border Grid.Row="1" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15">
-
-                    <Grid>
-
-                        <Label x:Name="guestPosLabel3"
-                                    Text="Зона 3"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
-                        </Label>
-
-                        <Picker x:Name="guestPosPicker3"
-                                    Title="Выберите игрока"
-                                    Opacity="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedGuest">
-                        </Picker>
-
-                    </Grid>
-
-                    <VisualStateManager.VisualStateGroups>
-
-                        <VisualStateGroupList>
-
-                            <VisualStateGroup x:Name="CommonStates">
-
-                                <VisualState x:Name="Normal">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                                <VisualState x:Name="PointerOver">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                            </VisualStateGroup>
-
-                        </VisualStateGroupList>
-
-                    </VisualStateManager.VisualStateGroups>
-
-                </Border>
-
-                <Border Grid.Row="1" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15">
-
-                    <Grid>
-
-                        <Label x:Name="guestPosLabel6"
-                                    Text="Зона 6"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
-                        </Label>
-
-                        <Picker x:Name="guestPosPicker6"
-                                    Title="Выберите игрока"
-                                    Opacity="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedGuest">
-                        </Picker>
-
-                    </Grid>
-
-                    <VisualStateManager.VisualStateGroups>
-
-                        <VisualStateGroupList>
-
-                            <VisualStateGroup x:Name="CommonStates">
-
-                                <VisualState x:Name="Normal">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                                <VisualState x:Name="PointerOver">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                            </VisualStateGroup>
-
-                        </VisualStateGroupList>
-
-                    </VisualStateManager.VisualStateGroups>
-
-                </Border>
-
-                <Border Grid.Row="2" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15">
-
-                    <Grid>
-
-                        <Label x:Name="guestPosLabel4"
-                                    Text="Зона 4"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
-                        </Label>
-
-                        <Picker x:Name="guestPosPicker4"
-                                    Title="Выберите игрока"
-                                    Opacity="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedGuest">
-                        </Picker>
-
-                    </Grid>
-
-                    <VisualStateManager.VisualStateGroups>
-
-                        <VisualStateGroupList>
-
-                            <VisualStateGroup x:Name="CommonStates">
-
-                                <VisualState x:Name="Normal">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                                <VisualState x:Name="PointerOver">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                            </VisualStateGroup>
-
-                        </VisualStateGroupList>
-
-                    </VisualStateManager.VisualStateGroups>
-
-                </Border>
-
-                <Border Grid.Row="2" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15">
-
-                    <Grid>
-
-                        <Label x:Name="guestPosLabel5"
-                                    Text="Зона 5"
-                                    TextColor="White"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    FontSize="Title">
-                        </Label>
-
-                        <Picker x:Name="guestPosPicker5"
-                                    Title="Выберите игрока"
-                                    Opacity="0"                                    
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill"
-                                    SelectedIndexChanged="OnPlayerSelectedGuest">
-                        </Picker>
-
-                    </Grid>
-
-                    <VisualStateManager.VisualStateGroups>
-
-                        <VisualStateGroupList>
-
-                            <VisualStateGroup x:Name="CommonStates">
-
-                                <VisualState x:Name="Normal">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
-
-                                    </VisualState.Setters>
-
-                                </VisualState>
-
-                                <VisualState x:Name="PointerOver">
-
-                                    <VisualState.Setters>
-
-                                        <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+                                        <Setter Property="Background" Value="{DynamicResource PointColorHome}"/>
 
                                     </VisualState.Setters>
 
@@ -735,7 +471,7 @@
                         </VisualStateGroupList>
 
                     </VisualStateManager.VisualStateGroups>
-                    
+
                 </Button>
 
                 <Button 
@@ -780,8 +516,428 @@
                         </VisualStateGroupList>
 
                     </VisualStateManager.VisualStateGroups>
-                    
+
                 </Button>
+
+            </Grid>
+
+            <Label x:Name="NameTeamGuest" Grid.Row="0" Grid.Column="2" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24" TextColor="White"/>
+
+            <Grid x:Name="GridGuest" RowDefinitions="*,*,*" ColumnDefinitions="*,*" Grid.Row="1" Grid.Column="2">
+
+                <Border Grid.Row="0" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15">
+
+                    <Grid>
+
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference guestPosPicker2}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference guestPosPicker2}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 2" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker2"
+                                ClassId="Right"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
+                        </Picker>
+
+                    </Grid>
+
+                    <VisualStateManager.VisualStateGroups>
+
+                        <VisualStateGroupList>
+
+                            <VisualStateGroup x:Name="CommonStates">
+
+                                <VisualState x:Name="Normal">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource MainColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                                <VisualState x:Name="PointerOver">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                            </VisualStateGroup>
+
+                        </VisualStateGroupList>
+
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15">
+
+                    <Grid>
+
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference guestPosPicker1}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference guestPosPicker1}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 1" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker1"
+                                ClassId="Right"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
+                        </Picker>
+
+                    </Grid>
+
+                    <VisualStateManager.VisualStateGroups>
+
+                        <VisualStateGroupList>
+
+                            <VisualStateGroup x:Name="CommonStates">
+
+                                <VisualState x:Name="Normal">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource MainColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                                <VisualState x:Name="PointerOver">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                            </VisualStateGroup>
+
+                        </VisualStateGroupList>
+
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15">
+
+                    <Grid>
+
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference guestPosPicker3}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference guestPosPicker3}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 3" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker3"
+                                ClassId="Right"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
+                        </Picker>
+
+                    </Grid>
+
+                    <VisualStateManager.VisualStateGroups>
+
+                        <VisualStateGroupList>
+
+                            <VisualStateGroup x:Name="CommonStates">
+
+                                <VisualState x:Name="Normal">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource MainColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                                <VisualState x:Name="PointerOver">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                            </VisualStateGroup>
+
+                        </VisualStateGroupList>
+
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15">
+
+                    <Grid>
+
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference guestPosPicker6}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference guestPosPicker6}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 6" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker6"
+                                ClassId="Right"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
+                        </Picker>
+
+                    </Grid>
+
+                    <VisualStateManager.VisualStateGroups>
+
+                        <VisualStateGroupList>
+
+                            <VisualStateGroup x:Name="CommonStates">
+
+                                <VisualState x:Name="Normal">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource MainColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                                <VisualState x:Name="PointerOver">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                            </VisualStateGroup>
+
+                        </VisualStateGroupList>
+
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="0" Margin="5" StrokeShape="RoundRectangle 15">
+
+                    <Grid>
+
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference guestPosPicker4}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference guestPosPicker4}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 4" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker4"
+                                ClassId="Right"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
+                        </Picker>
+
+                    </Grid>
+
+                    <VisualStateManager.VisualStateGroups>
+
+                        <VisualStateGroupList>
+
+                            <VisualStateGroup x:Name="CommonStates">
+
+                                <VisualState x:Name="Normal">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource MainColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                                <VisualState x:Name="PointerOver">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                            </VisualStateGroup>
+
+                        </VisualStateGroupList>
+
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="1" Margin="5" StrokeShape="RoundRectangle 15">
+
+                    <Grid>
+
+                        <Label TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Title">
+
+                            <Label.Text>
+
+                                <Binding Source="{x:Reference guestPosPicker5}" Path="SelectedItem.Number"/>
+
+                            </Label.Text>
+
+                            <Label.Triggers>
+
+                                <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference guestPosPicker5}, Path=SelectedIndex}" Value="-1">
+
+                                    <Setter Property="Text" Value="Зона 5" />
+
+                                </DataTrigger>
+
+                            </Label.Triggers>
+
+                        </Label>
+
+                        <Picker x:Name="guestPosPicker5"
+                                ClassId="Right"
+                                Opacity="0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                ItemDisplayBinding="{Binding Number}">
+
+                        </Picker>
+
+                    </Grid>
+
+                    <VisualStateManager.VisualStateGroups>
+
+                        <VisualStateGroupList>
+
+                            <VisualStateGroup x:Name="CommonStates">
+
+                                <VisualState x:Name="Normal">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource MainColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                                <VisualState x:Name="PointerOver">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                            </VisualStateGroup>
+
+                        </VisualStateGroupList>
+
+                    </VisualStateManager.VisualStateGroups>
+
+                </Border>
 
             </Grid>
             

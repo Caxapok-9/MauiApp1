@@ -18,7 +18,7 @@
                Padding="15"
                Margin="20"
                VerticalOptions="Start" 
-               BorderColor="{DynamicResource MainColorRight}" 
+               BorderColor="{DynamicResource MainColorGuest}" 
                Background="#141414" 
                CornerRadius="10">
 
@@ -66,7 +66,7 @@
 
                                                 <VisualState.Setters>
 
-                                                    <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+                                                    <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
                                                     <Setter Property="TextColor" Value="White"/>
 
                                                 </VisualState.Setters>
@@ -83,7 +83,7 @@
 
                                     <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="True">
 
-                                        <Setter Property="Background" Value="{DynamicResource MainColorRight}" />
+                                        <Setter Property="Background" Value="{DynamicResource MainColorGuest}" />
                                         <Setter Property="TextColor" Value="White" />
 
                                     </DataTrigger>
@@ -233,7 +233,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource MainColorRight}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MainColorGuest}"/>
 
                                 </VisualState.Setters>
 
@@ -243,7 +243,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource PointColorRight}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PointColorGuest}"/>
 
                                 </VisualState.Setters>
 

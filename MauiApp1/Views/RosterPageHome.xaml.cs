@@ -39,20 +39,32 @@ public partial class RosterPageHome : ContentPage
 
     private async void NextPageClick(object sender, EventArgs e)
     {
-        string res = CheckData();
+        if (IsBusy)
+            return;
 
-        if (res != null)
+        try
         {
-            await DisplayAlert("Ошибка " + res.Split("\n")[0], res.Split("\n")[1], "OK");
-        }
-        else
-        {
-            foreach (Player player in homePlayers)
+            IsBusy = true;
+
+            string res = CheckData();
+
+            if (res != null)
             {
-                await _db.SaveRosterAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamHome.Id });
+                await DisplayAlert("Ошибка " + res.Split("\n")[0], res.Split("\n")[1], "OK");
             }
+            else
+            {
+                foreach (Player player in homePlayers)
+                {
+                    await _db.SaveRosterAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamHome.Id });
+                }
 
-            await Navigation.PushAsync(new RosterPageGuest(_db));
+                await Navigation.PushAsync(new RosterPageGuest(_db));
+            }
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
@@ -180,37 +192,85 @@ public partial class RosterPageHome : ContentPage
 
     private void OnAddPlayerHomeClicked(object sender, EventArgs e)
     {
-        if (homePlayers.Count < 14)
-            homePlayers.Add(new Player());
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+
+            if (homePlayers.Count < 14)
+                homePlayers.Add(new Player());
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private void OnCaptainClicked(object sender, EventArgs e)
     {
-        var button = sender as Button;
-        var player = button?.CommandParameter as Player;
-
-        if (player == null)
+        if (IsBusy)
             return;
 
-        player.IsCaptain = !player.IsCaptain;
+        try
+        {
+            IsBusy = true;
+
+            var button = sender as Button;
+            var player = button?.CommandParameter as Player;
+
+            if (player == null)
+                return;
+
+            player.IsCaptain = !player.IsCaptain;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private void OnLiberoClicked(object sender, EventArgs e)
     {
-        var button = sender as Button;
-        var player = button?.CommandParameter as Player;
-
-        if (player == null)
+        if (IsBusy)
             return;
 
-        player.IsLibero = !player.IsLibero;
+        try
+        {
+            IsBusy = true;
+
+            var button = sender as Button;
+            var player = button?.CommandParameter as Player;
+
+            if (player == null)
+                return;
+
+            player.IsLibero = !player.IsLibero;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private void DeletePlayerClicked(object sender, EventArgs e)
     {
-        if (sender is Label label && label.BindingContext is Player player)
+        if (IsBusy)
+            return;
+
+        try
         {
-            homePlayers.Remove(player);
+            IsBusy = true;
+
+            if (sender is Label label && label.BindingContext is Player player)
+            {
+                homePlayers.Remove(player);
+            }
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
