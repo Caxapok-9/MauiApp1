@@ -99,6 +99,28 @@ public partial class LineupPage : ContentPage
                 await _db.UpdateTeamAsync(TeamGuest);
             }
         }
+        else if(set.NumberSet == 1)
+        {
+            string result = null;
+
+            while (string.IsNullOrWhiteSpace(result))
+            {
+                result = await DisplayActionSheet(" то подаЄт первым?", null, null, TeamHome.Name, TeamGuest.Name);
+            }
+
+            if (result == TeamHome.Name)
+            {
+                TeamHome.FirstSetServ = true;
+
+                await _db.UpdateTeamAsync(TeamHome);
+            }
+            else if (result == TeamGuest.Name)
+            {
+                TeamGuest.FirstSetServ = true;
+
+                await _db.UpdateTeamAsync(TeamGuest);
+            }
+        }
 
         await _db.SaveSetAsync(set);
     }
@@ -236,23 +258,23 @@ public partial class LineupPage : ContentPage
 
                 lineUpBeginHome.SetId = set.Id;
                 lineUpBeginHome.TeamId = TeamHome.Id;
-                lineUpBeginHome.Zone1PlayerID = rosterHome.Where(x => x.Number == homePosPicker1.SelectedItem.ToString()).First().Id;
-                lineUpBeginHome.Zone2PlayerID = rosterHome.Where(x => x.Number == homePosPicker2.SelectedItem.ToString()).First().Id;
-                lineUpBeginHome.Zone3PlayerID = rosterHome.Where(x => x.Number == homePosPicker3.SelectedItem.ToString()).First().Id;
-                lineUpBeginHome.Zone4PlayerID = rosterHome.Where(x => x.Number == homePosPicker4.SelectedItem.ToString()).First().Id;
-                lineUpBeginHome.Zone5PlayerID = rosterHome.Where(x => x.Number == homePosPicker5.SelectedItem.ToString()).First().Id;
-                lineUpBeginHome.Zone6PlayerID = rosterHome.Where(x => x.Number == homePosPicker6.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone1PlayerID = (int)rosterHome.Where(x => x.Number == homePosPicker1.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone2PlayerID = (int)rosterHome.Where(x => x.Number == homePosPicker2.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone3PlayerID = (int)rosterHome.Where(x => x.Number == homePosPicker3.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone4PlayerID = (int)rosterHome.Where(x => x.Number == homePosPicker4.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone5PlayerID = (int)rosterHome.Where(x => x.Number == homePosPicker5.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone6PlayerID = (int)rosterHome.Where(x => x.Number == homePosPicker6.SelectedItem.ToString()).First().Id;
 
                 LineUp lineUpBeginGuest = new LineUp();
 
                 lineUpBeginGuest.SetId = set.Id;
                 lineUpBeginGuest.TeamId = TeamGuest.Id;
-                lineUpBeginGuest.Zone1PlayerID = rosterGuest.Where(x => x.Number == guestPosPicker1.SelectedItem.ToString()).First().Id;
-                lineUpBeginGuest.Zone2PlayerID = rosterGuest.Where(x => x.Number == guestPosPicker2.SelectedItem.ToString()).First().Id;
-                lineUpBeginGuest.Zone3PlayerID = rosterGuest.Where(x => x.Number == guestPosPicker3.SelectedItem.ToString()).First().Id;
-                lineUpBeginGuest.Zone4PlayerID = rosterGuest.Where(x => x.Number == guestPosPicker4.SelectedItem.ToString()).First().Id;
-                lineUpBeginGuest.Zone5PlayerID = rosterGuest.Where(x => x.Number == guestPosPicker5.SelectedItem.ToString()).First().Id;
-                lineUpBeginGuest.Zone6PlayerID = rosterGuest.Where(x => x.Number == guestPosPicker6.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone1PlayerID = (int)rosterGuest.Where(x => x.Number == guestPosPicker1.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone2PlayerID = (int)rosterGuest.Where(x => x.Number == guestPosPicker2.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone3PlayerID = (int)rosterGuest.Where(x => x.Number == guestPosPicker3.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone4PlayerID = (int)rosterGuest.Where(x => x.Number == guestPosPicker4.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone5PlayerID = (int)rosterGuest.Where(x => x.Number == guestPosPicker5.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone6PlayerID = (int)rosterGuest.Where(x => x.Number == guestPosPicker6.SelectedItem.ToString()).First().Id;
 
                 await _db.SaveLineUpAsync(lineUpBeginHome);
                 await _db.SaveLineUpAsync(lineUpBeginGuest);
@@ -266,23 +288,23 @@ public partial class LineupPage : ContentPage
 
                 lineUpBeginHome.SetId = set.Id;
                 lineUpBeginHome.TeamId = TeamHome.Id;
-                lineUpBeginHome.Zone1PlayerID = rosterHome.Where(x => x.Number == guestPosPicker1.SelectedItem.ToString()).First().Id;
-                lineUpBeginHome.Zone2PlayerID = rosterHome.Where(x => x.Number == guestPosPicker2.SelectedItem.ToString()).First().Id;
-                lineUpBeginHome.Zone3PlayerID = rosterHome.Where(x => x.Number == guestPosPicker3.SelectedItem.ToString()).First().Id;
-                lineUpBeginHome.Zone4PlayerID = rosterHome.Where(x => x.Number == guestPosPicker4.SelectedItem.ToString()).First().Id;
-                lineUpBeginHome.Zone5PlayerID = rosterHome.Where(x => x.Number == guestPosPicker5.SelectedItem.ToString()).First().Id;
-                lineUpBeginHome.Zone6PlayerID = rosterHome.Where(x => x.Number == guestPosPicker6.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone1PlayerID = (int)rosterHome.Where(x => x.Number == guestPosPicker1.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone2PlayerID = (int)rosterHome.Where(x => x.Number == guestPosPicker2.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone3PlayerID = (int)rosterHome.Where(x => x.Number == guestPosPicker3.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone4PlayerID = (int)rosterHome.Where(x => x.Number == guestPosPicker4.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone5PlayerID = (int)rosterHome.Where(x => x.Number == guestPosPicker5.SelectedItem.ToString()).First().Id;
+                lineUpBeginHome.Zone6PlayerID = (int)rosterHome.Where(x => x.Number == guestPosPicker6.SelectedItem.ToString()).First().Id;
 
                 LineUp lineUpBeginGuest = new LineUp();
 
                 lineUpBeginGuest.SetId = set.Id;
                 lineUpBeginGuest.TeamId = TeamGuest.Id;
-                lineUpBeginGuest.Zone1PlayerID = rosterGuest.Where(x => x.Number == homePosPicker1.SelectedItem.ToString()).First().Id;
-                lineUpBeginGuest.Zone2PlayerID = rosterGuest.Where(x => x.Number == homePosPicker2.SelectedItem.ToString()).First().Id;
-                lineUpBeginGuest.Zone3PlayerID = rosterGuest.Where(x => x.Number == homePosPicker3.SelectedItem.ToString()).First().Id;
-                lineUpBeginGuest.Zone4PlayerID = rosterGuest.Where(x => x.Number == homePosPicker4.SelectedItem.ToString()).First().Id;
-                lineUpBeginGuest.Zone5PlayerID = rosterGuest.Where(x => x.Number == homePosPicker5.SelectedItem.ToString()).First().Id;
-                lineUpBeginGuest.Zone6PlayerID = rosterGuest.Where(x => x.Number == homePosPicker6.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone1PlayerID = (int)rosterGuest.Where(x => x.Number == homePosPicker1.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone2PlayerID = (int)rosterGuest.Where(x => x.Number == homePosPicker2.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone3PlayerID = (int)rosterGuest.Where(x => x.Number == homePosPicker3.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone4PlayerID = (int)rosterGuest.Where(x => x.Number == homePosPicker4.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone5PlayerID = (int)rosterGuest.Where(x => x.Number == homePosPicker5.SelectedItem.ToString()).First().Id;
+                lineUpBeginGuest.Zone6PlayerID = (int)rosterGuest.Where(x => x.Number == homePosPicker6.SelectedItem.ToString()).First().Id;
 
                 await _db.SaveLineUpAsync(lineUpBeginHome);
                 await _db.SaveLineUpAsync(lineUpBeginGuest);

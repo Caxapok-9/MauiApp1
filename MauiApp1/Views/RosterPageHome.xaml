@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.Views.RosterPageHome">
+
+    <Grid RowDefinitions="auto,*,auto">
+
+        <Label Grid.Row="0" Text="⚠️ Проверяйте данные при заполнении!" 
+                    TextColor="DarkOrange" 
+                    FontAttributes="Italic"
+                    FontSize="14"
+                    HorizontalOptions="Fill" 
+                    HorizontalTextAlignment="Center"
+                    Margin="0,20,0,0"
+                    LineBreakMode="WordWrap"/>
+
+        <Frame Grid.Row="1" 
+               Padding="15"
+               Margin="20"
+               VerticalOptions="Start" 
+               BorderColor="{DynamicResource MainColorLeft}" 
+               Background="#141414" 
+               CornerRadius="10">
+
+            <CollectionView x:Name="TeamHomeList">
+
+                <CollectionView.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <Grid ColumnDefinitions="40,*,Auto,Auto,40" Padding="5">
+
+                            <Entry Grid.Column="0" Text="{Binding Number}" Keyboard="Numeric" Placeholder="№" HorizontalTextAlignment="Center"/>
+
+                            <Entry Grid.Column="1" Text="{Binding Name}" Placeholder="Фамилия И.О." Margin="5,0"/>
+
+                            <Button Grid.Column="2" 
+                                    Text="Cap" 
+                                    FontAttributes="Bold"
+                                    Clicked="OnCaptainClicked"
+                                    CommandParameter="{Binding .}"
+                                    WidthRequest="40" 
+                                    HeightRequest="40"
+                                    CornerRadius="10"
+                                    Padding="0"                                            
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center">
+
+                                <VisualStateManager.VisualStateGroups>
+
+                                    <VisualStateGroupList>
+
+                                        <VisualStateGroup x:Name="CommonStates">
+
+                                            <VisualState x:Name="Normal">
+
+                                                <VisualState.Setters>
+
+
+
+                                                </VisualState.Setters>
+
+                                            </VisualState>
+
+                                            <VisualState x:Name="PointerOver">
+
+                                                <VisualState.Setters>
+
+                                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+                                                    <Setter Property="TextColor" Value="White"/>
+
+                                                </VisualState.Setters>
+
+                                            </VisualState>
+
+                                        </VisualStateGroup>
+
+                                    </VisualStateGroupList>
+
+                                </VisualStateManager.VisualStateGroups>
+
+                                <Button.Triggers>
+
+                                    <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="True">
+
+                                        <Setter Property="Background" Value="{DynamicResource MainColorLeft}" />
+                                        <Setter Property="TextColor" Value="White" />
+
+                                    </DataTrigger>
+
+                                    <DataTrigger TargetType="Button" Binding="{Binding IsCaptain}" Value="False">
+
+                                        <Setter Property="Background" Value="LightGray" />
+                                        <Setter Property="TextColor" Value="Black" />
+
+                                    </DataTrigger>
+
+                                </Button.Triggers>
+
+                            </Button>
+
+                            <Button Grid.Column="3" 
+                                    Text="L" 
+                                    FontAttributes="Bold"
+                                    CommandParameter="{Binding .}"
+                                    Clicked="OnLiberoClicked"
+                                    WidthRequest="40" 
+                                    HeightRequest="40"
+                                    CornerRadius="10"
+                                    Padding="0"
+                                    Margin="5,0,0,0"
+                                    VerticalOptions="Center" 
+                                    HorizontalOptions="Center">
+
+                                <VisualStateManager.VisualStateGroups>
+
+                                    <VisualStateGroupList>
+
+                                        <VisualStateGroup x:Name="CommonStates">
+
+                                            <VisualState x:Name="Normal">
+
+                                                <VisualState.Setters>
+
+
+
+                                                </VisualState.Setters>
+
+                                            </VisualState>
+
+                                            <VisualState x:Name="PointerOver">
+
+                                                <VisualState.Setters>
+
+                                                    <Setter Property="Background" Value="LimeGreen"/>
+                                                    <Setter Property="TextColor" Value="White"/>
+
+                                                </VisualState.Setters>
+
+                                            </VisualState>
+
+                                        </VisualStateGroup>
+
+                                    </VisualStateGroupList>
+
+                                </VisualStateManager.VisualStateGroups>
+
+                                <Button.Triggers>
+
+                                    <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="True">
+
+                                        <Setter Property="Background" Value="Green" />
+                                        <Setter Property="TextColor" Value="White" />
+
+                                    </DataTrigger>
+
+                                    <DataTrigger TargetType="Button" Binding="{Binding IsLibero}" Value="False">
+
+                                        <Setter Property="Background" Value="LightGray" />
+                                        <Setter Property="TextColor" Value="Black" />
+
+                                    </DataTrigger>
+
+                                </Button.Triggers>
+
+                            </Button>
+
+                            <Label Grid.Column="4" Text="❌" FontAttributes="None" VerticalOptions="Center" HorizontalOptions="End">
+
+                                <VisualStateManager.VisualStateGroups>
+
+                                    <VisualStateGroupList>
+
+                                        <VisualStateGroup x:Name="CommonStates">
+
+                                            <VisualState x:Name="Normal">
+
+                                                <VisualState.Setters>
+
+                                                    <Setter Property="Background" Value="#141414"/>
+                                                    <Setter Property="FontSize" Value="18"/>
+
+                                                </VisualState.Setters>
+
+                                            </VisualState>
+
+                                            <VisualState x:Name="PointerOver">
+
+                                                <VisualState.Setters>
+
+                                                    <Setter Property="FontSize" Value="22"/>
+                                                    <Setter Property="FontAttributes" Value="Bold"/>
+
+                                                </VisualState.Setters>
+
+                                            </VisualState>
+
+                                        </VisualStateGroup>
+
+                                    </VisualStateGroupList>
+
+                                </VisualStateManager.VisualStateGroups>
+
+                                <Label.GestureRecognizers>
+
+                                    <TapGestureRecognizer Tapped="DeletePlayerClicked"/>
+
+                                </Label.GestureRecognizers>
+
+                            </Label>
+
+                        </Grid>
+
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+        </Frame>
+
+        <VerticalStackLayout  Grid.Row="2" VerticalOptions="End">
+
+            <Button Text="+ Добавить игрока" Clicked="OnAddPlayerHomeClicked" TextColor="White" Margin="20,0,20,10">
+
+                <VisualStateManager.VisualStateGroups>
+
+                    <VisualStateGroupList>
+
+                        <VisualStateGroup x:Name="CommonStates">
+
+                            <VisualState x:Name="Normal">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColorLeft}"/>
+
+                                </VisualState.Setters>
+
+                            </VisualState>
+
+                            <VisualState x:Name="PointerOver">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColorLeft}"/>
+
+                                </VisualState.Setters>
+
+                            </VisualState>
+
+                        </VisualStateGroup>
+
+                    </VisualStateGroupList>
+
+                </VisualStateManager.VisualStateGroups>
+
+            </Button>
+
+            <Button Text="К следующей заявке"
+                         FontSize="18"
+                         FontAttributes="Bold"
+                         TextColor="White"
+                         HeightRequest="50"
+                         CornerRadius="10"
+                         HorizontalOptions="Fill"
+                         VerticalOptions="End"
+                         Margin="20,10,20,10"
+                         Clicked="NextPageClick">
+
+                <VisualStateManager.VisualStateGroups>
+
+                    <VisualStateGroupList>
+
+                        <VisualStateGroup x:Name="CommonStates">
+
+                            <VisualState x:Name="Normal">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+
+                                </VisualState.Setters>
+
+                            </VisualState>
+
+                            <VisualState x:Name="PointerOver">
+
+                                <VisualState.Setters>
+
+                                    <Setter Property="Background" Value="{DynamicResource PointColor}"/>
+
+                                </VisualState.Setters>
+
+                            </VisualState>
+
+                        </VisualStateGroup>
+
+                    </VisualStateGroupList>
+
+                </VisualStateManager.VisualStateGroups>
+
+            </Button>
+
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>

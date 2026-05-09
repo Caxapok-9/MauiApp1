@@ -18,7 +18,7 @@ public partial class ReplacePage : ContentPage
 
     List<Player> _bench = new List<Player>();
 
-    public ReplacePage(DatabaseService db, Team targetTeam, Set set)
+    public ReplacePage(DatabaseService db, Team targetTeam, Set set, List<Player> roster)
     {
         InitializeComponent();
 
@@ -28,20 +28,14 @@ public partial class ReplacePage : ContentPage
 
         _targetTeam = targetTeam;
 
+        _roster = roster.Where(x => !x.IsLibero).ToDictionary(x => (int)x.Id, x => x);
     }
 
     protected override async void OnAppearing()
     {
-
-        base.OnAppearing();
-
         _line = _db.LineUpBegin[_targetTeam.Id];
 
         _eventsReplace = await _db.GetEventAsync(_set.Id, _targetTeam.Id, _db.EventsCategories["Замена"]);
-
-        var r = await _db.GetRosterAsync(_targetTeam.Id);
-
-        _roster = r.Where(x => !x.IsLibero).ToDictionary(x => x.Id, x => x);
 
         if(_eventsReplace != null && _eventsReplace.Count > 0)
         {
@@ -114,6 +108,8 @@ public partial class ReplacePage : ContentPage
 
             ListPlayerOut.ItemsSource = _bench;
         }
+
+        base.OnAppearing();
     }
 
     private void CourtAdd(LineUp l)
@@ -152,9 +148,9 @@ public partial class ReplacePage : ContentPage
 
                         await _db.SaveEventAsync(ev);
 
-                        courtPlayer.ReplaceID = benchPlayer.Id;
+                        courtPlayer.ReplaceID = (int)benchPlayer.Id;
 
-                        await _db.UpdateRosterAsync(courtPlayer);
+                        await _db.SaveRosterAsync(courtPlayer);
 
                         await Navigation.PopModalAsync();
                     }
@@ -187,9 +183,9 @@ public partial class ReplacePage : ContentPage
 
                         await _db.SaveEventAsync(ev);
 
-                        courtPlayer.ReplaceID = benchPlayer.Id;
+                        courtPlayer.ReplaceID = (int)benchPlayer.Id;
 
-                        await _db.UpdateRosterAsync(courtPlayer);
+                        await _db.SaveRosterAsync(courtPlayer);
 
                         await Navigation.PopModalAsync();
                     }

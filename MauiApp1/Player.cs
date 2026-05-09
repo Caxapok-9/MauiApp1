@@ -12,7 +12,7 @@ namespace MauiApp1
     public class Player : INotifyPropertyChanged
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
+        public int? Id { get; set; } = null;
 
         public string Name { get; set; }
 

@@ -16,6 +16,10 @@ public partial class ScoreBoardPage : ContentPage
 
     private Set set;
 
+    private List<Player> RosterHome;
+
+    private List<Player> RosterGuest;
+
     private bool RosterHomeCheckReplace;
 
     private bool RosterGuestCheckReplace;
@@ -43,9 +47,13 @@ public partial class ScoreBoardPage : ContentPage
 
         var Roster = await _db.GetRosterAsync(TeamHome.Id);
 
+        RosterHome = Roster;
+
         RosterHomeCheckReplace = Roster.Where(x => !x.IsLibero).Count() < 7 ? true : false;
 
         Roster = await _db.GetRosterAsync(TeamGuest.Id);
+
+        RosterGuest = Roster;
 
         RosterGuestCheckReplace = Roster.Where(x => !x.IsLibero).Count() < 7 ? true : false;
 
@@ -58,6 +66,10 @@ public partial class ScoreBoardPage : ContentPage
 
         var TimeOutsGuest = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Тайм-аут"]);
 
+        var EventReplaceHome = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
+
+        var EventReplaceGuest = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
+
         if (TeamHome.IsLeft)
         {
             NameLeft.Text = TeamHome.Name;
@@ -69,32 +81,26 @@ public partial class ScoreBoardPage : ContentPage
             ScoreLeftButton.Text = set.ScoreHome.ToString();
             ScoreRightButton.Text = set.ScoreGuest.ToString();
 
-            if (RosterHomeCheckReplace)
+            if (EventReplaceHome.Count() == 6 || RosterHomeCheckReplace)
             {
                 ReplaceLeftButton.IsEnabled = false;
-
-                var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
-
-                int countReplace = Events.Count();
-
-                if (countReplace < 6 && !RosterGuestCheckReplace)
-                {
-                    ReplaceRightButton.IsEnabled = true;
-                }
+                ReplaceLeftButton.Text = $"Замены (0)";
+            }
+            else
+            {
+                ReplaceLeftButton.IsEnabled = true;
+                ReplaceLeftButton.Text = $"Замены ({6 - EventReplaceHome.Count()})";
             }
 
-            if (RosterGuestCheckReplace)
+            if (EventReplaceGuest.Count() == 6 || RosterGuestCheckReplace)
             {
                 ReplaceRightButton.IsEnabled = false;
-
-                var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
-
-                int countReplace = Events.Count();
-
-                if (countReplace < 6 && !RosterHomeCheckReplace)
-                {
-                    ReplaceLeftButton.IsEnabled = true;
-                }
+                ReplaceRightButton.Text = $"Замены (0)";
+            }
+            else
+            {
+                ReplaceRightButton.IsEnabled = true;
+                ReplaceRightButton.Text = $"Замены ({6 - EventReplaceGuest.Count()})";
             }
 
             if (TimeOutsHome.Count < 2)
@@ -130,32 +136,27 @@ public partial class ScoreBoardPage : ContentPage
             ScoreLeftButton.Text = set.ScoreGuest.ToString();
             ScoreRightButton.Text = set.ScoreHome.ToString();
 
-            if (RosterHomeCheckReplace)
+
+            if (EventReplaceHome.Count() == 6 || RosterHomeCheckReplace)
             {
                 ReplaceRightButton.IsEnabled = false;
-
-                var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
-
-                int countReplace = Events.Count();
-
-                if (countReplace < 6 && !RosterGuestCheckReplace)
-                {
-                    ReplaceLeftButton.IsEnabled = true;
-                }
+                ReplaceRightButton.Text = $"Замены (0)";
+            }
+            else
+            {
+                ReplaceRightButton.IsEnabled = true;
+                ReplaceRightButton.Text = $"Замены ({6 - EventReplaceHome.Count()})";
             }
 
-            if (RosterGuestCheckReplace)
+            if (EventReplaceGuest.Count() == 6 || RosterGuestCheckReplace)
             {
                 ReplaceLeftButton.IsEnabled = false;
-
-                var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
-
-                int countReplace = Events.Count();
-
-                if (countReplace < 6 && !RosterHomeCheckReplace)
-                {
-                    ReplaceRightButton.IsEnabled = true;
-                }
+                ReplaceLeftButton.Text = $"Замены (0)";
+            }
+            else
+            {
+                ReplaceLeftButton.IsEnabled = true;
+                ReplaceLeftButton.Text = $"Замены ({6 - EventReplaceGuest.Count()})";
             }
 
             if (TimeOutsHome.Count < 2)
@@ -267,120 +268,30 @@ public partial class ScoreBoardPage : ContentPage
 
     private async void OnReplaceLeftClick(object sender, EventArgs e)
     {
-        Button but = sender as Button;
-
         if (TeamHome.IsLeft)
         {
-            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
-
-            int countReplace = Events.Count();
-
-            if(countReplace < 6)
-            {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set));
-
-                var E = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
-                      
-                if (E.Count() == 6)
-                {
-                    but.IsEnabled = false;
-
-                    await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
-                }
-            }
-            else
-            {
-                but.IsEnabled = false;
-
-                await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
-            }                
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set, RosterHome));              
         }
         else
         {
-            var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
-
-            int countReplace = Events.Count();
-
-            if (countReplace < 6)
-            {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set));
-
-                var E = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
-
-                if (E.Count() == 6)
-                {
-                    but.IsEnabled = false;
-
-                    await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
-                }
-            }
-            else
-            {
-                but.IsEnabled = false;
-
-                await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
-            }
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set, RosterGuest));
         }
+
+        UpdateData();
     }
 
     private async void OnReplaceRightClick(object sender, EventArgs e)
     {
-        Button but = sender as Button;
-
         if (!TeamHome.IsLeft)
         {
-            var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
-
-            int countReplace = Events.Count();
-
-            if (countReplace < 6)
-            {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set));
-
-                var E = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
-
-                if (E.Count() == 6)
-                {
-                    but.IsEnabled = false;
-
-                    await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
-                }
-            }
-            else
-            {
-
-                but.IsEnabled = false;
-
-                await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
-            }
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set, RosterHome));
         }
         else
         {
-            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
-
-            int countReplace = Events.Count();
-
-            if (countReplace < 6)
-            {
-                await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set));
-
-                var E = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
-
-                if (E.Count() == 6)
-                {
-                    but.IsEnabled = false;
-
-                    await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
-                }
-            }
-            else
-            {
-
-                but.IsEnabled = false;
-
-                await DisplayAlert("Ошибка", "Достигнут лимит по заменам!", "OK");
-            }
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set, RosterGuest));
         }
+
+        UpdateData();
     }
 
     private async void OnNowLineUpLeftClick(object sender, EventArgs e)

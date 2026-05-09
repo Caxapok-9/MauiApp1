@@ -84,16 +84,23 @@ public class DatabaseService
         await _db.ExecuteAsync("UPDATE Player SET ReplaceID = 0", false);
     }
 
-    public async Task<int> SaveRosterAsync(Player player) => await _db.InsertAsync(player);
-
+    public async Task SaveRosterAsync(Player player)
+    {
+        if(player.Id == null)
+        {
+            await _db.InsertAsync(player);
+        }
+        else
+        {
+            await _db.UpdateAsync(player);
+        }
+    }
     public async Task<List<Player>> GetRosterAsync(int teamID)
     {
         return await _db.Table<Player>().Where(x => x.TeamID == teamID).ToListAsync();
     }
 
     public async Task<int> DeleteRosterAsync() => await _db.DeleteAllAsync<Player>();
-
-    public async Task<int> UpdateRosterAsync(Player player) => await _db.UpdateAsync(player);
 
     #endregion
 

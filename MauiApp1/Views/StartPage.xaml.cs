@@ -133,6 +133,6 @@ public partial class StartPage : ContentPage
         await _db.SaveMainInfoAsync(information);
 
         // 4. Переход на следующую страницу (составы)
-        await Navigation.PushAsync(new RosterPage(_db));
+        await Navigation.PushAsync(new RosterPageHome(_db));
     }
 }

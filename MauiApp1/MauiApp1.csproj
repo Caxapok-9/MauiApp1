@@ -77,7 +77,10 @@
 	  <MauiXaml Update="Views\ReplacePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\RosterPage.xaml">
+	  <MauiXaml Update="Views\RosterPageGuest.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RosterPageHome.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ScoreBoardPage.xaml">
