@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace MauiApp1.Views;
 
@@ -181,7 +182,9 @@ public partial class RosterPageHome : ContentPage
 
         foreach (var player in homePlayers)
         {
-            if (!player.Name.All(char.IsLetter) || player.Name.Length > 50)
+            string pattern = @"^[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)?\s[А-ЯЁ]\.[А-ЯЁ]\.$";
+
+            if (!Regex.IsMatch(player.Name, pattern))
                 return $"у команды {TeamHome.Name}\nЕсть некорректные имена";
         }
 
@@ -200,7 +203,11 @@ public partial class RosterPageHome : ContentPage
             IsBusy = true;
 
             if (homePlayers.Count < 14)
-                homePlayers.Add(new Player());
+            {
+                Player player = new Player();
+                homePlayers.Add(player);
+                TeamHomeList.ScrollTo(player);
+            }                  
         }
         finally
         {

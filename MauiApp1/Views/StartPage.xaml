@@ -84,8 +84,7 @@
                     </Button>
 
                 <Button 
-                    Text="⚙️" 
-                    FontSize="Title"
+                    Text="Настройки 🌣"
                     Clicked="OnSettingClicked"
                     TextColor="White"
                     Margin="0,20,0,0"

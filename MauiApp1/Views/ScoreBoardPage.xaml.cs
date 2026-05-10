@@ -316,6 +316,8 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
+            Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorHome"];
+
             await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
         }
         finally
@@ -332,6 +334,8 @@ public partial class ScoreBoardPage : ContentPage
         try
         {
             IsBusy = true;
+
+            Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorGuest"];
 
             await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
         }

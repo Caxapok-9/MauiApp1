@@ -1,5 +1,6 @@
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MauiApp1.Views;
 
@@ -142,6 +143,26 @@ public partial class StartPage : ContentPage
             if(teamHome == teamGuest)
             {
                 await DisplayAlert("Ошибка", "У команд должны быть разные названия", "OK");
+                return;
+            }
+
+            string pattern = @"^[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)?\s[А-ЯЁ]\.[А-ЯЁ]\.$";
+
+            if (!Regex.IsMatch(freferee, pattern))
+            {
+                await DisplayAlert("Ошибка", "Некорректное имя у главного судьи", "OK");
+                return;
+            }
+
+            if (!Regex.IsMatch(treferee, pattern))
+            {
+                await DisplayAlert("Ошибка", "Некорректное имя у второго судьи", "OK");
+                return;
+            }
+
+            if (!Regex.IsMatch(secretary, pattern))
+            {
+                await DisplayAlert("Ошибка", "Некорректное имя у секретаря", "OK");
                 return;
             }
 
