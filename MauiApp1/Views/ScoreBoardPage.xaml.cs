@@ -493,6 +493,8 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
+                                // Переход на страницу формирования PDF и подписания
+
                                 await _db.DeleteAsync();
 
                                 await Navigation.PushAsync(new StartPage(_db));
@@ -512,6 +514,10 @@ public partial class ScoreBoardPage : ContentPage
                                 }
 
                                 // Переход на страницу формирования PDF и подписания
+
+                                await _db.DeleteAsync();
+
+                                await Navigation.PushAsync(new StartPage(_db));
                             }
                         }
                     }
@@ -558,6 +564,10 @@ public partial class ScoreBoardPage : ContentPage
                                 }
 
                                 // Переход к формированию PDF и подписания
+
+                                await _db.DeleteAsync();
+
+                                await Navigation.PushAsync(new StartPage(_db));
                             }
                         }
                         else
@@ -574,6 +584,10 @@ public partial class ScoreBoardPage : ContentPage
                                 }
 
                                 // Переход на страницу формирования PDF и подписания
+
+                                await _db.DeleteAsync();
+
+                                await Navigation.PushAsync(new StartPage(_db));
                             }
                         }
                     }
