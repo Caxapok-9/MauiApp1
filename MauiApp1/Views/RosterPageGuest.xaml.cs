@@ -59,7 +59,7 @@ public partial class RosterPageGuest : ContentPage
                     await _db.SaveRosterAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamGuest.Id });
                 }
 
-                await Navigation.PushAsync(new LineupPage(_db));
+                await Navigation.PushAsync(new LineupPage(_db, true));
             }
         }
         finally

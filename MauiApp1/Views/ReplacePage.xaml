@@ -30,6 +30,12 @@
 
                         <Border Stroke="{DynamicResource MainColor}">
 
+                            <Border.StrokeShape>
+
+                                <RoundRectangle CornerRadius="10"/>
+
+                            </Border.StrokeShape>
+
                             <VisualStateManager.VisualStateGroups>
 
                                 <VisualStateGroupList>
@@ -40,7 +46,7 @@
 
                                             <VisualState.Setters>
 
-                                                <Setter Property="Background" Value="#141414"/>
+                                                <Setter Property="BackgroundColor" Value="#141414"/>
 
                                             </VisualState.Setters>
 
@@ -50,7 +56,7 @@
 
                                             <VisualState.Setters>
 
-                                                <Setter Property="Background" Value="{DynamicResource PointColor}"/>
+                                                <Setter Property="Background" Value="{DynamicResource MainColor}"/>
 
                                             </VisualState.Setters>
 
@@ -61,12 +67,6 @@
                                 </VisualStateGroupList>
 
                             </VisualStateManager.VisualStateGroups>
-
-                            <Border.StrokeShape>
-
-                                <RoundRectangle CornerRadius="10"/>
-
-                            </Border.StrokeShape>
 
                             <Grid ColumnDefinitions="auto,*" Margin="4" VerticalOptions="Center">
 

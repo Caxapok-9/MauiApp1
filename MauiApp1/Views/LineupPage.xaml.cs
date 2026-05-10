@@ -18,9 +18,13 @@ public partial class LineupPage : ContentPage
 
     private List<Picker> pickersGuest;
 
-    public LineupPage(DatabaseService db)
+    bool checkStart;
+
+    public LineupPage(DatabaseService db, bool CheckStart)
 	{
         _db = db;
+
+        checkStart = CheckStart;
 
         InitializeComponent();
 
@@ -41,7 +45,41 @@ public partial class LineupPage : ContentPage
 
         await GetData();
 
-        await CreateSet();
+        if(checkStart)
+        {
+            await CreateSet();
+        }
+        else
+        {
+            var Sets = await _db.GetSetAsync();
+
+            set = Sets.Last();
+
+            if (set.NumberSet == 1)
+            {
+                string result = null;
+
+                while (string.IsNullOrWhiteSpace(result))
+                {
+                    result = await DisplayActionSheet(" то подаЄт первым?", null, null, TeamHome.Name, TeamGuest.Name);
+                }
+
+                if (result == TeamHome.Name)
+                {
+                    TeamHome.FirstSetServ = true;
+
+                    await _db.UpdateTeamAsync(TeamHome);
+                }
+                else if (result == TeamGuest.Name)
+                {
+                    TeamGuest.FirstSetServ = true;
+
+                    await _db.UpdateTeamAsync(TeamGuest);
+                }
+            }
+
+            await _db.SaveSetAsync(set);
+        }            
 
         pickersHome = this.GetVisualTreeDescendants().OfType<Picker>().Where(x => x.ClassId == "Left").ToList();
 
@@ -160,7 +198,7 @@ public partial class LineupPage : ContentPage
     {
         List<Set> sets = await _db.GetSetAsync();
 
-        int num = sets.Count > 0 ? sets.Last().NumberSet : 0;
+        int num = sets != null ? sets.Last().NumberSet : 0;
         
         set.NumberSet = ++num;
 

@@ -30,8 +30,6 @@ public class DatabaseService
     public async Task InitializeMainInfoAsync()
     {
         await _db.CreateTableAsync<MainInformation>();
-
-        await _db.CreateTableAsync<MainInformation>();
     }
 
     public async Task<int> SaveMainInfoAsync(MainInformation info) => await _db.InsertAsync(info);
@@ -47,9 +45,10 @@ public class DatabaseService
     public async Task InitializeEventCategoryAsync()
     {
         await _db.CreateTableAsync<EventCategory>();
+    }
 
-        await _db.DeleteAllAsync<EventCategory>();
-
+    public async Task FillEventCategoryAsync()
+    {
         var list = new List<EventCategory>
         {
             new EventCategory() {NameCategory = "Очко"},
@@ -75,8 +74,6 @@ public class DatabaseService
     public async Task InitializeRosterAsync()
     {
         await _db.CreateTableAsync<Player>();
-
-        await _db.DeleteAllAsync<Player>();
     }
 
     public async Task ClearReplaceID()
@@ -109,13 +106,23 @@ public class DatabaseService
     public async Task InitializeSetAsync()
     {
         await _db.CreateTableAsync<Set>();
-
-        await _db.DeleteAllAsync<Set>();
     }
 
     public async Task<int> SaveSetAsync(Set set) => await _db.InsertAsync(set);
 
-    public async Task<List<Set>> GetSetAsync() => await _db.Table<Set>().ToListAsync();
+    public async Task<List<Set>> GetSetAsync()
+    {
+        int count = await _db.Table<Set>().CountAsync();
+
+        if(count == 0)
+        {
+            return null;
+        }
+        else
+        {
+            return await _db.Table<Set>().ToListAsync();
+        }
+    }
 
     public async Task<int> DeleteSetAsync() => await _db.DeleteAllAsync<Set>();
 
@@ -128,8 +135,6 @@ public class DatabaseService
     public async Task InitializeTeamAsync()
     {
         await _db.CreateTableAsync<Team>();
-
-        await _db.DeleteAllAsync<Team>();
     }
 
     public async Task<int> SaveTeamAsync(Team team) => await _db.InsertAsync(team);
@@ -147,8 +152,6 @@ public class DatabaseService
     public async Task InitializeLineUpBeginAsync()
     {
         await _db.CreateTableAsync<LineUp>();
-
-        await _db.DeleteAllAsync<LineUp>();
     }
 
     public async Task<int> SaveLineUpAsync(LineUp lineup) => await _db.InsertAsync(lineup);
@@ -156,6 +159,11 @@ public class DatabaseService
     public async Task<List<LineUp>> GetLineUpAsync(int setID, int teamID)
     {
         return await _db.Table<LineUp>().Where(x => x.SetId == setID && x.TeamId == teamID).ToListAsync();
+    }
+
+    public async Task<List<LineUp>> GetLineUpAsync(int setID)
+    {
+        return await _db.Table<LineUp>().Where(x => x.SetId == setID).ToListAsync();
     }
 
     public async Task<int> DeleteLineUpAsync() => await _db.DeleteAllAsync<LineUp>();
@@ -167,8 +175,6 @@ public class DatabaseService
     public async Task InitializeEventAsync()
     {
         await _db.CreateTableAsync<Event>();
-
-        await _db.DeleteAllAsync<Event>();
     }
 
     public async Task<int> SaveEventAsync(Event ev) => await _db.InsertAsync(ev);

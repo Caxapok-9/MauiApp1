@@ -29,7 +29,15 @@ public partial class ScoreBoardPage : ContentPage
 		InitializeComponent();
 
         _db = db;
-	}
+
+#if ANDROID
+
+        var activty = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
+        if (activty != null)
+            activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.SensorLandscape;
+
+#endif
+    }
 
     protected override async void OnAppearing()
     {
@@ -485,7 +493,9 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                // Переход на страницу формирования PDF и подписания
+                                await _db.DeleteAsync();
+
+                                await Navigation.PushAsync(new StartPage(_db));
                             }
                         }
                         else
@@ -506,7 +516,7 @@ public partial class ScoreBoardPage : ContentPage
                         }
                     }
 
-                    await Navigation.PushAsync(new LineupPage(_db));
+                    await Navigation.PushAsync(new LineupPage(_db, true));
                 }
             }
         }
@@ -547,7 +557,7 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                // Переход на страницу формирования PDF и подписания
+                                // Переход к формированию PDF и подписания
                             }
                         }
                         else
@@ -570,7 +580,7 @@ public partial class ScoreBoardPage : ContentPage
 
                     await DisplayAlert("Информация", "Партия окончена!", "OK");
 
-                    await Navigation.PushAsync(new LineupPage(_db));
+                    await Navigation.PushAsync(new LineupPage(_db, true));
                 }
             }
         }

@@ -21,16 +21,46 @@ public partial class StartPage : ContentPage
 
         Setting.GetSetting();
 
-		InitializeComponent();
-
         _db = db;
+
+        InizializeTables();
+
+        CheckDataBase();
+
+        InitializeComponent();        
+    }
+
+    private async Task CheckDataBase()
+    {
+        var Sets = await _db.GetSetAsync();
+
+        if(Sets != null)
+        {
+            await _db.InitializeEventCategoryAsync();
+
+            var Teams = await _db.GetTeamAsync();
+
+            Set set = Sets.LastOrDefault();
+
+            var LineUps = await _db.GetLineUpAsync(set.Id);
+            
+            if(LineUps.Count > 0)
+            {                
+                _db.LineUpBegin.Add(Teams.Find(x => x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => x.IsHome).Id));
+                _db.LineUpBegin.Add(Teams.Find(x => !x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => !x.IsHome).Id));
+
+                await Navigation.PushAsync(new ScoreBoardPage(_db));
+            }
+            else
+            {
+                await Navigation.PushAsync(new LineupPage(_db, false));
+            }
+        }
     }
 
     protected override async void OnAppearing()
     {
-        base.OnAppearing();
-
-        await InizializeTables();
+        base.OnAppearing();        
 
 #if ANDROID
 
@@ -45,7 +75,21 @@ public partial class StartPage : ContentPage
     private async Task InizializeTables()
     {
         await _db.InitializeEventCategoryAsync();
-        await _db.InitializeMainInfoAsync();
+
+        var eC = await _db.GetEventCategoryAsync();
+
+        if(eC.Count == 0)
+        {
+            await _db.FillEventCategoryAsync();
+        }
+        else
+        {
+            var l = await _db.GetEventCategoryAsync();
+
+            _db.EventsCategories = l.ToDictionary(x => x.NameCategory, x => x.IdCategory);
+        }
+
+            await _db.InitializeMainInfoAsync();
         await _db.InitializeRosterAsync();
         await _db.InitializeSetAsync();
         await _db.InitializeLineUpBeginAsync();
