@@ -1,3 +1,4 @@
+using QuestPDF.Fluent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -497,11 +498,11 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                // Переход на страницу формирования PDF и подписания
+                                ProtocolInfo info = CreateProtokolInfo();
 
-                                await _db.DeleteAsync();
+                                var document = new ProtocolPDF(_db, info);
 
-                                await Navigation.PushAsync(new StartPage(_db));
+                                document.GeneratePdf(@"C:\Users\Alex\Desktop\Учёба\Test.pdf");
                             }
                         }
                         else
@@ -517,11 +518,11 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                // Переход на страницу формирования PDF и подписания
+                                ProtocolInfo info = CreateProtokolInfo();
 
-                                await _db.DeleteAsync();
+                                var document = new ProtocolPDF(_db, info);
 
-                                await Navigation.PushAsync(new StartPage(_db));
+                                document.GeneratePdf(@"C:\Users\Alex\Desktop\Учёба\Test.pdf");
                             }
                         }
                     }
@@ -535,7 +536,8 @@ public partial class ScoreBoardPage : ContentPage
             if (set.ScoreHome > (Setting.MaxScoreInShortSet - 1) || set.ScoreGuest > (Setting.MaxScoreInShortSet - 1))
             {
                 if (Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
-                {                    
+                {
+                    await DisplayAlert("Информация", "Партия окончена!", "OK");
 
                     if (set.ScoreHome > set.ScoreGuest)
                     {
@@ -567,11 +569,11 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                // Переход к формированию PDF и подписания
+                                ProtocolInfo info = CreateProtokolInfo();
 
-                                await _db.DeleteAsync();
+                                var document = new ProtocolPDF(_db, info);
 
-                                await Navigation.PushAsync(new StartPage(_db));
+                                document.GeneratePdf(@"C:\Users\Alex\Desktop\Учёба\Test.pdf");
                             }
                         }
                         else
@@ -587,21 +589,28 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                // Переход на страницу формирования PDF и подписания
+                                ProtocolInfo info = CreateProtokolInfo();
 
-                                await _db.DeleteAsync();
+                                var document = new ProtocolPDF(_db, info);
 
-                                await Navigation.PushAsync(new StartPage(_db));
+                                document.GeneratePdf(@"C:\Users\Alex\Desktop\Учёба\Test.pdf");
                             }
                         }
                     }
-
-                    await DisplayAlert("Информация", "Партия окончена!", "OK");
 
                     await Navigation.PushAsync(new LineupPage(_db, true));
                 }
             }
         }
+    }
+
+    private ProtocolInfo CreateProtokolInfo()
+    {
+        ProtocolInfo info = new ProtocolInfo();
+
+        //// Заполняем данными из матча
+
+        return info;
     }
 
     protected override bool OnBackButtonPressed()
