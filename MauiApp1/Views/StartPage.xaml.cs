@@ -134,35 +134,41 @@ public partial class StartPage : ContentPage
                 return;
             }
 
-            if(teamHome.Length > 21 || teamGuest.Length > 21)
+            if(teamHome.Length > 20 || teamGuest.Length > 20)
             {
-                await DisplayAlert("Ошибка", "Кол-во символов в названиях команд не должно быть больше 21", "OK");
+                await DisplayAlert("Ошибка", "Кол-во символов в названиях команд не должно быть больше 20", "OK");
                 return;
             }
 
-            if(teamHome == teamGuest)
+            if (tournament.Length > 50)
+            {
+                await DisplayAlert("Ошибка", "Кол-во символов в названии турнира не должно быть больше 50", "OK");
+                return;
+            }
+
+            if (teamHome == teamGuest)
             {
                 await DisplayAlert("Ошибка", "У команд должны быть разные названия", "OK");
                 return;
             }
 
-            string pattern = @"^[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)?\s[А-ЯЁ]\.[А-ЯЁ]\.$";
+            string error;
 
-            if (!Regex.IsMatch(freferee, pattern))
+            if (!Validation.ValidationFIO(freferee, out error))
             {
-                await DisplayAlert("Ошибка", "Некорректное имя у главного судьи", "OK");
+                await DisplayAlert("Ошибка", error, "OK");
                 return;
             }
 
-            if (!Regex.IsMatch(treferee, pattern))
+            if (!string.IsNullOrWhiteSpace(treferee) && !Validation.ValidationFIO(treferee, out error))
             {
-                await DisplayAlert("Ошибка", "Некорректное имя у второго судьи", "OK");
+                await DisplayAlert("Ошибка", error, "OK");
                 return;
             }
 
-            if (!Regex.IsMatch(secretary, pattern))
+            if (!Validation.ValidationFIO(secretary, out error))
             {
-                await DisplayAlert("Ошибка", "Некорректное имя у секретаря", "OK");
+                await DisplayAlert("Ошибка", error, "OK");
                 return;
             }
 

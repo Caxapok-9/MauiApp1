@@ -128,64 +128,23 @@ public partial class RosterPageGuest : ContentPage
             return $"у команды {TeamGuest.Name}\nВ заявке может быть максимум 2 либеро";
         }
 
-        int countEmptyGuest = 0;
-
-        int countNumberLoongGuest = 0;
-
-        List<int> CheckNumberListGuest = new List<int>();
+        string error;
 
         foreach (var player in guestPlayers)
         {
-            if (string.IsNullOrWhiteSpace(player.Name))
-            {
-                countEmptyGuest++;
-                continue;
-            }
-
-            if (string.IsNullOrWhiteSpace(player.Number))
-            {
-                countEmptyGuest++;
-                continue;
-            }
-
-            if (player.Number.Length > 2)
-            {
-                countNumberLoongGuest++;
-                continue;
-            }
-
-            try
-            {
-                int number = Convert.ToInt32(player.Number);
-                CheckNumberListGuest.Add(number);
-            }
-            catch
-            {
-                return $"у команды {TeamGuest.Name}\nВведён некорректный номер";
-            }
+            if (!Validation.ValidationNumber(player.Number, out error))
+                return $"у команды {TeamGuest.Name}\n{error}";
         }
 
-        if (countEmptyGuest > 0)
+        if (guestPlayers.GroupBy(x => x.Number).Count() < guestPlayers.Count)
         {
-            return $"у команды {TeamGuest.Name}\nЕсть незаполненные поля";
-        }
-
-        if (countNumberLoongGuest > 0)
-        {
-            return $"у команды {TeamGuest.Name}\nНомера не должны быть больше 99";
-        }
-
-        if (CheckNumberListGuest.GroupBy(x => x).Count() != CheckNumberListGuest.Count)
-        {
-            return $"у команды {TeamGuest.Name}\nЕсть дубли в номерах";
+            return $"у команды {TeamGuest.Name}\nЕсть одинаковые номера";
         }
 
         foreach (var player in guestPlayers)
         {
-            string pattern = @"^[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)?\s[А-ЯЁ]\.[А-ЯЁ]\.$";
-
-            if (!Regex.IsMatch(player.Name, pattern))
-                return $"у команды {TeamGuest.Name}\nЕсть некорректные имена";
+            if (!Validation.ValidationFIO(player.Name, out error))
+                return $"у команды {TeamGuest.Name}\n{error}";
         }
 
         #endregion
