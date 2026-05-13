@@ -1,5 +1,4 @@
-﻿using QuestPDF.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +19,6 @@ namespace MauiApp1
             MaxSet = Preferences.Default.Get("MaxCountSet", 5);
             MaxScore = Preferences.Default.Get("MaxScoreSet", 25);
             MaxScoreInShortSet = Preferences.Default.Get("MaxScoreInShort", 15);
-            QuestPDF.Settings.License = LicenseType.Community;
         }
 
         static public void SaveColor()

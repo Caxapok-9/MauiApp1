@@ -1,4 +1,3 @@
-using QuestPDF.Fluent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -498,11 +497,9 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                ProtocolInfo info = CreateProtokolInfo();
+                                await _db.DeleteAsync();
 
-                                var document = new ProtocolPDF(_db, info);
-
-                                document.GeneratePdf(@"C:\Users\Alex\Desktop\Учёба\Test.pdf");
+                                Application.Current.Quit();
                             }
                         }
                         else
@@ -518,11 +515,9 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                ProtocolInfo info = CreateProtokolInfo();
+                                await _db.DeleteAsync();
 
-                                var document = new ProtocolPDF(_db, info);
-
-                                document.GeneratePdf(@"C:\Users\Alex\Desktop\Учёба\Test.pdf");
+                                Application.Current.Quit();
                             }
                         }
                     }
@@ -569,11 +564,9 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                ProtocolInfo info = CreateProtokolInfo();
+                                await _db.DeleteAsync();
 
-                                var document = new ProtocolPDF(_db, info);
-
-                                document.GeneratePdf(@"C:\Users\Alex\Desktop\Учёба\Test.pdf");
+                                Application.Current.Quit();
                             }
                         }
                         else
@@ -589,11 +582,9 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                ProtocolInfo info = CreateProtokolInfo();
+                                await _db.DeleteAsync();
 
-                                var document = new ProtocolPDF(_db, info);
-
-                                document.GeneratePdf(@"C:\Users\Alex\Desktop\Учёба\Test.pdf");
+                                Application.Current.Quit();
                             }
                         }
                     }
