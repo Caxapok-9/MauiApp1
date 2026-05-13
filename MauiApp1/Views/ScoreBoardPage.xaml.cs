@@ -497,6 +497,8 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
+                                CreateAndSavePDF();
+
                                 await _db.DeleteAsync();
 
                                 Application.Current.Quit();
@@ -514,6 +516,8 @@ public partial class ScoreBoardPage : ContentPage
                                 {
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
+
+                                CreateAndSavePDF();
 
                                 await _db.DeleteAsync();
 
@@ -564,6 +568,8 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
+                                CreateAndSavePDF();
+
                                 await _db.DeleteAsync();
 
                                 Application.Current.Quit();
@@ -582,6 +588,8 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
+                                CreateAndSavePDF();
+
                                 await _db.DeleteAsync();
 
                                 Application.Current.Quit();
@@ -595,13 +603,26 @@ public partial class ScoreBoardPage : ContentPage
         }
     }
 
-    private ProtocolInfo CreateProtokolInfo()
+    private async Task CreateAndSavePDF()
     {
         ProtocolInfo info = new ProtocolInfo();
 
-        //// Заполняем данными из матча
+        info = info.DataFromDatabase();
 
-        return info;
+        // Сбор подписей
+
+        iText.Kernel.Pdf.PdfDocument doc = ProtocolCreater.CreatePDF(info, out string error);
+
+        if (error != null)
+        {
+            //  Save pdf
+        }
+        else
+        {
+            await DisplayAlert("Информация", error, "OK");
+
+            // Сохраанение копии БД
+        }
     }
 
     protected override bool OnBackButtonPressed()
