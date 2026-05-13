@@ -120,8 +120,9 @@ public partial class ScoreBoardPage : ContentPage
             {
                 ReplaceHomeButton.IsEnabled = false;
                 ReplaceHomeButton.BackgroundColor = Colors.Grey;
-                ReplaceHomeButton.Text = "Замен нет";
             }
+
+            ReplaceHomeButton.Text = $"Замена ({6 - Events.Count})";
         }
 
         if (RosterGuestCheckReplace)
@@ -137,10 +138,28 @@ public partial class ScoreBoardPage : ContentPage
             if (Events.Count > 5)
             {
                 ReplaceGuestButton.IsEnabled = false;
-                ReplaceGuestButton.BackgroundColor = Colors.Grey;
-                ReplaceGuestButton.Text = "Замен нет";
+                ReplaceGuestButton.BackgroundColor = Colors.Grey;                
             }
+
+            ReplaceGuestButton.Text = $"Замена ({6 - Events.Count})";
         }
+
+        var EventsTimeOut = await _db.GetEventAsync(set.Id, _db.EventsCategories["Тайм-аут"]);
+
+        if (EventsTimeOut.Where(x => x.TeamID == TeamHome.Id).Count() > 1)
+        {
+            TimeOutHomeButton.IsEnabled = false;
+            TimeOutHomeButton.BackgroundColor = Colors.Grey;
+        }
+
+        if (EventsTimeOut.Where(x => x.TeamID == TeamGuest.Id).Count() > 1)
+        {
+            TimeOutGuestButton.IsEnabled = false;
+            TimeOutGuestButton.BackgroundColor = Colors.Grey;
+        }
+
+        TimeOutHomeButton.Text = $"Тайм-аут ({2 - EventsTimeOut.Where(x => x.TeamID == TeamHome.Id).Count()})";
+        TimeOutGuestButton.Text = $"Тайм-аут ({2 - EventsTimeOut.Where(x => x.TeamID == TeamGuest.Id).Count()})";
     }
 
     private void ReverseCheck()
@@ -206,28 +225,31 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            Event ev = new Event();
+            string result = null;
 
-            ev.SetID = set.Id;
-            ev.TeamID = TeamHome.Id;
-            ev.EventID = _db.EventsCategories["Тайм-аут"];
-            ev.ScoreHome = set.ScoreHome;
-            ev.ScoreGuest = set.ScoreGuest;
+            while (string.IsNullOrWhiteSpace(result))
+            {
+                result = await DisplayActionSheet($"Команда {TeamHome.Name} берёт тайм-аут ?", null, null, "Да", "Нет");
+            }
 
-            await _db.SaveEventAsync(ev);
+            if (result == "Да")
+            {
+                Event ev = new Event();
 
-            await DisplayAlert("Информация", "Тайм-аут взят!", "OK");
+                ev.SetID = set.Id;
+                ev.TeamID = TeamHome.Id;
+                ev.EventID = _db.EventsCategories["Тайм-аут"];
+                ev.ScoreHome = set.ScoreHome;
+                ev.ScoreGuest = set.ScoreGuest;
+
+                await _db.SaveEventAsync(ev);
+
+                await DisplayAlert("Информация", "Тайм-аут взят!", "OK");
+            }
         }
         finally
         {
-            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Тайм-аут"]);
-
-            if(Events.Count > 1)
-            {
-                TimeOutHomeButton.IsEnabled = false;
-                TimeOutHomeButton.BackgroundColor = Colors.Grey;
-                TimeOutHomeButton.Text = "Тайм-аутов нет";
-            }
+            UpdateData();
 
             IsBusy = false;
         }
@@ -242,28 +264,31 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            Event ev = new Event();
+            string result = null;
 
-            ev.SetID = set.Id;
-            ev.TeamID = TeamGuest.Id;
-            ev.EventID = _db.EventsCategories["Тайм-аут"];
-            ev.ScoreHome = set.ScoreHome;
-            ev.ScoreGuest = set.ScoreGuest;
+            while (string.IsNullOrWhiteSpace(result))
+            {
+                result = await DisplayActionSheet($"Команда {TeamGuest.Name} берёт тайм-аут ?", null, null, "Да", "Нет");
+            }
 
-            await _db.SaveEventAsync(ev);
+            if (result == "Да")
+            {
+                Event ev = new Event();
 
-            await DisplayAlert("Информация", "Тайм-аут записан!", "OK");
+                ev.SetID = set.Id;
+                ev.TeamID = TeamGuest.Id;
+                ev.EventID = _db.EventsCategories["Тайм-аут"];
+                ev.ScoreHome = set.ScoreHome;
+                ev.ScoreGuest = set.ScoreGuest;
+
+                await _db.SaveEventAsync(ev);
+
+                await DisplayAlert("Информация", "Тайм-аут записан!", "OK");
+            }
         }
         finally
         {
-            var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Тайм-аут"]);
-
-            if (Events.Count > 1)
-            {
-                TimeOutGuestButton.IsEnabled = false;
-                TimeOutGuestButton.BackgroundColor = Colors.Grey;
-                TimeOutGuestButton.Text = "Тайм-аутов нет";
-            }
+            UpdateData();
 
             IsBusy = false;
         }

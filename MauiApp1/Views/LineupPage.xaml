@@ -434,7 +434,7 @@
                 Grid.Row="0"
                 TextColor="White"
                 Text="Старт" 
-                FontSize="Title"  
+                FontSize="Subtitle"  
                 HorizontalOptions="Fill" 
                 VerticalOptions="Fill"
                 Clicked="OnStartMatchClicked"

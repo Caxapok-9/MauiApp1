@@ -16,7 +16,7 @@ namespace MauiApp1
             {
                 iText.Kernel.Pdf.PdfDocument doc;
 
-                using (PdfReader reader = new PdfReader())
+                using (PdfReader reader = new PdfReader(""))
                 {
                     doc = new iText.Kernel.Pdf.PdfDocument(reader);
 

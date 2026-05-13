@@ -33,29 +33,48 @@ public partial class StartPage : ContentPage
 
     private async Task CheckDataBase()
     {
-        var Sets = await _db.GetSetAsync();
-
-        if(Sets != null)
+        try
         {
-            await _db.InitializeEventCategoryAsync();
+            IsBusy = true;
 
-            var Teams = await _db.GetTeamAsync();
+            var Sets = await _db.GetSetAsync();
 
-            Set set = Sets.LastOrDefault();
-
-            var LineUps = await _db.GetLineUpAsync(set.Id);
-            
-            if(LineUps.Count > 0)
-            {                
-                _db.LineUpBegin.Add(Teams.Find(x => x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => x.IsHome).Id));
-                _db.LineUpBegin.Add(Teams.Find(x => !x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => !x.IsHome).Id));
-
-                await Navigation.PushAsync(new ScoreBoardPage(_db));
-            }
-            else
+            if (Sets != null)
             {
-                await Navigation.PushAsync(new LineupPage(_db, false));
+                await _db.InitializeEventCategoryAsync();
+
+                string result = null;
+
+                while (string.IsNullOrWhiteSpace(result))
+                {
+                    result = await DisplayActionSheet("Восстановить состояние с прошлой игры ?", null, null, "Да", "Нет");
+                }
+
+                if (result == "Да")
+                {
+                    var Teams = await _db.GetTeamAsync();
+
+                    Set set = Sets.LastOrDefault();
+
+                    var LineUps = await _db.GetLineUpAsync(set.Id);
+
+                    if (LineUps.Count > 0)
+                    {
+                        _db.LineUpBegin.Add(Teams.Find(x => x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => x.IsHome).Id));
+                        _db.LineUpBegin.Add(Teams.Find(x => !x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => !x.IsHome).Id));
+
+                        await Navigation.PushAsync(new ScoreBoardPage(_db));
+                    }
+                    else
+                    {
+                        await Navigation.PushAsync(new LineupPage(_db, false));
+                    }
+                }
             }
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
