@@ -1,4 +1,8 @@
-﻿using iText.Forms;
+﻿using CommunityToolkit.Maui.Storage;
+using iText.Forms;
+using iText.Forms.Fields;
+using iText.IO.Font;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using System;
 using System.Collections.Generic;
@@ -10,40 +14,69 @@ namespace MauiApp1
 {
     public static class ProtocolCreater
     {
-        public static iText.Kernel.Pdf.PdfDocument CreatePDF(ProtocolInfo info, out string error)
+        public static async Task CreatePDF(Dictionary<string, string> info)
         {
             try
             {
-                iText.Kernel.Pdf.PdfDocument doc;
+                using var fontStream = await FileSystem.OpenAppPackageFileAsync("CALIBRI.TTF");
 
-                using (PdfReader reader = new PdfReader(""))
+                using var fontMs = new MemoryStream();
+
+                await fontStream.CopyToAsync(fontMs);
+
+                byte[] fontBytes = fontMs.ToArray();
+
+                PdfFont myCyrillicFont = PdfFontFactory.CreateFont(fontBytes, PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+
+                MemoryStream outputStream = new MemoryStream();
+
+                var streamTemplate = await FileSystem.OpenAppPackageFileAsync("protokol.pdf");
+
+                PdfWriter writer = new PdfWriter(outputStream);
+
+                writer.SetCloseStream(false);
+
+                PdfReader reader = new PdfReader(streamTemplate);
+
+                iText.Kernel.Pdf.PdfDocument doc = new iText.Kernel.Pdf.PdfDocument(reader, writer);
+
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+
+                foreach (var item in info)
                 {
-                    doc = new iText.Kernel.Pdf.PdfDocument(reader);
+                    var field = form.GetField(item.Key);
 
-                    PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
-
-                    foreach(var item in info.GetDataDictionary())
+                    if (field != null)
                     {
-                        var field = form.GetField(item.Key);
-
-                        if(field != null)
-                        {
-                            field.SetValue(item.Value);
-                        }
+                        field.SetFont(myCyrillicFont);
+                        field.SetFontSize(12);
+                        field.SetJustification(iText.Layout.Properties.TextAlignment.CENTER);
+                        field.SetValue(item.Value);
                     }
-
-                    form.FlattenFields();
                 }
 
-                error = null;
+                form.FlattenFields();
 
-                return doc;
+                doc.Close();
+
+                outputStream.Position = 0; 
+
+                var result = await FileSaver.Default.SaveAsync("VolleyProtocol.pdf", outputStream, CancellationToken.None);
+
+                outputStream.Close();
+
+                if(result.IsSuccessful)
+                {
+                    await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Информация", "Ошибка формирования PDF", "OK");
+                }
             }
             catch(Exception e) 
             {
-                error = e.Message;
-
-                return null;
+                await App.Current.MainPage.DisplayAlert("Информация", e.Message, "OK");
             }
         }
     }

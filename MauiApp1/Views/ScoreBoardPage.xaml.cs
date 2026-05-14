@@ -24,6 +24,8 @@ public partial class ScoreBoardPage : ContentPage
 
     private bool RosterGuestCheckReplace;
 
+    private bool Game = true;
+
     public ScoreBoardPage(DatabaseService db)
 	{
 		InitializeComponent();
@@ -522,11 +524,7 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                CreateAndSavePDF();
-
-                                await _db.DeleteAsync();
-
-                                Application.Current.Quit();
+                                await CreateAndSavePDF();
                             }
                         }
                         else
@@ -542,16 +540,17 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                CreateAndSavePDF();
+                                await CreateAndSavePDF();
 
-                                await _db.DeleteAsync();
-
-                                Application.Current.Quit();
+                                Game = false;
                             }
                         }
                     }
 
-                    await Navigation.PushAsync(new LineupPage(_db, true));
+                    if(Game)
+                    {
+                        await Navigation.PushAsync(new LineupPage(_db, true));
+                    }                    
                 }
             }
         }
@@ -593,11 +592,7 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                CreateAndSavePDF();
-
-                                await _db.DeleteAsync();
-
-                                Application.Current.Quit();
+                                await CreateAndSavePDF();
                             }
                         }
                         else
@@ -613,16 +608,17 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                CreateAndSavePDF();
+                                await CreateAndSavePDF();
 
-                                await _db.DeleteAsync();
-
-                                Application.Current.Quit();
+                                Game = false;
                             }
                         }
                     }
 
-                    await Navigation.PushAsync(new LineupPage(_db, true));
+                    if (Game)
+                    {
+                        await Navigation.PushAsync(new LineupPage(_db, true));
+                    }
                 }
             }
         }
@@ -630,24 +626,17 @@ public partial class ScoreBoardPage : ContentPage
 
     private async Task CreateAndSavePDF()
     {
-        ProtocolInfo info = new ProtocolInfo();
-
-        info = info.DataFromDatabase();
+        ProtocolInfo info = new ProtocolInfo(_db);
 
         // Сбор подписей
 
-        iText.Kernel.Pdf.PdfDocument doc = ProtocolCreater.CreatePDF(info, out string error);
+        var dict = await info.GetDataDictionary();
 
-        if (error != null)
-        {
-            //  Save pdf
-        }
-        else
-        {
-            await DisplayAlert("Информация", error, "OK");
+        await ProtocolCreater.CreatePDF(dict);
 
-            // Сохраанение копии БД
-        }
+        await _db.DeleteAsync();
+
+        Application.Current.Quit();
     }
 
     protected override bool OnBackButtonPressed()

@@ -24,63 +24,50 @@ public partial class StartPage : ContentPage
 
         _db = db;
 
-        InizializeTables();
-
-        CheckDataBase();
-
         InitializeComponent();        
     }
 
     private async Task CheckDataBase()
     {
-        try
+        var Sets = await _db.GetSetAsync();
+
+        if (Sets != null)
         {
-            IsBusy = true;
+            await _db.InitializeEventCategoryAsync();
 
-            var Sets = await _db.GetSetAsync();
+            string result = null;
 
-            if (Sets != null)
+            while (string.IsNullOrWhiteSpace(result))
             {
-                await _db.InitializeEventCategoryAsync();
+                result = await DisplayActionSheet("Восстановить состояние с прошлой игры ?", null, null, "Да", "Нет");
+            }
 
-                string result = null;
+            if (result == "Да")
+            {
+                var Teams = await _db.GetTeamAsync();
 
-                while (string.IsNullOrWhiteSpace(result))
+                Set set = Sets.LastOrDefault();
+
+                var LineUps = await _db.GetLineUpAsync(set.Id);
+
+                if (LineUps.Count > 0)
                 {
-                    result = await DisplayActionSheet("Восстановить состояние с прошлой игры ?", null, null, "Да", "Нет");
+                    _db.LineUpBegin.Add(Teams.Find(x => x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => x.IsHome).Id));
+                    _db.LineUpBegin.Add(Teams.Find(x => !x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => !x.IsHome).Id));
+
+                    await Navigation.PushAsync(new ScoreBoardPage(_db));
                 }
-
-                if (result == "Да")
+                else
                 {
-                    var Teams = await _db.GetTeamAsync();
-
-                    Set set = Sets.LastOrDefault();
-
-                    var LineUps = await _db.GetLineUpAsync(set.Id);
-
-                    if (LineUps.Count > 0)
-                    {
-                        _db.LineUpBegin.Add(Teams.Find(x => x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => x.IsHome).Id));
-                        _db.LineUpBegin.Add(Teams.Find(x => !x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => !x.IsHome).Id));
-
-                        await Navigation.PushAsync(new ScoreBoardPage(_db));
-                    }
-                    else
-                    {
-                        await Navigation.PushAsync(new LineupPage(_db, false));
-                    }
+                    await Navigation.PushAsync(new LineupPage(_db, false));
                 }
             }
-        }
-        finally
-        {
-            IsBusy = false;
         }
     }
 
     protected override async void OnAppearing()
     {
-        base.OnAppearing();        
+        base.OnAppearing();
 
 #if ANDROID
 
@@ -90,6 +77,9 @@ public partial class StartPage : ContentPage
 
 #endif
 
+        await InizializeTables();
+
+        await CheckDataBase();
     }
 
     private async Task InizializeTables()

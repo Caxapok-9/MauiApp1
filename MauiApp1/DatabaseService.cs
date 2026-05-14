@@ -166,6 +166,11 @@ public class DatabaseService
         return await _db.Table<LineUp>().Where(x => x.SetId == setID).ToListAsync();
     }
 
+    public async Task<List<LineUp>> GetLineUpAsync()
+    {
+        return await _db.Table<LineUp>().ToListAsync();
+    }
+
     public async Task<int> DeleteLineUpAsync() => await _db.DeleteAllAsync<LineUp>();
 
     #endregion
