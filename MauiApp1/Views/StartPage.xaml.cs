@@ -62,6 +62,10 @@ public partial class StartPage : ContentPage
                     await Navigation.PushAsync(new LineupPage(_db, false));
                 }
             }
+            else
+            {
+                await _db.DeleteAsync();
+            }
         }
     }
 
@@ -80,6 +84,8 @@ public partial class StartPage : ContentPage
         await InizializeTables();
 
         await CheckDataBase();
+
+        await Setting.GetFonts();
     }
 
     private async Task InizializeTables()

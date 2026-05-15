@@ -37,48 +37,11 @@ public partial class ReplacePage : ContentPage
 
         _line = _db.LineUpBegin[_targetTeam.Id];
 
-        _eventsReplace = await _db.GetEventAsync(_set.Id, _targetTeam.Id, _db.EventsCategories["Замена"]);
+        _eventsReplace = await _db.GetEventAsync(_set.Id, _targetTeam.Id, new List<int> { _db.EventsCategories["Замена"] ,_db.EventsCategories["RЗамена"] });
 
         if (_eventsReplace != null && _eventsReplace.Count > 0)
         {
-            foreach (var ev in _eventsReplace)
-            {
-                if (_line.Zone1PlayerID == ev.PlayerInID)
-                {
-                    _line.Zone1PlayerID = (int)ev.PlayerOutID;
-                    continue;
-                }
-
-                if (_line.Zone2PlayerID == ev.PlayerInID)
-                {
-                    _line.Zone2PlayerID = (int)ev.PlayerOutID;
-                    continue;
-                }
-
-                if (_line.Zone3PlayerID == ev.PlayerInID)
-                {
-                    _line.Zone3PlayerID = (int)ev.PlayerOutID;
-                    continue;
-                }
-
-                if (_line.Zone4PlayerID == ev.PlayerInID)
-                {
-                    _line.Zone4PlayerID = (int)ev.PlayerOutID;
-                    continue;
-                }
-
-                if (_line.Zone5PlayerID == ev.PlayerInID)
-                {
-                    _line.Zone5PlayerID = (int)ev.PlayerOutID;
-                    continue;
-                }
-
-                if (_line.Zone6PlayerID == ev.PlayerInID)
-                {
-                    _line.Zone6PlayerID = (int)ev.PlayerOutID;
-                    continue;
-                }
-            }
+            ReplaceZone(_eventsReplace, _line);
         }
 
         CourtAdd(_line);
@@ -90,6 +53,48 @@ public partial class ReplacePage : ContentPage
         ListPlayerIn.ItemsSource = _court;
 
         ListPlayerOut.ItemsSource = _bench;     
+    }
+
+    private void ReplaceZone(List<Event> events, LineUp line)
+    {
+        foreach (var ev in events)
+        {
+            if (line.Zone1PlayerID == ev.PlayerInID)
+            {
+                line.Zone1PlayerID = (int)ev.PlayerOutID;
+                continue;
+            }
+
+            if (line.Zone2PlayerID == ev.PlayerInID)
+            {
+                line.Zone2PlayerID = (int)ev.PlayerOutID;
+                continue;
+            }
+
+            if (line.Zone3PlayerID == ev.PlayerInID)
+            {
+                line.Zone3PlayerID = (int)ev.PlayerOutID;
+                continue;
+            }
+
+            if (line.Zone4PlayerID == ev.PlayerInID)
+            {
+                line.Zone4PlayerID = (int)ev.PlayerOutID;
+                continue;
+            }
+
+            if (line.Zone5PlayerID == ev.PlayerInID)
+            {
+                line.Zone5PlayerID = (int)ev.PlayerOutID;
+                continue;
+            }
+
+            if (line.Zone6PlayerID == ev.PlayerInID)
+            {
+                line.Zone6PlayerID = (int)ev.PlayerOutID;
+                continue;
+            }
+        }
     }
 
     private void CourtAdd(LineUp l)
@@ -127,7 +132,7 @@ public partial class ReplacePage : ContentPage
 
                             ev.SetID = _set.Id;
                             ev.TeamID = _targetTeam.Id;
-                            ev.EventID = _db.EventsCategories["Замена"];
+                            ev.EventID = _db.EventsCategories["RЗамена"];
                             ev.ScoreGuest = _set.ScoreGuest;
                             ev.ScoreHome = _set.ScoreHome;
                             ev.PlayerInID = courtPlayer.Id;

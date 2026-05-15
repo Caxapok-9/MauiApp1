@@ -14,20 +14,10 @@ namespace MauiApp1
 {
     public static class ProtocolCreater
     {
-        public static async Task CreatePDF(Dictionary<string, string> info)
+        public static async Task CreatePDF(Dictionary<string, WriteText> info)
         {
             try
             {
-                using var fontStream = await FileSystem.OpenAppPackageFileAsync("CALIBRI.TTF");
-
-                using var fontMs = new MemoryStream();
-
-                await fontStream.CopyToAsync(fontMs);
-
-                byte[] fontBytes = fontMs.ToArray();
-
-                PdfFont myCyrillicFont = PdfFontFactory.CreateFont(fontBytes, PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
-
                 MemoryStream outputStream = new MemoryStream();
 
                 var streamTemplate = await FileSystem.OpenAppPackageFileAsync("protokol.pdf");
@@ -46,12 +36,12 @@ namespace MauiApp1
                 {
                     var field = form.GetField(item.Key);
 
-                    if (field != null)
+                    if (field != null && item.Value != null)
                     {
-                        field.SetFont(myCyrillicFont);
-                        field.SetFontSize(12);
-                        field.SetJustification(iText.Layout.Properties.TextAlignment.CENTER);
-                        field.SetValue(item.Value);
+                        field.SetFont(item.Value.Font);
+                        field.SetFontSize(item.Value.Size);
+                        field.SetJustification(item.Value.Align);                        
+                        field.SetValue(item.Value.Text);
                     }
                 }
 

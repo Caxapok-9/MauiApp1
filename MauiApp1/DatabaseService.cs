@@ -53,7 +53,8 @@ public class DatabaseService
         {
             new EventCategory() {NameCategory = "Очко"},
             new EventCategory() {NameCategory = "Тайм-аут"},
-            new EventCategory() {NameCategory = "Замена"}
+            new EventCategory() {NameCategory = "Замена"},
+            new EventCategory() {NameCategory = "RЗамена"}
         };
 
         await _db.InsertAllAsync(list);
@@ -186,9 +187,9 @@ public class DatabaseService
 
     public async Task<int> DeleteSelectEventAsync(Event ev) => await _db.DeleteAsync(ev);
 
-    public async Task<List<Event>> GetEventAsync(int setID, int teamID, int eventID)
+    public async Task<List<Event>> GetEventAsync(int setID, int teamID, List<int> eventsID)
     {
-        return await _db.Table<Event>().Where(x => x.SetID == setID && x.TeamID == teamID && x.EventID == eventID).ToListAsync();
+        return await _db.Table<Event>().Where(x => x.SetID == setID && x.TeamID == teamID && eventsID.Contains(x.EventID)).ToListAsync();
     }
 
     public async Task<List<Event>> GetEventAsync(int setID, int eventID)

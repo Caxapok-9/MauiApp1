@@ -116,7 +116,7 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, _db.EventsCategories["Замена"]);
+            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, new List<int> { _db.EventsCategories["Замена"], _db.EventsCategories["RЗамена"] });
 
             if (Events.Count > 5)
             {
@@ -135,7 +135,7 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, _db.EventsCategories["Замена"]);
+            var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, new List<int> { _db.EventsCategories["Замена"], _db.EventsCategories["RЗамена"] });
 
             if (Events.Count > 5)
             {

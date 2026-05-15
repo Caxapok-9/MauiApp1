@@ -1,4 +1,6 @@
-﻿using System;
+﻿using iText.IO.Font;
+using iText.Kernel.Font;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,20 +10,47 @@ namespace MauiApp1
 {
     public static class Setting
     {
-        static public int MaxSet;
+        public static int MaxSet;
 
-        static public int MaxScore;
+        public static int MaxScore;
 
-        static public int MaxScoreInShortSet;
+        public static int MaxScoreInShortSet;
 
-        static public void GetSetting()
+        public static PdfFont Calibri;
+
+        public static PdfFont CalibriBold;
+
+        public static async Task GetFonts()
+        {
+            using var fontStream = await FileSystem.OpenAppPackageFileAsync("CALIBRI.TTF");
+            
+            using var fontMs = new MemoryStream();
+
+            await fontStream.CopyToAsync(fontMs);
+
+            byte[] fontBytes = fontMs.ToArray();
+
+            Calibri = PdfFontFactory.CreateFont(fontBytes, PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+
+            using var fontStream2 = await FileSystem.OpenAppPackageFileAsync("CALIBRIB.TTF");
+
+            using var fontMs2 = new MemoryStream();
+
+            await fontStream2.CopyToAsync(fontMs2);
+
+            byte[] fontBytes2 = fontMs2.ToArray();
+
+            CalibriBold = PdfFontFactory.CreateFont(fontBytes2, PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+        }
+
+        public static void GetSetting()
         {
             MaxSet = Preferences.Default.Get("MaxCountSet", 5);
             MaxScore = Preferences.Default.Get("MaxScoreSet", 25);
             MaxScoreInShortSet = Preferences.Default.Get("MaxScoreInShort", 15);
         }
 
-        static public void SaveColor()
+        public static void SaveColor()
         {
             Application.Current.Resources["MainColorHome"] = Microsoft.Maui.Graphics.Color.FromRgba("#007ACC");
             Application.Current.Resources["PointColorHome"] = Colors.DodgerBlue;
