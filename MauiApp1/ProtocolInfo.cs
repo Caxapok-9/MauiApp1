@@ -164,8 +164,11 @@ namespace MauiApp1
             dictionary["HomeCaptain"] = new WriteText(RosterHome.Find(x => x.IsCaptain).Name, "roster");
             dictionary["GuestCaptain"] = new WriteText(RosterGuest.Find(x => x.IsCaptain).Name, "roster");
 
-            dictionary["HomeCoach"] = new WriteText(TeamHome.Coach, "roster");
-            dictionary["GuestCoach"] = new WriteText(TeamGuest.Coach, "roster");
+            if(TeamHome.Coach != null)
+                dictionary["HomeCoach"] = new WriteText(TeamHome.Coach, "roster");
+
+            if(TeamGuest.Coach != null)
+                dictionary["GuestCoach"] = new WriteText(TeamGuest.Coach, "roster");
 
             #endregion
 
