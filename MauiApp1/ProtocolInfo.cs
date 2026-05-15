@@ -164,6 +164,9 @@ namespace MauiApp1
             dictionary["HomeCaptain"] = new WriteText(RosterHome.Find(x => x.IsCaptain).Name, "roster");
             dictionary["GuestCaptain"] = new WriteText(RosterGuest.Find(x => x.IsCaptain).Name, "roster");
 
+            dictionary["HomeCoach"] = new WriteText(TeamHome.Coach, "roster");
+            dictionary["GuestCoach"] = new WriteText(TeamGuest.Coach, "roster");
+
             #endregion
 
             #region Result
@@ -277,6 +280,50 @@ namespace MauiApp1
 
         Dictionary<string, WriteText> dictionary = new Dictionary<string, WriteText>()
         {
+            {"Warning1", null},
+            {"Warning2", null},
+            {"Warning3", null},
+            {"Warning4", null},
+            {"Warning5", null},
+            {"Warning6", null},
+            {"Remark1", null},
+            {"Remark2", null},
+            {"Remark3", null},
+            {"Remark4", null},
+            {"Remark5", null},
+            {"Remark6", null},
+            {"Remove1", null},
+            {"Remove2", null},
+            {"Remove3", null},
+            {"Remove4", null},
+            {"Remove5", null},
+            {"Remove6", null},
+            {"Disqual1", null},
+            {"Disqual2", null},
+            {"Disqual3", null},
+            {"Disqual4", null},
+            {"Disqual5", null},
+            {"Disqual6", null},
+            {"ProtestHome", null},
+            {"ProtestGuest", null},
+            {"SetSanction1", null},
+            {"SetSanction2", null},
+            {"SetSanction3", null},
+            {"SetSanction4", null},
+            {"SetSanction5", null},
+            {"SetSanction6", null},
+            {"ScoreSanction1", null},
+            {"ScoreSanction2", null},
+            {"ScoreSanction3", null},
+            {"ScoreSanction4", null},
+            {"ScoreSanction5", null},
+            {"ScoreSanction6", null},
+            {"TeamSanction1", null},
+            {"TeamSanction2", null},
+            {"TeamSanction3", null},
+            {"TeamSanction4", null},
+            {"TeamSanction5", null},
+            {"TeamSanction6", null},
             {"NameTournament", null},
             {"Group", null},
             {"NameTeamHomeHeader", null},

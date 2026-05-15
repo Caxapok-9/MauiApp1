@@ -100,6 +100,8 @@ public partial class LineupPage : ContentPage
         NameTeamGuest.Text = TeamGuest.Name;
 
         ReverseCheck();
+
+        CheckServ();
     }
 
     private void ReverseCheck()
@@ -358,6 +360,60 @@ public partial class LineupPage : ContentPage
         return;
     }
 
+    private void CheckServ()
+    {
+        if (TeamHome.FirstSetServ)
+        {
+            if (set.NumberSet % 2 != 0)
+            {
+                if (TeamHome.IsLeft)
+                {
+                    LabelServe.Text = "<- Подача слева";
+                }
+                else
+                {
+                    LabelServe.Text = "Подача справа ->";
+                }
+            }
+            else
+            {
+                if (TeamHome.IsLeft)
+                {
+                    LabelServe.Text = "Подача справа ->";
+                }
+                else
+                {
+                    LabelServe.Text = "<- Подача слева";
+                }
+            }
+        }
+        else
+        {
+            if (set.NumberSet % 2 == 0)
+            {
+                if (TeamHome.IsLeft)
+                {
+                    LabelServe.Text = "Подача справа ->";
+                }
+                else
+                {
+                    LabelServe.Text = "<- Подача слева";
+                }
+            }
+            else
+            {
+                if (TeamHome.IsLeft)
+                {
+                    LabelServe.Text = "<- Подача слева";
+                }
+                else
+                {
+                    LabelServe.Text = "Подача справа ->";
+                }
+            }
+        }
+    }
+
     private async void OnReverseClicked(object sender, EventArgs e)
     {
         if (IsBusy)
@@ -372,6 +428,8 @@ public partial class LineupPage : ContentPage
             await _db.UpdateTeamAsync(TeamHome);
 
             ReverseCheck();
+
+            CheckServ();
         }
         finally
         {

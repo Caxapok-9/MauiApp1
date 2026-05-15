@@ -81,6 +81,9 @@
 	  <MauiXaml Update="Views\LineupPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\ProtestPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\ReplacePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -53,7 +53,7 @@ public partial class LineupNowPage : ContentPage
 
 		TeamL target = new TeamL();
 		target.Id = _teamTarget.Id;
-		target.IsServe = _set.IsShort ? _teamTarget.FinalySetServ : SetAnaliz(_teamTarget);
+		target.IsServe = _set.IsShort ? _teamTarget.FinalySetServ : CheckServ(_teamTarget);
 
         TeamL enemy = new TeamL();
         enemy.Id = _teamEnemy.Id;
@@ -134,7 +134,7 @@ public partial class LineupNowPage : ContentPage
         LabelZone6.Text = Roster[line.Zone6PlayerID];
     }
 
-	private bool SetAnaliz(Team team)
+	private bool CheckServ(Team team)
 	{
 		bool serv = team.FirstSetServ;
 

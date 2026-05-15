@@ -118,13 +118,31 @@ public partial class ScoreBoardPage : ContentPage
         {
             var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, new List<int> { _db.EventsCategories["Замена"], _db.EventsCategories["RЗамена"] });
 
-            if (Events.Count > 5)
+            int countReplace;
+
+            if (RosterHome.Where(x => !x.IsLibero).Count() > 8)
+            {
+                countReplace = 6;
+            }
+            else
+            {
+                if (RosterHome.Where(x => !x.IsLibero).Count() == 8)
+                {
+                    countReplace = 4;
+                }
+                else
+                {
+                    countReplace = 2;
+                }
+            }
+
+            if (Events.Count > countReplace - 1)
             {
                 ReplaceHomeButton.IsEnabled = false;
                 ReplaceHomeButton.BackgroundColor = Colors.Grey;
             }
 
-            ReplaceHomeButton.Text = $"Замена ({6 - Events.Count})";
+            ReplaceHomeButton.Text = $"Замена ({countReplace - Events.Count})";
         }
 
         if (RosterGuestCheckReplace)
@@ -137,13 +155,31 @@ public partial class ScoreBoardPage : ContentPage
         {
             var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, new List<int> { _db.EventsCategories["Замена"], _db.EventsCategories["RЗамена"] });
 
-            if (Events.Count > 5)
+            int countReplace;
+
+            if (RosterGuest.Where(x => !x.IsLibero).Count() > 8)
+            {
+                countReplace = 6;
+            }
+            else
+            {
+                if (RosterGuest.Where(x => !x.IsLibero).Count() == 8)
+                {
+                    countReplace = 4;
+                }
+                else
+                {
+                    countReplace = 2;
+                }
+            }
+
+            if (Events.Count > countReplace - 1)
             {
                 ReplaceGuestButton.IsEnabled = false;
                 ReplaceGuestButton.BackgroundColor = Colors.Grey;                
             }
 
-            ReplaceGuestButton.Text = $"Замена ({6 - Events.Count})";
+            ReplaceGuestButton.Text = $"Замена ({countReplace - Events.Count})";
         }
 
         var EventsTimeOut = await _db.GetEventAsync(set.Id, _db.EventsCategories["Тайм-аут"]);
@@ -524,7 +560,11 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
+                                //await OptionalPages();
+
                                 await CreateAndSavePDF();
+
+                                Game = false;
                             }
                         }
                         else
@@ -539,6 +579,8 @@ public partial class ScoreBoardPage : ContentPage
                                 {
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
+
+                                //await OptionalPages();
 
                                 await CreateAndSavePDF();
 
@@ -592,7 +634,11 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
+                                //await OptionalPages();
+
                                 await CreateAndSavePDF();
+
+                                Game = false;
                             }
                         }
                         else
@@ -608,6 +654,8 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
+                                //await OptionalPages();
+
                                 await CreateAndSavePDF();
 
                                 Game = false;
@@ -622,6 +670,11 @@ public partial class ScoreBoardPage : ContentPage
                 }
             }
         }
+    }
+
+    private async Task OptionalPages()
+    {
+        await Navigation.PushAsync(new ProtestPage());
     }
 
     private async Task CreateAndSavePDF()

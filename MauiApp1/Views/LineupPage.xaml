@@ -430,49 +430,55 @@
 
             <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="*,*,*">
 
-                <Button
-                Grid.Row="0"
-                TextColor="White"
-                Text="Старт" 
-                FontSize="Subtitle"  
-                HorizontalOptions="Fill" 
-                VerticalOptions="Fill"
-                Clicked="OnStartMatchClicked"
-                Margin="30,10,30,10">
+                <Grid Grid.Row="0" RowDefinitions="auto,*">
 
-                    <VisualStateManager.VisualStateGroups>
+                    <Label Grid.Row="0" x:Name="LabelServe" TextColor="White" FontSize="Subtitle" VerticalOptions="Center" HorizontalOptions="Center"/>
 
-                        <VisualStateGroupList>
+                    <Button     
+                        Grid.Row="1"
+                        TextColor="White"
+                        Text="Старт" 
+                        FontSize="Subtitle"  
+                        HorizontalOptions="Fill" 
+                        VerticalOptions="Fill"
+                        Clicked="OnStartMatchClicked"
+                        Margin="30,10,30,10">
 
-                            <VisualStateGroup x:Name="CommonStates">
+                        <VisualStateManager.VisualStateGroups>
 
-                                <VisualState x:Name="Normal">
+                            <VisualStateGroupList>
 
-                                    <VisualState.Setters>
+                                <VisualStateGroup x:Name="CommonStates">
 
-                                        <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+                                    <VisualState x:Name="Normal">
 
-                                    </VisualState.Setters>
+                                        <VisualState.Setters>
 
-                                </VisualState>
+                                            <Setter Property="Background" Value="{DynamicResource MainColor}"/>
 
-                                <VisualState x:Name="PointerOver">
+                                        </VisualState.Setters>
 
-                                    <VisualState.Setters>
+                                    </VisualState>
 
-                                        <Setter Property="Background" Value="{DynamicResource PointColor}"/>
+                                    <VisualState x:Name="PointerOver">
 
-                                    </VisualState.Setters>
+                                        <VisualState.Setters>
 
-                                </VisualState>
+                                            <Setter Property="Background" Value="{DynamicResource PointColor}"/>
 
-                            </VisualStateGroup>
+                                        </VisualState.Setters>
 
-                        </VisualStateGroupList>
+                                    </VisualState>
 
-                    </VisualStateManager.VisualStateGroups>
+                                </VisualStateGroup>
 
-                </Button>
+                            </VisualStateGroupList>
+
+                        </VisualStateManager.VisualStateGroups>
+
+                    </Button>
+
+                </Grid>                
 
                 <Button 
                     Grid.Row="1" 

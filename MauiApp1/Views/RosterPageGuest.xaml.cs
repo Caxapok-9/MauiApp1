@@ -60,6 +60,8 @@ public partial class RosterPageGuest : ContentPage
                     await _db.SaveRosterAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamGuest.Id });
                 }
 
+                await _db.UpdateTeamAsync(TeamGuest);
+
                 await Navigation.PushAsync(new LineupPage(_db, true));
             }
         }
@@ -71,16 +73,14 @@ public partial class RosterPageGuest : ContentPage
 
     private string CheckData()
     {
-        #region Проверки команды Хозяев
-
         if (guestPlayers.Count < 6)
         {
-            return $"у команды {TeamGuest.Name}\nВ заявке должно быть минимум 6 игроков";
+            return $"В заявке должно быть минимум 6 игроков";
         }
 
         if (guestPlayers.Count > 14)
         {
-            return $"у команды {TeamGuest.Name}\nМаксимальное кол-во игроков в заявке 14 человек";
+            return $"Максимальное кол-во игроков в заявке 14 человек";
         }
 
         int capGuest = 0;
@@ -95,7 +95,7 @@ public partial class RosterPageGuest : ContentPage
 
         if (capGuest != 1)
         {
-            return $"у команды {TeamGuest.Name}\nДолжен быть выбран 1 капитан";
+            return $"Должен быть выбран 1 капитан";
         }
 
         int NoLibGuest = 0;
@@ -115,17 +115,17 @@ public partial class RosterPageGuest : ContentPage
 
         if (NoLibGuest < 6)
         {
-            return $"у команды {TeamGuest.Name}\nВ заявке должно быть минимум 6 полевых игроков (Не либеро)";
+            return $"В заявке должно быть минимум 6 полевых игроков (Не либеро)";
         }
 
         if (NoLibGuest > 12)
         {
-            return $"у команды {TeamGuest.Name}\nВ заявке может быть максимум 12 полевых игроков (Не либеро)";
+            return $"В заявке может быть максимум 12 полевых игроков (Не либеро)";
         }
 
         if (LibGuest > 2)
         {
-            return $"у команды {TeamGuest.Name}\nВ заявке может быть максимум 2 либеро";
+            return $"В заявке может быть максимум 2 либеро";
         }
 
         string error;
@@ -133,21 +133,27 @@ public partial class RosterPageGuest : ContentPage
         foreach (var player in guestPlayers)
         {
             if (!Validation.ValidationNumber(player.Number, out error))
-                return $"у команды {TeamGuest.Name}\n{error}";
+                return error;
         }
 
         if (guestPlayers.GroupBy(x => x.Number).Count() < guestPlayers.Count)
         {
-            return $"у команды {TeamGuest.Name}\nЕсть одинаковые номера";
+            return $"Не должно быть одинаковых номеров";
         }
 
         foreach (var player in guestPlayers)
         {
             if (!Validation.ValidationFIO(player.Name, out error))
-                return $"у команды {TeamGuest.Name}\n{error}";
+                return error;
         }
 
-        #endregion
+        if (!string.IsNullOrWhiteSpace(EntryCoachGuest.Text))
+        {
+            if (!Validation.ValidationFIO(EntryCoachGuest.Text, out error))
+                return error;
+            else
+                TeamGuest.Coach = EntryCoachGuest.Text;
+        }
 
         return null;
     }

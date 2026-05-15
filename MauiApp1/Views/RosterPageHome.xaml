@@ -5,14 +5,13 @@
 
     <Grid RowDefinitions="auto,*,auto">
 
-        <Label Grid.Row="0" Text="⚠️ Проверяйте данные при заполнении!" 
-                    TextColor="DarkOrange" 
-                    FontAttributes="Italic"
-                    FontSize="14"
-                    HorizontalOptions="Fill" 
-                    HorizontalTextAlignment="Center"
-                    Margin="0,20,0,0"
-                    LineBreakMode="WordWrap"/>
+        <VerticalStackLayout Grid.Row="0">
+
+            <Label Text="Тренер команды:" Margin="15,0,0,0" FontSize="Subtitle"/>
+            <Entry x:Name="EntryCoachHome" Placeholder="Фамилия И.О. (Необязательно)" Margin="20" BackgroundColor="#141414"/>
+            <Label Text="Состав команды:" Margin="15,0,0,0" FontSize="Subtitle"/>
+            
+        </VerticalStackLayout>
 
         <Frame Grid.Row="1" 
                Padding="15"
@@ -219,7 +218,7 @@
 
         </Frame>
 
-        <VerticalStackLayout  Grid.Row="2" VerticalOptions="End">
+        <VerticalStackLayout  Grid.Row="3" VerticalOptions="End">
 
             <Button Text="+ Добавить игрока" Clicked="OnAddPlayerHomeClicked" TextColor="White" Margin="20,0,20,10">
 
@@ -302,6 +301,15 @@
 
             </Button>
 
+            <Label Text="⚠️ Проверяйте данные при заполнении!" 
+                    TextColor="DarkOrange" 
+                    FontAttributes="Italic"
+                    FontSize="14"
+                    HorizontalOptions="Fill" 
+                    HorizontalTextAlignment="Center"
+                    Margin="20"
+                    LineBreakMode="WordWrap"/>
+            
         </VerticalStackLayout>
 
     </Grid>
