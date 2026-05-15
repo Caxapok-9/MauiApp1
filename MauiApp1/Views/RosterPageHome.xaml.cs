@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace MauiApp1.Views;
@@ -35,7 +36,7 @@ public partial class RosterPageHome : ContentPage
             activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
 
 #endif
-
+        CheckList();
     }
 
     private async void NextPageClick(object sender, EventArgs e)
@@ -51,7 +52,7 @@ public partial class RosterPageHome : ContentPage
 
             if (res != null)
             {
-                await DisplayAlert("Ошибка " + res.Split("\n")[0], res.Split("\n")[1], "OK");
+                await DisplayAlert("Ошибка", res, "OK");
             }
             else
             {
@@ -60,7 +61,30 @@ public partial class RosterPageHome : ContentPage
                     await _db.SaveRosterAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamHome.Id });
                 }
 
-                await _db.UpdateTeamAsync(TeamHome);
+                while (true)
+                {
+                    string result = await DisplayPromptAsync("Ввод данных", "Введите ФИО тренера (Необязательно)", "Ок", null);
+
+                    if (!string.IsNullOrWhiteSpace(result))
+                    {
+                        string errorValidation;
+
+                        if (!Validation.ValidationFIO(result, out errorValidation))
+                        {
+                            await DisplayAlert("Ошибка", errorValidation, "OK");
+                        }
+                        else
+                        {
+                            TeamHome.Coach = result;
+                            await _db.UpdateTeamAsync(TeamHome);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }                
 
                 await Navigation.PushAsync(new RosterPageGuest(_db));
             }
@@ -147,14 +171,6 @@ public partial class RosterPageHome : ContentPage
                 return error;
         }
 
-        if(!string.IsNullOrWhiteSpace(EntryCoachHome.Text))
-        {
-            if (!Validation.ValidationFIO(EntryCoachHome.Text, out error))
-                return error;
-            else
-                TeamHome.Coach = EntryCoachHome.Text;
-        }
-
         return null;
     }
 
@@ -176,7 +192,21 @@ public partial class RosterPageHome : ContentPage
         }
         finally
         {
+            CheckList();
             IsBusy = false;
+        }
+    }
+
+    private void CheckList()
+    {
+
+        if (homePlayers.Count == 0)
+        {
+            TeamHomeList.IsVisible = false;
+        }
+        else
+        {
+            TeamHomeList.IsVisible = true;
         }
     }
 
@@ -242,6 +272,7 @@ public partial class RosterPageHome : ContentPage
         }
         finally
         {
+            CheckList();
             IsBusy = false;
         }
     }

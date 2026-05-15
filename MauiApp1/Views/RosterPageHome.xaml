@@ -3,17 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.Views.RosterPageHome">
 
-    <Grid RowDefinitions="auto,*,auto">
+    <Grid RowDefinitions="auto,auto">
 
-        <VerticalStackLayout Grid.Row="0">
-
-            <Label Text="Тренер команды:" Margin="15,0,0,0" FontSize="Subtitle"/>
-            <Entry x:Name="EntryCoachHome" Placeholder="Фамилия И.О. (Необязательно)" Margin="20" BackgroundColor="#141414"/>
-            <Label Text="Состав команды:" Margin="15,0,0,0" FontSize="Subtitle"/>
-            
-        </VerticalStackLayout>
-
-        <Frame Grid.Row="1" 
+        <Frame Grid.Row="0" 
                Padding="15"
                Margin="20"
                VerticalOptions="Start" 
@@ -218,7 +210,7 @@
 
         </Frame>
 
-        <VerticalStackLayout  Grid.Row="3" VerticalOptions="End">
+        <VerticalStackLayout  Grid.Row="1" VerticalOptions="End">
 
             <Button Text="+ Добавить игрока" Clicked="OnAddPlayerHomeClicked" TextColor="White" Margin="20,0,20,10">
 

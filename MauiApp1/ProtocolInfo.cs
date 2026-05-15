@@ -150,14 +150,14 @@ namespace MauiApp1
             for (int i = 0; i < RosterHome.Count; i++)
             {
                 int index = i + 1;
-                dictionary["HomePlayerNumber" + index.ToString()] = new WriteText(RosterHome[i].Number, "roster");
+                dictionary["HomePlayerNumber" + index.ToString()] = new WriteText(RosterHome[i].Number, "rosterNumber");
                 dictionary["HomePlayerName" + index.ToString()] = new WriteText(RosterHome[i].Name, "roster");
             }
 
             for (int i = 0; i < RosterGuest.Count; i++)
             {
                 int index = i + 1;
-                dictionary["GuestPlayerNumber" + index.ToString()] = new WriteText(RosterGuest[i].Number, "roster");
+                dictionary["GuestPlayerNumber" + index.ToString()] = new WriteText(RosterGuest[i].Number, "rosterNumber");
                 dictionary["GuestPlayerName" + index.ToString()] = new WriteText(RosterGuest[i].Name, "roster");
             }
 
@@ -684,6 +684,13 @@ namespace MauiApp1
             }
 
             if (mode == "result")
+            {
+                this.Size = 11;
+                this.Align = iText.Layout.Properties.TextAlignment.CENTER;
+                this.Font = Setting.Calibri;
+            }
+
+            if (mode == "rosterNumber")
             {
                 this.Size = 11;
                 this.Align = iText.Layout.Properties.TextAlignment.CENTER;

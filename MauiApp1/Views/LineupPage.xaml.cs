@@ -368,22 +368,22 @@ public partial class LineupPage : ContentPage
             {
                 if (TeamHome.IsLeft)
                 {
-                    LabelServe.Text = "<- Подача слева";
+                    LabelServe.Text = "< Подача слева";
                 }
                 else
                 {
-                    LabelServe.Text = "Подача справа ->";
+                    LabelServe.Text = "Подача справа >";
                 }
             }
             else
             {
                 if (TeamHome.IsLeft)
                 {
-                    LabelServe.Text = "Подача справа ->";
+                    LabelServe.Text = "Подача справа >";
                 }
                 else
                 {
-                    LabelServe.Text = "<- Подача слева";
+                    LabelServe.Text = "< Подача слева";
                 }
             }
         }
@@ -393,22 +393,22 @@ public partial class LineupPage : ContentPage
             {
                 if (TeamHome.IsLeft)
                 {
-                    LabelServe.Text = "Подача справа ->";
+                    LabelServe.Text = "Подача справа >";
                 }
                 else
                 {
-                    LabelServe.Text = "<- Подача слева";
+                    LabelServe.Text = "< Подача слева";
                 }
             }
             else
             {
                 if (TeamHome.IsLeft)
                 {
-                    LabelServe.Text = "<- Подача слева";
+                    LabelServe.Text = "< Подача слева";
                 }
                 else
                 {
-                    LabelServe.Text = "Подача справа ->";
+                    LabelServe.Text = "Подача справа >";
                 }
             }
         }

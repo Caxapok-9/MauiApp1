@@ -35,7 +35,7 @@ public partial class RosterPageGuest : ContentPage
             activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
 
 #endif
-
+        CheckList();
     }
 
     private async void NextPageClick(object sender, EventArgs e)
@@ -51,7 +51,7 @@ public partial class RosterPageGuest : ContentPage
 
             if (res != null)
             {
-                await DisplayAlert("Ошибка " + res.Split("\n")[0], res.Split("\n")[1], "OK");
+                await DisplayAlert("Ошибка", res, "OK");
             }
             else
             {
@@ -71,6 +71,18 @@ public partial class RosterPageGuest : ContentPage
         }
     }
 
+    private void CheckList()
+    {
+
+        if (guestPlayers.Count == 0)
+        {
+            TeamGuestList.IsVisible = false;
+        }
+        else
+        {
+            TeamGuestList.IsVisible = true;
+        }
+    }
     private string CheckData()
     {
         if (guestPlayers.Count < 6)
@@ -176,7 +188,8 @@ public partial class RosterPageGuest : ContentPage
                 
         }
         finally
-        { 
+        {
+            CheckList();
             IsBusy = false; 
         }
     }
@@ -243,6 +256,7 @@ public partial class RosterPageGuest : ContentPage
         }
         finally
         {
+            CheckList();
             IsBusy = false;
         }
     }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace MauiApp1
 {
@@ -14,14 +14,16 @@ namespace MauiApp1
         private static string PatternFIO2 = @"^[А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)? [А-ЯЁ][а-яё]+( [А-ЯЁ][а-яё]+)?$";
 
         public static bool ValidationFIO(string input, out string? error)
-        {
+        {            
             if(string.IsNullOrWhiteSpace(input))
             {
                 error = "Есть незаполненные поля";
                 return false;
             }
 
-            if(input.Length > 49)
+            input = input.TrimEnd();
+
+            if (input.Length > 49)
             {
                 error = $"Слишком длинное ФИО {input}\nНе больше 50 символов";
                 return false;
@@ -48,6 +50,8 @@ namespace MauiApp1
                 error = "Есть незаполненные номера";
                 return false;
             }
+
+            number = number.TrimEnd();
 
             int num;
 
