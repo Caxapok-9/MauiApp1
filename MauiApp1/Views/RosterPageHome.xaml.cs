@@ -202,11 +202,11 @@ public partial class RosterPageHome : ContentPage
 
         if (homePlayers.Count == 0)
         {
-            TeamHomeList.IsVisible = false;
+            HomeFrame.IsVisible = false;
         }
         else
         {
-            TeamHomeList.IsVisible = true;
+            HomeFrame.IsVisible = true;
         }
     }
 

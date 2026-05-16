@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace MauiApp1
 {
@@ -132,16 +133,16 @@ namespace MauiApp1
             #region Main
 
             dictionary["NameTournament"] = new WriteText("«" + MainInfo.First().NameTournament + "»", "tournament");
-            dictionary["Group"] = null;
+            dictionary["Group"] = new WriteText(MainInfo.First().Group, "header");
             dictionary["NameTeamHomeHeader"] = new WriteText(TeamHome.Name, "header");
             dictionary["NameTeamGuestHeader"] = new WriteText(TeamGuest.Name, "header");
             dictionary["NameTeamHomeRoster"] = new WriteText(TeamHome.Name, "teamRoster");
             dictionary["NameTeamGuestRoster"] = new WriteText(TeamGuest.Name, "teamRoster");
-            dictionary["DateNumber"] = null;
-            dictionary["DateMonth"] = null;
-            dictionary["DateYear"] = null;
-            dictionary["TimeBegin"] = null;
-            dictionary["TimeEnd"] = null;
+            dictionary["DateNumber"] = new WriteText(DateTime.Now.Date.Day.ToString(), "main");
+            dictionary["DateMonth"] = new WriteText(DateTime.Now.Date.ToString("MMMM", CultureInfo.GetCultureInfo("ru-RU")), "main");
+            dictionary["DateYear"] = new WriteText(DateTime.Now.Date.ToString("yy"), "main");
+            dictionary["TimeBegin"] = new WriteText(MainInfo.First().TimeBegin.ToString("HH:mm"), "tournament");
+            dictionary["TimeEnd"] = new WriteText(DateTime.Now.ToString("HH:mm"), "tournament");
 
             #endregion
 

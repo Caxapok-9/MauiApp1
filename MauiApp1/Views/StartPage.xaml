@@ -13,14 +13,14 @@
                     <Label Text="Название турнира:" Margin="5,0,0,0"/>
                     <Entry x:Name="EntryTournament" Placeholder="Чемпионат города Твери" Margin="0,10,0,15"/>
 
+                    <Label Text="Группа:" Margin="5,0,0,0"/>
+                    <Entry x:Name="EntryGroup" Placeholder="М1 (Необязательно)" Margin="0,10,0,15"/>
+
                     <Label Text="Команда Хозяева:" Margin="5,0,0,0"/>
                     <Entry x:Name="EntryTeamHome" Placeholder="Название команды хозяев" Margin="0,10,0,15"/>
 
                     <Label Text="Команда Гости:" Margin="5,0,0,0"/>
                     <Entry x:Name="EntryTeamGuest" Placeholder="Название команды гостей" Margin="0,10,0,15"/>
-
-                    <Label Text="Место проведения:" Margin="5,0,0,0"/>
-                    <Entry x:Name="EntryLocation" Placeholder="Адрес, зал" Margin="0,10,0,15"/>
 
                     <Label Text="Главный судья:" Margin="5,0,0,0"/>
                     <Entry x:Name="EntryFirstReferee" Placeholder="Фамилия И.О." Margin="0,10,0,15"/>

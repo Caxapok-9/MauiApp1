@@ -11,7 +11,6 @@ public partial class StartPage : ContentPage
     string tournament = "";
     string teamHome = "";
     string teamGuest = "";
-    string location = "";
     string freferee = "";
     string treferee = "";
     string secretary = "";
@@ -130,7 +129,6 @@ public partial class StartPage : ContentPage
             tournament = EntryTournament.Text;
             teamHome = EntryTeamHome.Text;
             teamGuest = EntryTeamGuest.Text;
-            location = EntryLocation.Text;
             freferee = EntryFirstReferee.Text;
             treferee = EntryToReferee.Text;
             secretary = EntrySecretary.Text;
@@ -140,7 +138,6 @@ public partial class StartPage : ContentPage
                 string.IsNullOrWhiteSpace(teamHome) || 
                 string.IsNullOrWhiteSpace(teamGuest) || 
                 string.IsNullOrWhiteSpace(tournament) || 
-                string.IsNullOrWhiteSpace(location) ||
                 string.IsNullOrWhiteSpace(freferee) ||
                 string.IsNullOrWhiteSpace(secretary)
             )
@@ -208,7 +205,6 @@ public partial class StartPage : ContentPage
             information.NameTournament = tournament;
             information.TeamHome = ListTeam.Where(x => x.IsHome).First().Id;
             information.TeamGuest = ListTeam.Where(x => !x.IsHome).First().Id;
-            information.Location = location;
             information.FirstReferee = freferee;
             information.ToReferee = string.IsNullOrWhiteSpace(treferee) ? null : treferee;
             information.Secretary = secretary;        

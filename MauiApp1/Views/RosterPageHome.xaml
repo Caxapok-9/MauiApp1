@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.Views.RosterPageHome">
 
-    <Grid RowDefinitions="auto,auto">
+    <Grid RowDefinitions="*,auto">
 
         <Frame Grid.Row="0" 
                Padding="15"
@@ -11,7 +11,8 @@
                VerticalOptions="Start" 
                BorderColor="{DynamicResource MainColorHome}" 
                Background="#141414" 
-               CornerRadius="10">
+               CornerRadius="10"
+               x:Name="HomeFrame">
 
             <CollectionView x:Name="TeamHomeList">
 

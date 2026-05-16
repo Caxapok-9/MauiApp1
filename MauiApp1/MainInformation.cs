@@ -1,4 +1,5 @@
-﻿using SQLiteNetExtensions.Attributes;
+﻿using SQLite;
+using SQLiteNetExtensions.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ namespace MauiApp1
 {
     public class MainInformation
     {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
         public string NameTournament { get; set; }
 
         [ForeignKey(typeof(Team))]
@@ -17,12 +21,14 @@ namespace MauiApp1
         [ForeignKey(typeof(Team))]
         public int TeamGuest { get; set; }
 
-        public string Location { get; set; }
-
         public string FirstReferee { get; set; }
 
         public string? ToReferee { get; set; }
 
         public string Secretary { get; set; }
+
+        public string Group { get; set; }
+
+        public DateTime TimeBegin {  get; set; }
     }
 }

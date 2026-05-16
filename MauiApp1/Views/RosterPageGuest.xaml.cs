@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MauiApp1.Views;
 
@@ -60,6 +61,31 @@ public partial class RosterPageGuest : ContentPage
                     await _db.SaveRosterAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamGuest.Id });
                 }
 
+                while (true)
+                {
+                    string result = await DisplayPromptAsync("Ввод данных", "Введите ФИО тренера (Необязательно)", "Ок", null);
+
+                    if (!string.IsNullOrWhiteSpace(result))
+                    {
+                        string errorValidation;
+
+                        if (!Validation.ValidationFIO(result, out errorValidation))
+                        {
+                            await DisplayAlert("Ошибка", errorValidation, "OK");
+                        }
+                        else
+                        {
+                            TeamGuest.Coach = result;
+                            await _db.UpdateTeamAsync(TeamGuest);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
                 await _db.UpdateTeamAsync(TeamGuest);
 
                 await Navigation.PushAsync(new LineupPage(_db, true));
@@ -76,11 +102,11 @@ public partial class RosterPageGuest : ContentPage
 
         if (guestPlayers.Count == 0)
         {
-            TeamGuestList.IsVisible = false;
+            GuestFrame.IsVisible = false;
         }
         else
         {
-            TeamGuestList.IsVisible = true;
+            GuestFrame.IsVisible = true;
         }
     }
     private string CheckData()
@@ -157,14 +183,6 @@ public partial class RosterPageGuest : ContentPage
         {
             if (!Validation.ValidationFIO(player.Name, out error))
                 return error;
-        }
-
-        if (!string.IsNullOrWhiteSpace(EntryCoachGuest.Text))
-        {
-            if (!Validation.ValidationFIO(EntryCoachGuest.Text, out error))
-                return error;
-            else
-                TeamGuest.Coach = EntryCoachGuest.Text;
         }
 
         return null;

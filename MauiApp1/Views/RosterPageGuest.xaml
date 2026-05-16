@@ -11,7 +11,8 @@
                VerticalOptions="Start" 
                BorderColor="{DynamicResource MainColorGuest}" 
                Background="#141414" 
-               CornerRadius="10">
+               CornerRadius="10"
+               x:Name="GuestFrame">
 
             <CollectionView x:Name="TeamGuestList">
 

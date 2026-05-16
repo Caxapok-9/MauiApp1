@@ -36,6 +36,8 @@ public class DatabaseService
 
     public async Task<List<MainInformation>> GetMainInfoAsync() => await _db.Table<MainInformation>().ToListAsync();
 
+    public async Task<int> UpdateMainInfoAsync(MainInformation Info) => await _db.UpdateAsync(Info);
+
     public async Task<int> DeleteMainInfoAsync() => await _db.DeleteAllAsync<MainInformation>();
 
     #endregion

@@ -204,6 +204,15 @@ public partial class LineupPage : ContentPage
         
         set.NumberSet = ++num;
 
+        if(set.NumberSet == 1)
+        {
+            var info = await _db.GetMainInfoAsync();
+
+            info.First().TimeBegin = DateTime.Now;
+
+            await _db.UpdateMainInfoAsync(info.First());
+        }
+
         if (set.NumberSet == Setting.MaxSet)
         {
             set.IsShort = true;

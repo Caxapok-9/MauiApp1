@@ -67,6 +67,12 @@ namespace MauiApp1
                 return false;
             }
 
+            if (num < 0)
+            {
+                error = $"Номер не может быть отрицательным {number}";
+                return false;
+            }
+
             error = null;
 
             return true;
