@@ -4,7 +4,7 @@
              x:Class="MauiApp1.Views.ScoreBoardPage"
              Title="Игра">
 
-    <Grid RowDefinitions="2*, 5*, 3*" 
+    <Grid RowDefinitions="2*, 8*, 3*" 
           Padding="10"
           RowSpacing="10">
 
@@ -31,7 +31,9 @@
                    Margin="15,0,15,0">
             </Label>
 
-            <Label Grid.Column="2" Text=":" VerticalOptions="Center" FontSize="Title"/>
+            <Label x:Name="NoIndicator" Grid.Column="2" Text=":" VerticalOptions="Center" FontSize="Title"/>
+
+            <ActivityIndicator x:Name="Indicator" Grid.Column="2" IsRunning="True" Color="White"/>
 
             <Label x:Name="CountSetGuest"
                    Grid.Column="3" 
@@ -99,13 +101,13 @@
                 
             </Button>
 
-            <Grid Grid.Column="1" RowDefinitions="*,*">
+            <Grid Grid.Column="1" RowDefinitions="*,*,*">
 
                 <Button Grid.Row="0" 
                     Text="Смена" 
                     FontAttributes="Bold"
                     Clicked="OnReverseClick"
-                    VerticalOptions="End"
+                    VerticalOptions="Center"
                     HorizontalOptions="Fill"    
                     TextColor="White" 
                     Margin="5,0,5,0">
@@ -187,7 +189,51 @@
                     </VisualStateManager.VisualStateGroups>
 
                 </Button>
-                
+
+                <Button Grid.Row="2" 
+                    x:Name="ButtonSanction" 
+                    Text="Санкции"
+                    Clicked="OnSanctionClick"
+                    FontAttributes="Bold"
+                    TextColor="White"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Fill"
+                    Margin="5,0,5,0">
+
+                    <VisualStateManager.VisualStateGroups>
+
+                        <VisualStateGroupList>
+
+                            <VisualStateGroup x:Name="CommonStates">
+
+                                <VisualState x:Name="Normal">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource ExitColor}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                                <VisualState x:Name="PointerOver">
+
+                                    <VisualState.Setters>
+
+                                        <Setter Property="Background" Value="{DynamicResource PointExitColor}"/>
+
+                                    </VisualState.Setters>
+
+                                </VisualState>
+
+                            </VisualStateGroup>
+
+                        </VisualStateGroupList>
+
+                    </VisualStateManager.VisualStateGroups>
+
+                </Button>
+
             </Grid>            
             
             <Button Grid.Column="2" 

@@ -27,7 +27,7 @@ namespace MauiApp1
 
         public string Secretary { get; set; }
 
-        public string Group { get; set; }
+        public string? Group { get; set; }
 
         public DateTime TimeBegin {  get; set; }
     }

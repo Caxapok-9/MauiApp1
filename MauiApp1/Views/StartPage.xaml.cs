@@ -14,6 +14,7 @@ public partial class StartPage : ContentPage
     string freferee = "";
     string treferee = "";
     string secretary = "";
+    string group = "";
 
     public StartPage(DatabaseService db)
 	{
@@ -22,6 +23,8 @@ public partial class StartPage : ContentPage
         Setting.GetSetting();
 
         _db = db;
+
+        db.FillSanctionCategoryAsync();
 
         InitializeComponent();        
     }
@@ -65,6 +68,10 @@ public partial class StartPage : ContentPage
             {
                 await _db.DeleteAsync();
             }
+        }
+        else
+        {
+            await _db.DeleteAsync();
         }
     }
 
@@ -110,6 +117,7 @@ public partial class StartPage : ContentPage
         await _db.InitializeLineUpBeginAsync();
         await _db.InitializeEventAsync();
         await _db.InitializeTeamAsync();
+        await _db.InitializeSanctionAsync();
     }
 
     private async void OnSettingClicked(object sender, EventArgs e)
@@ -132,6 +140,7 @@ public partial class StartPage : ContentPage
             freferee = EntryFirstReferee.Text;
             treferee = EntryToReferee.Text;
             secretary = EntrySecretary.Text;
+            group = EntryGroup.Text;
 
             if 
             (
@@ -207,7 +216,8 @@ public partial class StartPage : ContentPage
             information.TeamGuest = ListTeam.Where(x => !x.IsHome).First().Id;
             information.FirstReferee = freferee;
             information.ToReferee = string.IsNullOrWhiteSpace(treferee) ? null : treferee;
-            information.Secretary = secretary;        
+            information.Secretary = secretary; 
+            information.Group = string.IsNullOrWhiteSpace(group) ? null : group;
 
             await _db.SaveMainInfoAsync(information);
 

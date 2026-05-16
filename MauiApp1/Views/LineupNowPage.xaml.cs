@@ -40,7 +40,7 @@ public partial class LineupNowPage : ContentPage
 
 		var Events = await _db.GetEventAsync();
 
-		var SelectEvents = Events.Where(x => x.SetID == _set.Id && (x.EventID == _db.EventsCategories["Очко"] || x.EventID == _db.EventsCategories["Замена"])).ToList();
+		var SelectEvents = Events.Where(x => x.SetID == _set.Id && (x.EventID == _db.EventsCategories["Очко"] || x.EventID == _db.EventsCategories["Замена"] || x.EventID == _db.EventsCategories["RЗамена"])).ToList();
 
         await Processing(SelectEvents);
     }
@@ -86,7 +86,7 @@ public partial class LineupNowPage : ContentPage
                 }
 			}
 
-            if (e.EventID == _db.EventsCategories["Замена"])
+            if (e.EventID == _db.EventsCategories["Замена"] || e.EventID == _db.EventsCategories["RЗамена"])
 			{
                 if (line.Zone1PlayerID == e.PlayerInID)
                 {

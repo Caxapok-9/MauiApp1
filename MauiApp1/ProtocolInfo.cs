@@ -36,6 +36,8 @@ namespace MauiApp1
 
             var LineUps = await db.GetLineUpAsync();
 
+            var Sanctions = await db.GetSanctionAsync();
+
             foreach(Set set in Sets)
             {
                 if(set != null)
@@ -140,7 +142,7 @@ namespace MauiApp1
             dictionary["NameTeamGuestRoster"] = new WriteText(TeamGuest.Name, "teamRoster");
             dictionary["DateNumber"] = new WriteText(DateTime.Now.Date.Day.ToString(), "main");
             dictionary["DateMonth"] = new WriteText(DateTime.Now.Date.ToString("MMMM", CultureInfo.GetCultureInfo("ru-RU")), "main");
-            dictionary["DateYear"] = new WriteText(DateTime.Now.Date.ToString("yy"), "main");
+            dictionary["DateYear"] = new WriteText(DateTime.Now.Date.ToString("yy"), "tournament");
             dictionary["TimeBegin"] = new WriteText(MainInfo.First().TimeBegin.ToString("HH:mm"), "tournament");
             dictionary["TimeEnd"] = new WriteText(DateTime.Now.ToString("HH:mm"), "tournament");
 
@@ -170,6 +172,158 @@ namespace MauiApp1
 
             if(TeamGuest.Coach != null)
                 dictionary["GuestCoach"] = new WriteText(TeamGuest.Coach, "roster");
+
+            #endregion
+
+            #region Sanction
+
+            for (int i = 0; i < Sanctions.Count; i++)
+            {
+                SanctionPDF sanction = Sanctions[i];
+
+                int number = i + 1;
+
+                dictionary["SetSanction" + number.ToString()] = new WriteText(Sets.Find(x => x.Id == sanction.SetId).NumberSet.ToString(), "result");
+
+                dictionary["ScoreSanction" + number.ToString()] = new WriteText(sanction.ScoreHome.ToString() + ":" + sanction.ScoreGuest.ToString(), "result");
+
+                if (sanction.TeamId == TeamHome.Id)
+                {
+                    dictionary["TeamSanction" + number.ToString()] = new WriteText("А", "result");
+
+                    if (sanction.SanctionId == 1)
+                    {
+                        if (sanction.TargetId == -1)
+                        {
+                            dictionary["Warning" + number.ToString()] = new WriteText("Т", "result");
+                        }
+                        else if (sanction.TargetId == -2)
+                        {
+                            dictionary["Warning" + number.ToString()] = new WriteText("K", "result");
+                        }
+                        else
+                        {                            
+                            dictionary["Warning" + number.ToString()] = new WriteText(RosterHome.Find(x => x.Id == sanction.TargetId).Number, "result");
+                        }
+                    }
+
+                    if(sanction.SanctionId == 2)
+                    {
+                        if (sanction.TargetId == -1)
+                        {
+                            dictionary["Remark" + number.ToString()] = new WriteText("Т", "result");
+                        }
+                        else if (sanction.TargetId == -2)
+                        {
+                            dictionary["Remark" + number.ToString()] = new WriteText("K", "result");
+                        }
+                        else
+                        {
+                            dictionary["Remark" + number.ToString()] = new WriteText(RosterHome.Find(x => x.Id == sanction.TargetId).Number, "result");
+                        }
+                    }
+
+                    if (sanction.SanctionId == 3)
+                    {
+                        if (sanction.TargetId == -1)
+                        {
+                            dictionary["Remove" + number.ToString()] = new WriteText("Т", "result");
+                        }
+                        else if (sanction.TargetId == -2)
+                        {
+                            dictionary["Remove" + number.ToString()] = new WriteText("K", "result");
+                        }
+                        else
+                        {
+                            dictionary["Remove" + number.ToString()] = new WriteText(RosterHome.Find(x => x.Id == sanction.TargetId).Number, "result");
+                        }
+                    }
+
+                    if (sanction.SanctionId == 4)
+                    {
+                        if (sanction.TargetId == -1)
+                        {
+                            dictionary["Disqual" + number.ToString()] = new WriteText("Т", "result");
+                        }
+                        else if (sanction.TargetId == -2)
+                        {
+                            dictionary["Disqual" + number.ToString()] = new WriteText("K", "result");
+                        }
+                        else
+                        {
+                            dictionary["Disqual" + number.ToString()] = new WriteText(RosterHome.Find(x => x.Id == sanction.TargetId).Number, "result");
+                        }
+                    }
+                }
+                else
+                {
+                    dictionary["TeamSanction" + number.ToString()] = new WriteText("Б", "result");
+
+                    if (sanction.SanctionId == 1)
+                    {
+                        if (sanction.TargetId == -1)
+                        {
+                            dictionary["Warning" + number.ToString()] = new WriteText("Т", "result");
+                        }
+                        else if (sanction.TargetId == -2)
+                        {
+                            dictionary["Warning" + number.ToString()] = new WriteText("K", "result");
+                        }
+                        else
+                        {
+                            dictionary["Warning" + number.ToString()] = new WriteText(RosterGuest.Find(x => x.Id == sanction.TargetId).Number, "result");
+                        }
+                    }
+
+                    if (sanction.SanctionId == 2)
+                    {
+                        if (sanction.TargetId == -1)
+                        {
+                            dictionary["Remark" + number.ToString()] = new WriteText("Т", "result");
+                        }
+                        else if (sanction.TargetId == -2)
+                        {
+                            dictionary["Remark" + number.ToString()] = new WriteText("K", "result");
+                        }
+                        else
+                        {
+                            dictionary["Remark" + number.ToString()] = new WriteText(RosterGuest.Find(x => x.Id == sanction.TargetId).Number, "result");
+                        }
+                    }
+
+                    if (sanction.SanctionId == 3)
+                    {
+                        if (sanction.TargetId == -1)
+                        {
+                            dictionary["Remove" + number.ToString()] = new WriteText("Т", "result");
+                        }
+                        else if (sanction.TargetId == -2)
+                        {
+                            dictionary["Remove" + number.ToString()] = new WriteText("K", "result");
+                        }
+                        else
+                        {
+                            dictionary["Remove" + number.ToString()] = new WriteText(RosterGuest.Find(x => x.Id == sanction.TargetId).Number, "result");
+                        }
+                    }
+
+                    if (sanction.SanctionId == 4)
+                    {
+                        if (sanction.TargetId == -1)
+                        {
+                            dictionary["Disqual" + number.ToString()] = new WriteText("Т", "result");
+                        }
+                        else if (sanction.TargetId == -2)
+                        {
+                            dictionary["Disqual" + number.ToString()] = new WriteText("K", "result");
+                        }
+                        else
+                        {
+                            dictionary["Disqual" + number.ToString()] = new WriteText(RosterGuest.Find(x => x.Id == sanction.TargetId).Number, "result");
+                        }
+                    }
+                }
+            }
 
             #endregion
 

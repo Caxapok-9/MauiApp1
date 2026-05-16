@@ -45,6 +45,10 @@ public partial class ScoreBoardPage : ContentPage
     {
         base.OnAppearing();
 
+        Indicator.IsVisible = false;
+
+        NoIndicator.IsVisible = true;
+
         Sets = await _db.GetSetAsync();
 
         set = Sets.Last();
@@ -520,6 +524,25 @@ public partial class ScoreBoardPage : ContentPage
         }
     }
 
+    private async void OnSanctionClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+
+            await Navigation.PushModalAsync(new SanctionPage(_db, set));
+        }
+        finally
+        {
+            UpdateData();
+
+            IsBusy = false;
+        }
+    }
+
     private async Task CheckEndSet()
     {
         if (!set.IsShort)
@@ -528,8 +551,6 @@ public partial class ScoreBoardPage : ContentPage
             {
                 if (Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
                 {
-                    await DisplayAlert("Информация", "Партия окончена!", "OK");
-
                     if (set.ScoreHome > set.ScoreGuest)
                     {
                         set.WinnerID = TeamHome.Id;
@@ -562,79 +583,9 @@ public partial class ScoreBoardPage : ContentPage
 
                                 //await OptionalPages();
 
-                                await CreateAndSavePDF();
+                                Indicator.IsVisible = true;
 
-                                Game = false;
-                            }
-                        }
-                        else
-                        {
-                            if (team.Count() > 1)
-                            {
-                                if (team.First().WinnerID == TeamHome.Id)
-                                {
-                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
-                                }
-                                else
-                                {
-                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
-                                }
-
-                                //await OptionalPages();
-
-                                await CreateAndSavePDF();
-
-                                Game = false;
-                            }
-                        }
-                    }
-
-                    if(Game)
-                    {
-                        await Navigation.PushAsync(new LineupPage(_db, true));
-                    }                    
-                }
-            }
-        }
-        else
-        {
-            if (set.ScoreHome > (Setting.MaxScoreInShortSet - 1) || set.ScoreGuest > (Setting.MaxScoreInShortSet - 1))
-            {
-                if (Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
-                {
-                    await DisplayAlert("Информация", "Партия окончена!", "OK");
-
-                    if (set.ScoreHome > set.ScoreGuest)
-                    {
-                        set.WinnerID = TeamHome.Id;
-                    }
-                    else
-                    {
-                        set.WinnerID = TeamGuest.Id;
-                    }
-
-                    await _db.UpdateSetAsync(set);
-
-                    Sets = await _db.GetSetAsync();
-
-                    var WinTeams = Sets.GroupBy(x => x.WinnerID).ToList();
-
-                    foreach (var team in WinTeams)
-                    {
-                        if (Setting.MaxSet == 5)
-                        {
-                            if (team.Count() > 2)
-                            {
-                                if (team.First().WinnerID == TeamHome.Id)
-                                {
-                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
-                                }
-                                else
-                                {
-                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
-                                }
-
-                                //await OptionalPages();
+                                NoIndicator.IsVisible = false;
 
                                 await CreateAndSavePDF();
 
@@ -655,6 +606,10 @@ public partial class ScoreBoardPage : ContentPage
                                 }
 
                                 //await OptionalPages();
+
+                                Indicator.IsVisible = true;
+
+                                NoIndicator.IsVisible = false;
 
                                 await CreateAndSavePDF();
 
@@ -665,6 +620,90 @@ public partial class ScoreBoardPage : ContentPage
 
                     if (Game)
                     {
+                        await DisplayAlert("Информация", "Партия окончена!", "OK");
+
+                        await Navigation.PushAsync(new LineupPage(_db, true));
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (set.ScoreHome > (Setting.MaxScoreInShortSet - 1) || set.ScoreGuest > (Setting.MaxScoreInShortSet - 1))
+            {
+                if (Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+                {
+                    if (set.ScoreHome > set.ScoreGuest)
+                    {
+                        set.WinnerID = TeamHome.Id;
+                    }
+                    else
+                    {
+                        set.WinnerID = TeamGuest.Id;
+                    }
+
+                    await _db.UpdateSetAsync(set);
+
+                    Sets = await _db.GetSetAsync();
+
+                    var WinTeams = Sets.GroupBy(x => x.WinnerID).ToList();
+
+                    foreach (var team in WinTeams)
+                    {
+                        if (Setting.MaxSet == 5)
+                        {
+                            if (team.Count() > 2)
+                            {
+                                if (team.First().WinnerID == TeamHome.Id)
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
+                                }
+
+                                //await OptionalPages();
+
+                                Indicator.IsVisible = true;
+
+                                NoIndicator.IsVisible = false;
+
+                                await CreateAndSavePDF();
+
+                                Game = false;
+                            }
+                        }
+                        else
+                        {
+                            if (team.Count() > 1)
+                            {
+                                if (team.First().WinnerID == TeamHome.Id)
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
+                                }
+                                else
+                                {
+                                    await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
+                                }
+
+                                //await OptionalPages();
+
+                                Indicator.IsVisible = true;
+
+                                NoIndicator.IsVisible = false;
+
+                                await CreateAndSavePDF();
+
+                                Game = false;
+                            }
+                        }
+                    }
+
+                    if (Game)
+                    {
+                        await DisplayAlert("Информация", "Партия окончена!", "OK");
+
                         await Navigation.PushAsync(new LineupPage(_db, true));
                     }
                 }

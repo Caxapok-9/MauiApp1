@@ -14,6 +14,8 @@ public class DatabaseService
 
     public Dictionary<string, int> EventsCategories;
 
+    public List<SanctionIn> SanctionsCategories;
+
     public Dictionary<int, LineUp> LineUpBegin = new Dictionary<int, LineUp>();
 
     public async Task<int> DeleteAsync() =>
@@ -23,7 +25,8 @@ public class DatabaseService
         & await _db.DeleteAllAsync<LineUp>()
         & await _db.DeleteAllAsync<Team>()
         & await _db.DeleteAllAsync<MainInformation>()
-        & await _db.DeleteAllAsync<EventCategory>();
+        & await _db.DeleteAllAsync<EventCategory>()
+        & await _db.DeleteAllAsync<SanctionPDF>();
 
     #region MainInfo
 
@@ -213,4 +216,29 @@ public class DatabaseService
 
     #endregion
 
+    #region
+
+    public async Task InitializeSanctionAsync()
+    {
+        await _db.CreateTableAsync<SanctionPDF>();
+    }
+
+    public async Task<int> SaveSanctionAsync(SanctionPDF info) => await _db.InsertAsync(info);
+
+    public async Task<List<SanctionPDF>> GetSanctionAsync() => await _db.Table<SanctionPDF>().ToListAsync();
+
+    public async Task<int> DeleteSanctionAsync() => await _db.DeleteAllAsync<SanctionPDF>();
+
+    public void FillSanctionCategoryAsync()
+    {
+        SanctionsCategories = new List<SanctionIn>
+        {
+            new SanctionIn() { Id = 1, Name = "Предупреждение (Жёлтая карточка)"},
+            new SanctionIn() { Id = 2, Name = "Замечание (Красная карточка)"},
+            new SanctionIn() { Id = 3, Name = "Удаление (Две карточки в одной руке)"},
+            new SanctionIn() { Id = 4, Name = "Дисквалификация (Две карточки в обеих руках)"},
+        };
+    }
+
+    #endregion
 }
