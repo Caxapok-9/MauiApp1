@@ -30,6 +30,8 @@ namespace MauiApp1
 
         private bool _IsSelected { get; set; }
 
+        public string DisplayName => $"{Number} - {Name}";
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Player()

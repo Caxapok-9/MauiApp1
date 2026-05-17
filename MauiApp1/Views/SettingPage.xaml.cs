@@ -44,7 +44,7 @@ public partial class SettingPage : ContentPage
             return;
         }
 
-        if (maxScore > 30 || maxScore < 8 || maxScoreInShortSet > 21 || maxScoreInShortSet < 8)
+        if (maxScore > 35 || maxScore < 1 || maxScoreInShortSet > 35 || maxScoreInShortSet < 1)
         {
             await DisplayAlert("Ошибка", "Некорректное кол-во очков!", "OK");
             return;

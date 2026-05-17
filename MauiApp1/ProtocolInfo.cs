@@ -145,9 +145,11 @@ namespace MauiApp1
             dictionary["DateYear"] = new WriteText(DateTime.Now.Date.ToString("yy"), "tournament");
             dictionary["TimeBegin"] = new WriteText(MainInfo.First().TimeBegin.ToString("HH:mm"), "tournament");
             dictionary["TimeEnd"] = new WriteText(DateTime.Now.ToString("HH:mm"), "tournament");
-            dictionary["FirstReferee"] = new WriteText(MainInfo.First().FirstReferee, "main");
-            dictionary["ToReferee"] = new WriteText(MainInfo.First().ToReferee, "main");
-            dictionary["Secretary"] = new WriteText(MainInfo.First().Secretary, "main");
+            dictionary["FirstReferee"] = new WriteText(MainInfo.First().FirstReferee, "tournament");
+            dictionary["ToReferee"] = new WriteText(MainInfo.First().ToReferee, "tournament");
+            dictionary["Secretary"] = new WriteText(MainInfo.First().Secretary, "tournament");
+            dictionary["MVPHome"] = new WriteText(RosterHome.Find(x => x.Id == MainInfo.First().MVPHome).Number, "char");
+            dictionary["MVPGuest"] = new WriteText(RosterGuest.Find(x => x.Id == MainInfo.First().MVPGuest).Number, "char");
 
             #endregion
 
@@ -336,7 +338,7 @@ namespace MauiApp1
             int winGuest = Sets.Where(x => x.WinnerID == TeamGuest.Id).Count();
 
             dictionary["Final_Result"] = new WriteText(winHome.ToString() + ":" + winGuest.ToString(), "result");
-            dictionary["Final_Char_Result"] = new WriteText(winHome > winGuest ? "А" : "Б", "header");
+            dictionary["Final_Char_Result"] = new WriteText(winHome > winGuest ? "А" : "Б", "char");
 
             #endregion
 
@@ -441,6 +443,8 @@ namespace MauiApp1
 
         Dictionary<string, WriteText> dictionary = new Dictionary<string, WriteText>()
         {
+            {"MVPHome", null},
+            {"MVPGuest", null},
             {"SignFirstReferee", new WriteText("Подпись", "main")},
             {"SignToReferee", new WriteText("Подпись", "main")},
             {"SignSecretary", new WriteText("Подпись", "main")},
@@ -897,6 +901,13 @@ namespace MauiApp1
             {
                 this.Size = 11;
                 this.Align = iText.Layout.Properties.TextAlignment.LEFT;
+                this.Font = Setting.CalibriBold;
+            }
+
+            if (mode == "char")
+            {
+                this.Size = 11;
+                this.Align = iText.Layout.Properties.TextAlignment.CENTER;
                 this.Font = Setting.CalibriBold;
             }
 

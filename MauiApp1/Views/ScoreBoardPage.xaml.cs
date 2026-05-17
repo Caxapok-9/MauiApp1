@@ -582,7 +582,7 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                EndGame();
+                                await EndGame();
                             }
                         }
                         else
@@ -598,7 +598,7 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                EndGame();
+                                await EndGame();
                             }
                         }
                     }
@@ -648,7 +648,7 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                EndGame();
+                                await EndGame();
                             }
                         }
                         else
@@ -664,7 +664,7 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                EndGame();
+                                await EndGame();
                             }
                         }
                     }
@@ -682,56 +682,55 @@ public partial class ScoreBoardPage : ContentPage
 
     private async Task EndGame()
     {
-        Game = false;
-
-        var info = await _db.GetMainInfoAsync();
-
-        Indicator.IsVisible = true;
-
-        NoIndicator.IsVisible = false;
-
-
-        SignaturePage pageSecretary = new SignaturePage($"Секретарь {info.FirstOrDefault().Secretary}");
-
-        await Navigation.PushModalAsync(pageSecretary);
-
-        byte[] SecretarySignature = await pageSecretary.ResultTask;
-
-
-        SignaturePage pageFirstReferee = new SignaturePage($"Главный судья {info.FirstOrDefault().FirstReferee}");
-
-        await Navigation.PushModalAsync(pageFirstReferee);
-
-        byte[] FirstRefereeSignature = await pageFirstReferee.ResultTask;
-
-
-        byte[] ToRefereeSignature = null;
-
-        if (info.FirstOrDefault().ToReferee != null)
+        try
         {
-            SignaturePage pageToReferee = new SignaturePage($"Второй судья {info.FirstOrDefault().ToReferee}");
+            IsBusy = true;
 
-            await Navigation.PushModalAsync(pageToReferee);
+            Game = false;
 
-            ToRefereeSignature = await pageToReferee.ResultTask;
+            var info = await _db.GetMainInfoAsync();
+
+            SignaturePage pageSecretary = new SignaturePage(_db, $"Секретарь {info.FirstOrDefault().Secretary}");
+
+            await Navigation.PushModalAsync(pageSecretary);
+
+            byte[] SecretarySignature = await pageSecretary.ResultTask;
+
+            SignaturePage pageFirstReferee = new SignaturePage(_db, $"Главный судья {info.FirstOrDefault().FirstReferee}");
+
+            await Navigation.PushModalAsync(pageFirstReferee);
+
+            byte[] FirstRefereeSignature = await pageFirstReferee.ResultTask;
+
+            byte[] ToRefereeSignature = null;
+
+            if (info.FirstOrDefault().ToReferee != null)
+            {
+                SignaturePage pageToReferee = new SignaturePage(_db, $"Второй судья {info.FirstOrDefault().ToReferee}");
+
+                await Navigation.PushModalAsync(pageToReferee);
+
+                ToRefereeSignature = await pageToReferee.ResultTask;
+            }
+
+            SignaturePage pageCaptainHome = new SignaturePage(_db, $"Капитан команды {TeamHome.Name} - {RosterHome.Find(x => x.IsCaptain).Name}", "Home", RosterGuest);
+
+            await Navigation.PushModalAsync(pageCaptainHome);
+
+            byte[] CaptainHomeSignature = await pageCaptainHome.ResultTask;
+
+            SignaturePage pageCaptainGuest = new SignaturePage(_db, $"Капитан команды {TeamGuest.Name} - {RosterGuest.Find(x => x.IsCaptain).Name}", "Guest", RosterHome);
+
+            await Navigation.PushModalAsync(pageCaptainGuest);
+
+            byte[] CaptainGuestSignature = await pageCaptainGuest.ResultTask;
+
+            await CreateAndViewPDF(FirstRefereeSignature, ToRefereeSignature, SecretarySignature, CaptainHomeSignature, CaptainGuestSignature);
         }
-
-
-        SignaturePage pageCaptainHome = new SignaturePage($"Капитан команды {TeamHome.Name} - {RosterHome.Find(x => x.IsCaptain).Name}");
-
-        await Navigation.PushModalAsync(pageCaptainHome);
-
-        byte[] CaptainHomeSignature = await pageCaptainHome.ResultTask;
-
-
-        SignaturePage pageCaptainGuest = new SignaturePage($"Капитан команды {TeamGuest.Name} - {RosterGuest.Find(x => x.IsCaptain).Name}");
-
-        await Navigation.PushModalAsync(pageCaptainGuest);
-
-        byte[] CaptainGuestSignature = await pageCaptainGuest.ResultTask;
-
-
-        await CreateAndViewPDF(FirstRefereeSignature, ToRefereeSignature, SecretarySignature, CaptainHomeSignature, CaptainGuestSignature);
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private async Task OptionalPages()
@@ -741,39 +740,48 @@ public partial class ScoreBoardPage : ContentPage
 
     private async Task CreateAndViewPDF(byte[] signatureFirstReferee, byte[] signatureToReferee, byte[] signatureSecretary, byte[] signatureCaptainHome, byte[] signatureCaptainGuest)
     {
-        ProtocolInfo info = new ProtocolInfo(_db);
-
-        var dict = await info.GetDataDictionary();
-
-        Dictionary<string, byte[]> sign = new Dictionary<string, byte[]>
+        try
         {
-            {"SignFirstReferee", signatureFirstReferee },
-            {"SignToReferee", signatureToReferee },
-            {"SignSecretary", signatureSecretary },
-            {"SignCaptainHome", signatureCaptainHome },
-            {"SignCaptainGuest", signatureCaptainGuest }
-        };
+            IsBusy = true;
 
-        var array = await ProtocolCreater.CreatePDF(dict, sign);
+            ProtocolInfo info = new ProtocolInfo(_db);
 
-        if (array != null)
-        {
-            var res = await FileSaver.Default.SaveAsync("VolleyProtocol.pdf", new MemoryStream(array), CancellationToken.None);
+            var dict = await info.GetDataDictionary();
 
-            if (res.IsSuccessful)
+            Dictionary<string, byte[]> sign = new Dictionary<string, byte[]>
             {
-                await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
-            }
-            else
+                {"SignFirstReferee", signatureFirstReferee },
+                {"SignToReferee", signatureToReferee },
+                {"SignSecretary", signatureSecretary },
+                {"SignCaptainHome", signatureCaptainHome },
+                {"SignCaptainGuest", signatureCaptainGuest }
+            };
+
+            var array = await ProtocolCreater.CreatePDF(dict, sign);
+
+            if (array != null)
             {
-                // сохранение БД
-                await App.Current.MainPage.DisplayAlert("Информация", "Ошибка формирования PDF", "OK");
+                var res = await FileSaver.Default.SaveAsync("VolleyProtocol.pdf", new MemoryStream(array), CancellationToken.None);
+
+                if (res.IsSuccessful)
+                {
+                    await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
+                }
+                else
+                {
+                    // сохранение БД
+                    await App.Current.MainPage.DisplayAlert("Информация", "Ошибка формирования PDF", "OK");
+                }
             }
+
+            await _db.DeleteAsync();
+
+            Application.Current.Quit();
         }
-
-        await _db.DeleteAsync();
-
-        Application.Current.Quit();
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     protected override bool OnBackButtonPressed()

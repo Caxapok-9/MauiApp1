@@ -34,5 +34,9 @@ namespace MauiApp1
         public bool ProtestHome { get; set; }
 
         public bool ProtestGuest { get; set; }
+
+        public int MVPHome {  get; set; }
+
+        public int MVPGuest { get; set; }
     }
 }

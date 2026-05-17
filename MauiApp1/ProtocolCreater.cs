@@ -50,9 +50,9 @@ namespace MauiApp1
 
                                 iText.Layout.Element.Image image = new iText.Layout.Element.Image(data);
 
-                                image.SetWidth(40f);
+                                image.SetWidth(35f);
 
-                                image.SetHeight(18f);
+                                image.SetHeight(15f);
 
                                 Rectangle rectangle = field.GetWidgets().FirstOrDefault().GetRectangle().ToRectangle();
 
