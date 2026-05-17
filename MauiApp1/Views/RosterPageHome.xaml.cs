@@ -22,6 +22,8 @@ public partial class RosterPageHome : ContentPage
 
         _db = db;
 
+        _db.DeleteRosterAsync();
+
         GetNamesTeams();
     }
 

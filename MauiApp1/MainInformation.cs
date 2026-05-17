@@ -30,5 +30,9 @@ namespace MauiApp1
         public string? Group { get; set; }
 
         public DateTime TimeBegin {  get; set; }
+
+        public bool ProtestHome { get; set; }
+
+        public bool ProtestGuest { get; set; }
     }
 }

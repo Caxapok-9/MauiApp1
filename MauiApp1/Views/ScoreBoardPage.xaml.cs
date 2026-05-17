@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Storage;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -581,15 +582,7 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                //await OptionalPages();
-
-                                Indicator.IsVisible = true;
-
-                                NoIndicator.IsVisible = false;
-
-                                await CreateAndSavePDF();
-
-                                Game = false;
+                                EndGame();
                             }
                         }
                         else
@@ -605,15 +598,7 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                //await OptionalPages();
-
-                                Indicator.IsVisible = true;
-
-                                NoIndicator.IsVisible = false;
-
-                                await CreateAndSavePDF();
-
-                                Game = false;
+                                EndGame();
                             }
                         }
                     }
@@ -663,15 +648,7 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                //await OptionalPages();
-
-                                Indicator.IsVisible = true;
-
-                                NoIndicator.IsVisible = false;
-
-                                await CreateAndSavePDF();
-
-                                Game = false;
+                                EndGame();
                             }
                         }
                         else
@@ -687,15 +664,7 @@ public partial class ScoreBoardPage : ContentPage
                                     await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
                                 }
 
-                                //await OptionalPages();
-
-                                Indicator.IsVisible = true;
-
-                                NoIndicator.IsVisible = false;
-
-                                await CreateAndSavePDF();
-
-                                Game = false;
+                                EndGame();
                             }
                         }
                     }
@@ -711,20 +680,96 @@ public partial class ScoreBoardPage : ContentPage
         }
     }
 
+    private async Task EndGame()
+    {
+        Game = false;
+
+        var info = await _db.GetMainInfoAsync();
+
+        Indicator.IsVisible = true;
+
+        NoIndicator.IsVisible = false;
+
+
+        SignaturePage pageSecretary = new SignaturePage($"Секретарь {info.FirstOrDefault().Secretary}");
+
+        await Navigation.PushModalAsync(pageSecretary);
+
+        byte[] SecretarySignature = await pageSecretary.ResultTask;
+
+
+        SignaturePage pageFirstReferee = new SignaturePage($"Главный судья {info.FirstOrDefault().FirstReferee}");
+
+        await Navigation.PushModalAsync(pageFirstReferee);
+
+        byte[] FirstRefereeSignature = await pageFirstReferee.ResultTask;
+
+
+        byte[] ToRefereeSignature = null;
+
+        if (info.FirstOrDefault().ToReferee != null)
+        {
+            SignaturePage pageToReferee = new SignaturePage($"Второй судья {info.FirstOrDefault().ToReferee}");
+
+            await Navigation.PushModalAsync(pageToReferee);
+
+            ToRefereeSignature = await pageToReferee.ResultTask;
+        }
+
+
+        SignaturePage pageCaptainHome = new SignaturePage($"Капитан команды {TeamHome.Name} - {RosterHome.Find(x => x.IsCaptain).Name}");
+
+        await Navigation.PushModalAsync(pageCaptainHome);
+
+        byte[] CaptainHomeSignature = await pageCaptainHome.ResultTask;
+
+
+        SignaturePage pageCaptainGuest = new SignaturePage($"Капитан команды {TeamGuest.Name} - {RosterGuest.Find(x => x.IsCaptain).Name}");
+
+        await Navigation.PushModalAsync(pageCaptainGuest);
+
+        byte[] CaptainGuestSignature = await pageCaptainGuest.ResultTask;
+
+
+        await CreateAndViewPDF(FirstRefereeSignature, ToRefereeSignature, SecretarySignature, CaptainHomeSignature, CaptainGuestSignature);
+    }
+
     private async Task OptionalPages()
     {
         await Navigation.PushAsync(new ProtestPage());
     }
 
-    private async Task CreateAndSavePDF()
+    private async Task CreateAndViewPDF(byte[] signatureFirstReferee, byte[] signatureToReferee, byte[] signatureSecretary, byte[] signatureCaptainHome, byte[] signatureCaptainGuest)
     {
         ProtocolInfo info = new ProtocolInfo(_db);
 
-        // Сбор подписей
-
         var dict = await info.GetDataDictionary();
 
-        await ProtocolCreater.CreatePDF(dict);
+        Dictionary<string, byte[]> sign = new Dictionary<string, byte[]>
+        {
+            {"SignFirstReferee", signatureFirstReferee },
+            {"SignToReferee", signatureToReferee },
+            {"SignSecretary", signatureSecretary },
+            {"SignCaptainHome", signatureCaptainHome },
+            {"SignCaptainGuest", signatureCaptainGuest }
+        };
+
+        var array = await ProtocolCreater.CreatePDF(dict, sign);
+
+        if (array != null)
+        {
+            var res = await FileSaver.Default.SaveAsync("VolleyProtocol.pdf", new MemoryStream(array), CancellationToken.None);
+
+            if (res.IsSuccessful)
+            {
+                await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
+            }
+            else
+            {
+                // сохранение БД
+                await App.Current.MainPage.DisplayAlert("Информация", "Ошибка формирования PDF", "OK");
+            }
+        }
 
         await _db.DeleteAsync();
 

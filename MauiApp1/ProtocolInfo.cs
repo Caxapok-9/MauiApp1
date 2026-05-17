@@ -145,6 +145,9 @@ namespace MauiApp1
             dictionary["DateYear"] = new WriteText(DateTime.Now.Date.ToString("yy"), "tournament");
             dictionary["TimeBegin"] = new WriteText(MainInfo.First().TimeBegin.ToString("HH:mm"), "tournament");
             dictionary["TimeEnd"] = new WriteText(DateTime.Now.ToString("HH:mm"), "tournament");
+            dictionary["FirstReferee"] = new WriteText(MainInfo.First().FirstReferee, "main");
+            dictionary["ToReferee"] = new WriteText(MainInfo.First().ToReferee, "main");
+            dictionary["Secretary"] = new WriteText(MainInfo.First().Secretary, "main");
 
             #endregion
 
@@ -438,6 +441,11 @@ namespace MauiApp1
 
         Dictionary<string, WriteText> dictionary = new Dictionary<string, WriteText>()
         {
+            {"SignFirstReferee", new WriteText("Подпись", "main")},
+            {"SignToReferee", new WriteText("Подпись", "main")},
+            {"SignSecretary", new WriteText("Подпись", "main")},
+            {"SignCaptainHome", new WriteText("Подпись", "main")},
+            {"SignCaptainGuest", new WriteText("Подпись", "main")},
             {"Warning1", null},
             {"Warning2", null},
             {"Warning3", null},
