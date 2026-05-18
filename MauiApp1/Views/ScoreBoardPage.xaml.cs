@@ -232,11 +232,11 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, set, RosterHome));
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, TeamGuest, set, RosterHome));
         }
         finally
         {
-            UpdateData();
+            await UpdateData();
 
             IsBusy = false;
         }
@@ -251,11 +251,11 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, set, RosterGuest));
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, TeamHome, set, RosterGuest));
         }
         finally
         {
-            UpdateData();
+            await UpdateData();
 
             IsBusy = false;
         }
@@ -394,38 +394,36 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            var Events = await _db.GetEventAsync(set.Id, TeamHome.Id, new List<int> { _db.EventsCategories["Замена"], _db.EventsCategories["RЗамена"] });
+            int countReplace = 0;
 
-            int countReplace;
+            var line = await LineUpNow.GetNowLineUp(_db, TeamHome, TeamGuest, set);
 
-            int countPlayer = RosterHome.Where(x => !x.IsLibero && !x.IsRemove && !x.IsDisqual).Count();
+            var linePlayers = line.Select(x => RosterHome.Find(p => p.Id == x.Value)).ToList();
 
-            if (countPlayer > 8)
-            {
-                countReplace = 6;
-            }
-            else if (countPlayer == 8)
-            {
-                countReplace = 4;
-            }
-            else if (countPlayer == 7)
-            {
-                countReplace = 2;
-            }
-            else
-            {
-                countReplace = 0;
-            }            
+            var banchPlayers = RosterHome.Where(x => !linePlayers.Contains(x) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
 
-            if (Events.Count > countReplace - 1)
+            foreach(Player player in banchPlayers)
             {
-                ReplaceHomeButton.IsEnabled = false;
-                ReplaceHomeButton.BackgroundColor = Colors.Grey;
-                ReplaceHomeButton.Text = "Замен нет";
+                if(player.ReplaceID == 0)
+                {
+                    countReplace += 2;
+                }
+                else
+                {
+                    if(linePlayers.Find(x => x.ReplaceID == player.Id) == null)
+                    {
+                        countReplace++;
+                    }
+                }
+            }     
+
+            if (countReplace == 0)
+            {
+                ReplaceHomeButton.Text = "Замена";
             }
             else
             {
-                ReplaceHomeButton.Text = $"Замена \n({countReplace - Events.Count})";
+                ReplaceHomeButton.Text = $"Замена \n({countReplace})";
             }            
         }
 
@@ -437,39 +435,37 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            var Events = await _db.GetEventAsync(set.Id, TeamGuest.Id, new List<int> { _db.EventsCategories["Замена"], _db.EventsCategories["RЗамена"] });
+            int countReplace = 0;
 
-            int countReplace;
+            var line = await LineUpNow.GetNowLineUp(_db, TeamGuest, TeamHome, set);
 
-            int countPlayer = RosterGuest.Where(x => !x.IsLibero && !x.IsRemove && !x.IsDisqual).Count();
+            var linePlayers = line.Select(x => RosterGuest.Find(p => p.Id == x.Value)).ToList();
 
-            if (countPlayer > 8)
+            var banchPlayers = RosterGuest.Where(x => !linePlayers.Contains(x) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
+
+            foreach (Player player in banchPlayers)
             {
-                countReplace = 6;
+                if (player.ReplaceID == 0)
+                {
+                    countReplace = countReplace + 2;
+                }
+                else
+                {
+                    if(linePlayers.Find(x => x.ReplaceID == player.Id) == null)
+                    {
+                        countReplace++;
+                    }                    
+                }
             }
-            else if (countPlayer == 8)
+
+            if (countReplace == 0)
             {
-                countReplace = 4;
-            }
-            else if (countPlayer == 7)
-            {
-                countReplace = 2;
+                ReplaceGuestButton.Text = "Замена";
             }
             else
             {
-                countReplace = 0;
+                ReplaceGuestButton.Text = $"Замена \n({countReplace})";
             }
-
-            if (Events.Count > countReplace - 1)
-            {
-                ReplaceGuestButton.IsEnabled = false;
-                ReplaceGuestButton.BackgroundColor = Colors.Grey;
-                ReplaceGuestButton.Text = "Замен нет";
-            }
-            else
-            {
-                ReplaceGuestButton.Text = $"Замена \n({countReplace - Events.Count})";
-            }            
         }
 
         var EventsTimeOut = await _db.GetEventAsync(set.Id, _db.EventsCategories["Тайм-аут"]);

@@ -67,6 +67,9 @@ namespace MauiApp1
             Application.Current.Resources["ExitColor"] = Colors.Maroon;
             Application.Current.Resources["PointExitColor"] = Colors.Firebrick;
 
+            Application.Current.Resources["HealthColor"] = Colors.SeaGreen;
+            Application.Current.Resources["PointHealthColor"] = Colors.MediumSeaGreen;
+
             Application.Current.Resources["ColorLineUp"] = null;
         }
     }

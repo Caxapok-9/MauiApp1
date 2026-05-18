@@ -272,7 +272,7 @@ public partial class LineupPage : ContentPage
         {
             IsBusy = true;
 
-            string res = CheckData();
+            string res = await CheckData();
 
             if (res != null)
             {
@@ -319,7 +319,7 @@ public partial class LineupPage : ContentPage
         }
     }
 
-    private string CheckData()
+    private async Task<string> CheckData()
     {
         foreach (Picker picker in pickersHome)
         {
@@ -351,6 +351,54 @@ public partial class LineupPage : ContentPage
             return $"в команде {TeamGuest.Name}\nИгроки не должны повторяться!";
         }
 
+        foreach(Picker pick in pickersHome)
+        {
+            Player player = pick.SelectedItem as Player;
+
+            if(player.IsInjury)
+            {
+                string result = null;
+
+                while (result == null)
+                {
+                    result = await DisplayActionSheet($"Внимание! Вы поставили в расстановку игрока с травмой ({player.Number} - {player.Name})\nПодтвердите, что это не ошибка", null, null, "Всё верно", "Ошибка");
+                }
+                
+                if(result == "Ошибка")
+                {
+                    return $"в команде {TeamHome.Name}\nЗамените травмированного игрока";
+                }
+
+                player.IsInjury = false;
+
+                await _db.SaveRosterAsync(player);
+            }
+        }
+
+        foreach (Picker pick in pickersGuest)
+        {
+            Player player = pick.SelectedItem as Player;
+
+            if (player.IsInjury)
+            {
+                string result = null;
+
+                while (result == null)
+                {
+                    result = await DisplayActionSheet($"Внимание! Вы поставили в расстановку игрока с травмой ({player.Number} - {player.Name})\nПодтвердите, что это не ошибка", null, null, "Всё верно", "Ошибка");
+                }
+
+                if (result == "Ошибка")
+                {
+                    return $"в команде {TeamGuest.Name}\nЗамените травмированного игрока";
+                }
+
+                player.IsInjury = false;
+
+                await _db.SaveRosterAsync(player);
+            }
+        }
+
         return null;
     }
 
@@ -369,8 +417,6 @@ public partial class LineupPage : ContentPage
         rosterGuest = await _db.GetRosterAsync(TeamGuest.Id);
 
         rosterGuest = rosterGuest.Where(x => !x.IsLibero && !x.IsDisqual).ToList();
-
-        return;
     }
 
     private void CheckServ()

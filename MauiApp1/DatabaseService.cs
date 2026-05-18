@@ -59,7 +59,8 @@ public class DatabaseService
             new EventCategory() {NameCategory = "Очко"},
             new EventCategory() {NameCategory = "Тайм-аут"},
             new EventCategory() {NameCategory = "Замена"},
-            new EventCategory() {NameCategory = "RЗамена"}
+            new EventCategory() {NameCategory = "RЗамена"},
+            new EventCategory() {NameCategory = "WЗамена"}
         };
 
         await _db.InsertAllAsync(list);

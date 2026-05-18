@@ -50,7 +50,7 @@ namespace MauiApp1
 
                                 iText.Layout.Element.Image image = new iText.Layout.Element.Image(data);
 
-                                image.SetWidth(26f);
+                                image.SetWidth(22f);
 
                                 image.SetHeight(12f);
 

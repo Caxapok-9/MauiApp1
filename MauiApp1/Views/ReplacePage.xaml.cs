@@ -8,17 +8,15 @@ public partial class ReplacePage : ContentPage
 
     Team _targetTeam;
 
-    LineUp _line;
+    Team _enemyTeam;
 
-    List<Event> _eventsReplace;
+    List<Player> _roster;
 
-    Dictionary<int, Player> _roster;
+    Dictionary<int, int> _line;
 
-    List<Player> _court = new List<Player>();
+    string _mode;
 
-    List<Player> _bench = new List<Player>();
-
-    public ReplacePage(DatabaseService db, Team targetTeam, Set set, List<Player> roster)
+    public ReplacePage(DatabaseService db, Team targetTeam, Team enemyTeam, Set set, List<Player> roster, string mode = null)
     {
         InitializeComponent();
 
@@ -28,83 +26,24 @@ public partial class ReplacePage : ContentPage
 
         _targetTeam = targetTeam;
 
-        _roster = roster.Where(x => !x.IsLibero).ToDictionary(x => (int)x.Id, x => x);
+        _enemyTeam = enemyTeam;
+
+        _roster = roster;
+
+        _mode = mode;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        _line = _db.LineUpBegin[_targetTeam.Id];
+        _line = await LineUpNow.GetNowLineUp(_db, _targetTeam, _enemyTeam, _set);
 
-        _eventsReplace = await _db.GetEventAsync(_set.Id, _targetTeam.Id, new List<int> { _db.EventsCategories["Замена"] ,_db.EventsCategories["RЗамена"] });
+        ListPlayerIn.ItemsSource = _line.Select(c => _roster.Find(x => x.Id == c.Value)).ToList();
 
-        if (_eventsReplace != null && _eventsReplace.Count > 0)
-        {
-            ReplaceZone(_eventsReplace, _line);
-        }
+        var listHealth = _roster.Where(x => x.IsInjury && x.InjurySetId != _set.Id).ToList();
 
-        CourtAdd(_line);
-
-        var l = _court.Select(c => c.Id).ToHashSet();
-
-        _bench.AddRange(_roster.Values.Where(p => !l.Contains(p.Id) && !p.IsDisqual && !p.IsRemove));
-
-        ListPlayerIn.ItemsSource = _court;
-
-        ListPlayerOut.ItemsSource = _bench;     
-    }
-
-    private void ReplaceZone(List<Event> events, LineUp line)
-    {
-        foreach (var ev in events)
-        {
-            if (line.Zone1PlayerID == ev.PlayerInID)
-            {
-                line.Zone1PlayerID = (int)ev.PlayerOutID;
-                continue;
-            }
-
-            if (line.Zone2PlayerID == ev.PlayerInID)
-            {
-                line.Zone2PlayerID = (int)ev.PlayerOutID;
-                continue;
-            }
-
-            if (line.Zone3PlayerID == ev.PlayerInID)
-            {
-                line.Zone3PlayerID = (int)ev.PlayerOutID;
-                continue;
-            }
-
-            if (line.Zone4PlayerID == ev.PlayerInID)
-            {
-                line.Zone4PlayerID = (int)ev.PlayerOutID;
-                continue;
-            }
-
-            if (line.Zone5PlayerID == ev.PlayerInID)
-            {
-                line.Zone5PlayerID = (int)ev.PlayerOutID;
-                continue;
-            }
-
-            if (line.Zone6PlayerID == ev.PlayerInID)
-            {
-                line.Zone6PlayerID = (int)ev.PlayerOutID;
-                continue;
-            }
-        }
-    }
-
-    private void CourtAdd(LineUp l)
-    {
-        _court.Add(_roster[l.Zone1PlayerID]);
-        _court.Add(_roster[l.Zone2PlayerID]);
-        _court.Add(_roster[l.Zone3PlayerID]);
-        _court.Add(_roster[l.Zone4PlayerID]);
-        _court.Add(_roster[l.Zone5PlayerID]);
-        _court.Add(_roster[l.Zone6PlayerID]);
+        ListIsInjury.ItemsSource = listHealth;
     }
 
     private async void OnReplaceButtonClick(object sender, EventArgs e)
@@ -116,86 +55,48 @@ public partial class ReplacePage : ContentPage
         {
             IsBusy = true;
 
-            Player courtPlayer = ListPlayerIn.SelectedItem as Player;
+            await Replace();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
 
-            Player benchPlayer = ListPlayerOut.SelectedItem as Player;
+    private async void OnHealthClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
 
-            if (courtPlayer != null && benchPlayer != null)
+        try
+        {
+            IsBusy = true;
+
+            if (sender is Button but && but.BindingContext is Player player)
             {
-                if (courtPlayer.ReplaceID == 0)
-                {
-                    if (benchPlayer.ReplaceID != 0)
-                    {
-                        if (benchPlayer.ReplaceID == courtPlayer.Id)
-                        {
-                            Event ev = new Event();
+                player.IsInjury = false;
 
-                            ev.SetID = _set.Id;
-                            ev.TeamID = _targetTeam.Id;
-                            ev.EventID = _db.EventsCategories["RЗамена"];
-                            ev.ScoreGuest = _set.ScoreGuest;
-                            ev.ScoreHome = _set.ScoreHome;
-                            ev.PlayerInID = courtPlayer.Id;
-                            ev.PlayerOutID = benchPlayer.Id;
+                await _db.SaveRosterAsync(player);
 
-                            await _db.SaveEventAsync(ev);
-
-                            courtPlayer.ReplaceID = (int)benchPlayer.Id;
-
-                            await _db.SaveRosterAsync(courtPlayer);
-
-                            await Navigation.PopModalAsync();
-                        }
-                        else
-                        {
-                            if (_court.Where(x => x.ReplaceID == benchPlayer.Id).Count() == 0)
-                            {
-                                await DisplayAlert("Ошибка", $"Игрока {benchPlayer.Number} можно выпустить только вместо игрока {_roster[benchPlayer.ReplaceID].Number}, в рамках обратной замены!", "OK");
-                            }
-                            else
-                            {
-                                await DisplayAlert("Ошибка", $"Игрока {benchPlayer.Number} нельзя выпустить, так как он уже участвовал в обратной замене!", "OK");
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        if (_bench.Where(x => x.ReplaceID == courtPlayer.Id).Count() == 0)
-                        {
-                            Event ev = new Event();
-
-                            ev.SetID = _set.Id;
-                            ev.TeamID = _targetTeam.Id;
-                            ev.EventID = _db.EventsCategories["Замена"];
-                            ev.ScoreGuest = _set.ScoreGuest;
-                            ev.ScoreHome = _set.ScoreHome;
-                            ev.PlayerInID = courtPlayer.Id;
-                            ev.PlayerOutID = benchPlayer.Id;
-
-                            await _db.SaveEventAsync(ev);
-
-                            courtPlayer.ReplaceID = (int)benchPlayer.Id;
-
-                            await _db.SaveRosterAsync(courtPlayer);
-
-                            await Navigation.PopModalAsync();
-                        }
-                        else
-                        {
-                            await DisplayAlert("Ошибка", $"Игрока {courtPlayer.Number} можно заменить только на игрока {_bench.Where(x => x.ReplaceID == courtPlayer.Id).First().Number}, в рамках обратной замены!", "OK");
-                        }
-                    }
-                }
-                else
-                {
-                    await DisplayAlert("Ошибка", $"Нельзя убирать игрока {courtPlayer.Number} с поля, так как он уже участвовал в обратной замене!", "OK");
-                }
+                await SelectItem();
             }
-            else
-            {
-                await DisplayAlert("Ошибка", "Нужно выбрать игрока на поле и игрока на замене!", "OK");
-            }
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async void OnSelectItem(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+
+            await SelectItem();
         }
         finally
         {
@@ -206,5 +107,149 @@ public partial class ReplacePage : ContentPage
     private async void OnExitButtonClick(object sender, EventArgs e)
     {
         await Navigation.PopModalAsync();
+    }
+
+    private async Task SelectItem()
+    {
+        var listHealth = _roster.Where(x => x.IsInjury && x.InjurySetId != _set.Id).ToList();
+
+        ListIsInjury.ItemsSource = listHealth;
+
+        var listBench = _roster.Where(x => !_line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
+
+        Player targetPlayer = ListPlayerIn.SelectedItem as Player;
+
+        if (targetPlayer != null)
+        {
+            if (targetPlayer.ReplaceID == 0)
+            {
+                if (listBench.Count > 0)
+                {
+                    var listTarget = listBench.Where(x => x.ReplaceID == targetPlayer.Id).ToList();
+
+                    if (listTarget.Count > 0)
+                    {
+                        ListPlayerOut.ItemsSource = new List<Player> { listTarget.First() };
+                    }
+                    else
+                    {
+                        var listReplace = listBench.Where(x => x.ReplaceID == 0).ToList();
+
+                        if (listReplace.Count > 0)
+                        {
+                            ListPlayerOut.ItemsSource = listReplace;
+                        }
+                        else
+                        {
+                            if (WarningHealth.IsChecked || WarningRemove.IsChecked)
+                            {
+                                ListPlayerOut.ItemsSource = listBench;
+                            }
+                            else
+                            {
+                                ListPlayerOut.ItemsSource = null;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (WarningHealth.IsChecked || WarningRemove.IsChecked)
+                {
+                    ListPlayerOut.ItemsSource = listBench;
+                }
+                else
+                {
+                    ListPlayerOut.ItemsSource = null;
+                }
+            }
+        }
+    }
+
+    private async Task Replace()
+    {
+        Player courtPlayer = ListPlayerIn.SelectedItem as Player;
+
+        Player benchPlayer = ListPlayerOut.SelectedItem as Player;
+
+        if (WarningHealth.IsChecked || WarningRemove.IsChecked)
+        {
+            benchPlayer.ReplaceID = (int)courtPlayer.Id;
+
+            if(WarningHealth.IsChecked)
+            {
+                courtPlayer.InjurySetId = _set.Id;
+
+                _roster.Find(x => x.Id == (int)courtPlayer.Id).IsInjury = true;
+            }
+
+            if(WarningRemove.IsChecked)
+            {
+                if(_mode == "Remove")
+                    _roster.Find(x => x.Id == (int)courtPlayer.Id).IsRemove = true;
+
+                if(_mode == "Disqual")
+                    _roster.Find(x => x.Id == (int)courtPlayer.Id).IsDisqual = true;
+            }
+
+            Event ev = new Event();
+
+            ev.SetID = _set.Id;
+            ev.TeamID = _targetTeam.Id;
+            ev.EventID = _db.EventsCategories["WЗамена"];
+            ev.ScoreGuest = _set.ScoreGuest;
+            ev.ScoreHome = _set.ScoreHome;
+            ev.PlayerInID = courtPlayer.Id;
+            ev.PlayerOutID = benchPlayer.Id;
+
+            await _db.SaveEventAsync(ev);
+
+            await _db.SaveRosterAsync(courtPlayer);
+            await _db.SaveRosterAsync(benchPlayer);
+
+            await Navigation.PopModalAsync();
+        }
+        else
+        {
+            courtPlayer.ReplaceID = (int)benchPlayer.Id;
+
+            if (benchPlayer.ReplaceID == 0)
+            {
+                Event ev = new Event();
+
+                ev.SetID = _set.Id;
+                ev.TeamID = _targetTeam.Id;
+                ev.EventID = _db.EventsCategories["Замена"];
+                ev.ScoreGuest = _set.ScoreGuest;
+                ev.ScoreHome = _set.ScoreHome;
+                ev.PlayerInID = courtPlayer.Id;
+                ev.PlayerOutID = benchPlayer.Id;
+
+                await _db.SaveEventAsync(ev);
+
+                await _db.SaveRosterAsync(courtPlayer);
+
+                await Navigation.PopModalAsync();
+            }
+            else
+            {
+                Event ev = new Event();
+
+                ev.SetID = _set.Id;
+                ev.TeamID = _targetTeam.Id;
+                ev.EventID = _db.EventsCategories["RЗамена"];
+                ev.ScoreGuest = _set.ScoreGuest;
+                ev.ScoreHome = _set.ScoreHome;
+                ev.PlayerInID = courtPlayer.Id;
+                ev.PlayerOutID = benchPlayer.Id;
+
+                await _db.SaveEventAsync(ev);
+
+                await _db.SaveRosterAsync(courtPlayer);
+
+                await Navigation.PopModalAsync();
+            }
+        }
     }
 }

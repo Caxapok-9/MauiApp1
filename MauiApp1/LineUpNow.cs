@@ -12,7 +12,7 @@ namespace MauiApp1
         {
             var Events = await _db.GetEventAsync();
 
-            var SelectEvents = Events.Where(x => x.SetID == _set.Id && (x.EventID == _db.EventsCategories["Очко"] || x.EventID == _db.EventsCategories["Замена"] || x.EventID == _db.EventsCategories["RЗамена"])).ToList();
+            var SelectEvents = Events.Where(x => x.SetID == _set.Id && (x.EventID == _db.EventsCategories["Очко"] || x.EventID == _db.EventsCategories["Замена"] || x.EventID == _db.EventsCategories["RЗамена"] || x.EventID == _db.EventsCategories["WЗамена"])).ToList();
 
             LineUp BeginLineUp = _db.LineUpBegin[_teamTarget.Id];
 
@@ -55,7 +55,7 @@ namespace MauiApp1
                     }
                 }
 
-                if (e.EventID == _db.EventsCategories["Замена"] || e.EventID == _db.EventsCategories["RЗамена"])
+                if (e.EventID == _db.EventsCategories["Замена"] || e.EventID == _db.EventsCategories["RЗамена"] || e.EventID == _db.EventsCategories["WЗамена"])
                 {
                     if (line.Zone1PlayerID == e.PlayerInID)
                     {

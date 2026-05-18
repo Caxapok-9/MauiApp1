@@ -484,7 +484,7 @@
                     Grid.Row="1" 
                     Text="⇄" 
                     TextColor="White"
-                    FontSize="30" 
+                    FontSize="Title" 
                     FontAttributes="Bold"
                     HorizontalOptions="Fill" 
                     VerticalOptions="Fill"
