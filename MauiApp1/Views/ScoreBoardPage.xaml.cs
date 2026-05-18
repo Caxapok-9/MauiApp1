@@ -170,7 +170,11 @@ public partial class ScoreBoardPage : ContentPage
 
                 if (warning == "Да")
                 {
-                    await TechLose(TeamHome);
+                    CheckTech = false;
+
+                    await TechLosing.TechLoseGame(_db, set, TeamHome, TeamGuest);
+
+                    await EndGame();
                 }
             }
             else if (result.Contains(TeamGuest.Name))
@@ -179,7 +183,11 @@ public partial class ScoreBoardPage : ContentPage
 
                 if (warning == "Да")
                 {
-                    await TechLose(TeamGuest);
+                    CheckTech = false;
+
+                    await TechLosing.TechLoseGame(_db, set, TeamGuest, TeamHome);
+
+                    await EndGame();
                 }
             }
         }
@@ -538,7 +546,7 @@ public partial class ScoreBoardPage : ContentPage
         }
     }
 
-    private async Task AddScore(Team team)
+    public async Task AddScore(Team team)
     {
         if (team.IsHome)
         {
@@ -612,140 +620,6 @@ public partial class ScoreBoardPage : ContentPage
                 await DisplayAlert("Информация", "Для последнего события в протоколе необходим счёт, поэтому дальше убирать очки нельзя!", "OK");
             }
         }
-    }
-
-    private async Task TechLose(Team teamLoser)
-    {
-        CheckTech = false;
-
-        while(set.WinnerID == 0)
-        {
-            if (teamLoser.IsHome)
-            {
-                await AddScore(TeamGuest);
-            }
-            else
-            {
-                await AddScore(TeamHome);
-            }
-        }
-
-        Sets = await _db.GetSetAsync();
-
-        int winCount = Sets.Where(x => x.WinnerID != teamLoser.Id).Count();
-
-        if(Setting.MaxSet == 5)
-        {
-            if(winCount < 3)
-            {
-                while(winCount < 3)
-                {
-                    Sets = await _db.GetSetAsync();
-
-                    Set newSet = new Set();
-
-                    if(teamLoser.IsHome)
-                    {
-                        if (Sets.Last().NumberSet + 1 != 5)
-                        {
-                            newSet.ScoreHome = 0;
-                            newSet.ScoreGuest = Setting.MaxScore;
-                            newSet.WinnerID = TeamGuest.Id;
-                            newSet.NumberSet = Sets.Last().NumberSet + 1;
-                            newSet.IsShort = false;
-                        }
-                        else
-                        {
-                            newSet.ScoreHome = 0;
-                            newSet.ScoreGuest = Setting.MaxScoreInShortSet;
-                            newSet.WinnerID = TeamGuest.Id;
-                            newSet.NumberSet = Sets.Last().NumberSet + 1;
-                            newSet.IsShort = true;
-                        }
-                    }
-                    else
-                    {
-                        if (Sets.Last().NumberSet + 1 != 5)
-                        {
-                            newSet.ScoreHome = Setting.MaxScore;
-                            newSet.ScoreGuest = 0;
-                            newSet.WinnerID = TeamHome.Id;
-                            newSet.NumberSet = Sets.Last().NumberSet + 1;
-                            newSet.IsShort = false;
-                        }
-                        else
-                        {
-                            newSet.ScoreHome = Setting.MaxScoreInShortSet;
-                            newSet.ScoreGuest = 0;
-                            newSet.WinnerID = TeamHome.Id;
-                            newSet.NumberSet = Sets.Last().NumberSet + 1;
-                            newSet.IsShort = true;
-                        }
-                    }
-
-                    await _db.SaveSetAsync(newSet);
-
-                    winCount++;
-                }
-            }
-        }
-        else
-        {
-            if (winCount < 2)
-            {
-                while (winCount != 2)
-                {
-                    Sets = await _db.GetSetAsync();
-
-                    Set newSet = new Set();
-
-                    if (teamLoser.IsHome)
-                    {
-                        if (Sets.Last().NumberSet + 1 != 3)
-                        {
-                            newSet.ScoreHome = 0;
-                            newSet.ScoreGuest = Setting.MaxScore;
-                            newSet.WinnerID = TeamGuest.Id;
-                            newSet.NumberSet = Sets.Last().NumberSet + 1;
-                            newSet.IsShort = false;
-                        }
-                        else
-                        {
-                            newSet.ScoreHome = 0;
-                            newSet.ScoreGuest = Setting.MaxScoreInShortSet;
-                            newSet.WinnerID = TeamGuest.Id;
-                            newSet.NumberSet = Sets.Last().NumberSet + 1;
-                            newSet.IsShort = true;
-                        }
-                    }
-                    else
-                    {
-                        if (Sets.Last().NumberSet + 1 != 3)
-                        {
-                            newSet.ScoreHome = Setting.MaxScore;
-                            newSet.ScoreGuest = 0;
-                            newSet.WinnerID = TeamHome.Id;
-                            newSet.NumberSet = Sets.Last().NumberSet + 1;
-                            newSet.IsShort = false;
-                        }
-                        else
-                        {
-                            newSet.ScoreHome = Setting.MaxScoreInShortSet;
-                            newSet.ScoreGuest = 0;
-                            newSet.WinnerID = TeamHome.Id;
-                            newSet.NumberSet = Sets.Last().NumberSet + 1;
-                            newSet.IsShort = true;
-                        }
-                    }
-
-                    await _db.SaveSetAsync(newSet);
-
-                    winCount++;
-                }
-            }
-        }
-
-        await EndGame();
     }
 
     private async Task CheckEndSet()
@@ -948,7 +822,7 @@ public partial class ScoreBoardPage : ContentPage
         }
     }
 
-    private async Task EndGame()
+    public async Task EndGame()
     {
         try
         {
