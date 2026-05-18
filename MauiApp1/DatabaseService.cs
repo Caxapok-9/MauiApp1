@@ -87,6 +87,11 @@ public class DatabaseService
         await _db.ExecuteAsync("UPDATE Player SET ReplaceID = 0", false);
     }
 
+    public async Task ClearRemove()
+    {
+        await _db.ExecuteAsync("UPDATE Player SET IsRemove = FALSE", false);
+    }
+
     public async Task SaveRosterAsync(Player player)
     {
         if(player.Id == null)

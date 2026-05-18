@@ -50,13 +50,13 @@ namespace MauiApp1
 
                                 iText.Layout.Element.Image image = new iText.Layout.Element.Image(data);
 
-                                image.SetWidth(35f);
+                                image.SetWidth(26f);
 
-                                image.SetHeight(15f);
+                                image.SetHeight(12f);
 
                                 Rectangle rectangle = field.GetWidgets().FirstOrDefault().GetRectangle().ToRectangle();
 
-                                image.SetFixedPosition(rectangle.GetLeft(), rectangle.GetBottom());
+                                image.SetFixedPosition(rectangle.GetLeft() + 3, rectangle.GetBottom() + 3);
 
                                 Document layout = new Document(doc);
 

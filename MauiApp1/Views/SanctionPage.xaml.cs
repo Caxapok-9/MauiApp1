@@ -80,7 +80,26 @@ public partial class SanctionPage : ContentPage
 			sanctionPDF.ScoreGuest = _set.ScoreGuest;
 			sanctionPDF.SetId = _set.Id;
 	
-			await _db.SaveSanctionAsync(sanctionPDF);			
+			await _db.SaveSanctionAsync(sanctionPDF);
+			
+			if(sanction.Id == 4)
+			{
+				target.IsDisqual = true;
+
+				await _db.SaveRosterAsync(target);
+
+				await ReplaceRemoveAndDisqual(team, target);
+
+            }
+
+            if (sanction.Id == 3)
+            {
+                target.IsRemove = true;
+
+                await _db.SaveRosterAsync(target);
+
+                await ReplaceRemoveAndDisqual(team, target);
+            }
 
             await Navigation.PopModalAsync();
         }
@@ -90,6 +109,12 @@ public partial class SanctionPage : ContentPage
 		}        
     }
 	   
+	private async Task ReplaceRemoveAndDisqual(Team team, Player target)
+	{
+        // проверить на поляне он или на бане
+		// если на поляне заменить
+	}
+
 	private string CheckData()
 	{
 		if (PickerTeams.SelectedIndex == -1)

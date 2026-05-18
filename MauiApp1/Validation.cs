@@ -61,7 +61,13 @@ namespace MauiApp1
                 return false;
             }
 
-            if(num > 99)
+            if(number.Length > 2)
+            {
+                error = $"Слишком длинный номер {number}";
+                return false;
+            }
+
+            if (num > 99)
             {
                 error = $"Слишком длинный номер {number}";
                 return false;

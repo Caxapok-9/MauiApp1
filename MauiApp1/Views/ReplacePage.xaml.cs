@@ -48,7 +48,7 @@ public partial class ReplacePage : ContentPage
 
         var l = _court.Select(c => c.Id).ToHashSet();
 
-        _bench.AddRange(_roster.Values.Where(p => !l.Contains(p.Id)));
+        _bench.AddRange(_roster.Values.Where(p => !l.Contains(p.Id) && !p.IsDisqual && !p.IsRemove));
 
         ListPlayerIn.ItemsSource = _court;
 

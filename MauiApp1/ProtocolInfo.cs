@@ -51,19 +51,25 @@ namespace MauiApp1
                     LineUp lineHome = LineUps.Where(x => x.SetId == set.Id && x.TeamId == TeamHome.Id).FirstOrDefault();
                     LineUp lineGuest = LineUps.Where(x => x.SetId == set.Id && x.TeamId == TeamGuest.Id).FirstOrDefault();
 
-                    dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_1"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone1PlayerID).Number, "lineup");
-                    dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_2"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone2PlayerID).Number, "lineup");
-                    dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_3"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone3PlayerID).Number, "lineup");
-                    dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_4"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone4PlayerID).Number, "lineup");
-                    dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_5"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone5PlayerID).Number, "lineup");
-                    dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_6"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone6PlayerID).Number, "lineup");
+                    if (lineHome != null)
+                    {
+                        dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_1"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone1PlayerID).Number, "lineup");
+                        dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_2"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone2PlayerID).Number, "lineup");
+                        dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_3"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone3PlayerID).Number, "lineup");
+                        dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_4"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone4PlayerID).Number, "lineup");
+                        dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_5"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone5PlayerID).Number, "lineup");
+                        dictionary["Set_" + numberSet + "_" + vectorHome + "_Zone_6"] = new WriteText(RosterHome.Find(x => x.Id == lineHome.Zone6PlayerID).Number, "lineup");
+                    }
 
-                    dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_1"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone1PlayerID).Number, "lineup");
-                    dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_2"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone2PlayerID).Number, "lineup");
-                    dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_3"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone3PlayerID).Number, "lineup");
-                    dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_4"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone4PlayerID).Number, "lineup");
-                    dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_5"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone5PlayerID).Number, "lineup");
-                    dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_6"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone6PlayerID).Number, "lineup");
+                    if (lineGuest != null)
+                    {
+                        dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_1"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone1PlayerID).Number, "lineup");
+                        dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_2"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone2PlayerID).Number, "lineup");
+                        dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_3"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone3PlayerID).Number, "lineup");
+                        dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_4"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone4PlayerID).Number, "lineup");
+                        dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_5"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone5PlayerID).Number, "lineup");
+                        dictionary["Set_" + numberSet + "_" + vectorGuest + "_Zone_6"] = new WriteText(RosterGuest.Find(x => x.Id == lineGuest.Zone6PlayerID).Number, "lineup");
+                    }
 
                     #endregion
 
@@ -148,8 +154,12 @@ namespace MauiApp1
             dictionary["FirstReferee"] = new WriteText(MainInfo.First().FirstReferee, "tournament");
             dictionary["ToReferee"] = new WriteText(MainInfo.First().ToReferee, "tournament");
             dictionary["Secretary"] = new WriteText(MainInfo.First().Secretary, "tournament");
-            dictionary["MVPHome"] = new WriteText(RosterHome.Find(x => x.Id == MainInfo.First().MVPHome).Number, "char");
-            dictionary["MVPGuest"] = new WriteText(RosterGuest.Find(x => x.Id == MainInfo.First().MVPGuest).Number, "char");
+
+            if(MainInfo.First().MVPHome != 0)
+                dictionary["MVPHome"] = new WriteText(RosterHome.Find(x => x.Id == MainInfo.First().MVPHome).Number, "char");
+
+            if(MainInfo.First().MVPGuest != 0)
+                dictionary["MVPGuest"] = new WriteText(RosterGuest.Find(x => x.Id == MainInfo.First().MVPGuest).Number, "char");
 
             #endregion
 

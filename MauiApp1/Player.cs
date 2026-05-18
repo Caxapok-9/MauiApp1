@@ -11,6 +11,10 @@ namespace MauiApp1
 {
     public class Player : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string DisplayName => $"{Number} - {Name}";
+
         [PrimaryKey, AutoIncrement]
         public int? Id { get; set; } = null;
 
@@ -18,29 +22,15 @@ namespace MauiApp1
 
         public string Number { get; set; }
 
-        private bool _IsCaptain { get; set; }
-
-        private bool _IsLibero { get; set; }
-
         [ForeignKey(typeof(Team))]
         public int TeamID { get; set; }
 
         [ForeignKey(typeof(Player))]
         public int ReplaceID { get; set; } = 0;
 
-        private bool _IsSelected { get; set; }
+        public bool IsDisqual {  get; set; }
 
-        public string DisplayName => $"{Number} - {Name}";
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public Player()
-        {
-            Number = "";
-            Name = "";
-            _IsCaptain = false;
-            _IsLibero = false;
-        }
+        public bool IsRemove { get; set; }
 
         public bool IsCaptain
         {
@@ -50,19 +40,6 @@ namespace MauiApp1
                 if (_IsCaptain != value) // Меняем только если значение другое
                 {
                     _IsCaptain = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
-                }
-            }
-        }
-
-        public bool IsSelected
-        {
-            get => _IsSelected;
-            set
-            {
-                if (_IsSelected != value) // Меняем только если значение другое
-                {
-                    _IsSelected = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
                 }
             }
@@ -80,5 +57,18 @@ namespace MauiApp1
                 }
             }
         }
+
+        private bool _IsCaptain { get; set; }
+
+        private bool _IsLibero { get; set; }
+
+        public Player()
+        {
+            Number = "";
+            Name = "";
+            _IsCaptain = false;
+            _IsLibero = false;
+        }
+
     }
 }

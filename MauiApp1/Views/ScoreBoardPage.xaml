@@ -4,6 +4,20 @@
              x:Class="MauiApp1.Views.ScoreBoardPage"
              Title="Игра">
 
+    <ContentPage.ToolbarItems>
+
+        <ToolbarItem Clicked="OnTechLoseClick" Priority="0" Order="Primary">
+
+            <ToolbarItem.IconImageSource>
+
+                <FontImageSource Glyph="⋮" Size="30" Color="White"/>
+
+            </ToolbarItem.IconImageSource>
+            
+        </ToolbarItem>
+
+    </ContentPage.ToolbarItems>
+    
     <Grid RowDefinitions="2*, 8*, 3*" 
           Padding="10"
           RowSpacing="10">
@@ -336,7 +350,8 @@
                     Margin="5,0,5,0" 
                     Text="Таймаут"
                     FontAttributes="Bold"
-                    MinimumHeightRequest="60">
+                    MinimumHeightRequest="60"
+                    LineBreakMode="WordWrap">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -391,7 +406,8 @@
                     Margin="5,0,10,0" 
                     Text="Замена"
                     FontAttributes="Bold"
-                    MinimumHeightRequest="60">
+                    MinimumHeightRequest="60"
+                    LineBreakMode="WordWrap">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -446,7 +462,8 @@
                     Margin="10,0,5,0" 
                     Text="Замена"
                     FontAttributes="Bold"
-                    MinimumHeightRequest="60">
+                    MinimumHeightRequest="60"
+                    LineBreakMode="WordWrap">
 
                 <VisualStateManager.VisualStateGroups>
 
@@ -501,7 +518,8 @@
                     Margin="5,0,5,0" 
                     Text="Таймаут"
                     FontAttributes="Bold"
-                    MinimumHeightRequest="60">
+                    MinimumHeightRequest="60"
+                    LineBreakMode="WordWrap">
 
                 <VisualStateManager.VisualStateGroups>
 

@@ -364,7 +364,11 @@ public partial class LineupPage : ContentPage
 
         rosterHome = await _db.GetRosterAsync(TeamHome.Id);
 
+        rosterHome = rosterHome.Where(x => !x.IsLibero && !x.IsDisqual).ToList();
+
         rosterGuest = await _db.GetRosterAsync(TeamGuest.Id);
+
+        rosterGuest = rosterGuest.Where(x => !x.IsLibero && !x.IsDisqual).ToList();
 
         return;
     }
