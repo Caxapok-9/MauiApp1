@@ -88,7 +88,7 @@ public partial class SanctionPage : ContentPage
 
 				await _db.SaveRosterAsync(target);
 
-				await ReplaceRemoveAndDisqual(team, target);
+				int task = await ReplaceRemoveAndDisqual(team, target);
 
             }
 
@@ -98,7 +98,7 @@ public partial class SanctionPage : ContentPage
 
                 await _db.SaveRosterAsync(target);
 
-                await ReplaceRemoveAndDisqual(team, target);
+                int task = await ReplaceRemoveAndDisqual(team, target);
             }
 
             await Navigation.PopModalAsync();
@@ -109,18 +109,20 @@ public partial class SanctionPage : ContentPage
 		}        
     }
 	   
-	private async Task ReplaceRemoveAndDisqual(Team team, Player target)
+	private async Task<int> ReplaceRemoveAndDisqual(Team team, Player target)
 	{
         var sanction = PickerSanction.SelectedItem as SanctionIn;
 
         if (team.IsHome)
-		{
-			await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, TeamGuest, _set, RosterHome, sanction.Id == 3 ? "Remove" : "Disqual"));
+		{            
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, TeamGuest, _set, RosterHome, sanction.Id == 3 ? "Remove" : "Disqual", target));
         }
 		else
 		{
-            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, TeamHome, _set, RosterGuest, sanction.Id == 3 ? "Remove" : "Disqual"));
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, TeamHome, _set, RosterGuest, sanction.Id == 3 ? "Remove" : "Disqual", target));
         }
+
+		return 0;
 	}
 
 	private string CheckData()

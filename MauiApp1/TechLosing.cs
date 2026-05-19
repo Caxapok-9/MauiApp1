@@ -11,22 +11,73 @@ namespace MauiApp1
     {
         public static async Task TechLoseSet(DatabaseService _db, Set set, Team teamLoser, Team teamEnemy)
         {
-            while (set.WinnerID == 0)
+            if (!set.IsShort)
             {
-                await new ScoreBoardPage(_db).AddScore(teamEnemy);
+                if (teamLoser.IsHome)
+                {
+                    set.ScoreGuest++;
+
+                    while (set.ScoreGuest < Setting.MaxScore && Math.Abs(set.ScoreHome - set.ScoreGuest) < 2)
+                    {
+                        set.ScoreGuest++;
+                    }
+
+                    set.WinnerID = teamEnemy.Id;
+
+                    await _db.UpdateSetAsync(set); 
+                }
+                else
+                {
+                    set.ScoreHome++;
+
+                    while (set.ScoreGuest < Setting.MaxScore && Math.Abs(set.ScoreHome - set.ScoreGuest) < 2)
+                    {
+                        set.ScoreHome++;
+                    }
+
+                    set.WinnerID = teamEnemy.Id;
+
+                    await _db.UpdateSetAsync(set);
+                }
+            }
+            else
+            {
+                if (teamLoser.IsHome)
+                {
+                    set.ScoreGuest++;
+
+                    while (set.ScoreGuest < Setting.MaxScoreInShortSet && Math.Abs(set.ScoreHome - set.ScoreGuest) < 2)
+                    {
+                        set.ScoreGuest++;
+                    }
+
+                    set.WinnerID = teamEnemy.Id;
+
+                    await _db.UpdateSetAsync(set);
+                }
+                else
+                {
+                    set.ScoreHome++;
+
+                    while (set.ScoreGuest < Setting.MaxScoreInShortSet && Math.Abs(set.ScoreHome - set.ScoreGuest) < 2)
+                    {
+                        set.ScoreHome++;
+                    }
+
+                    set.WinnerID = teamEnemy.Id;
+
+                    await _db.UpdateSetAsync(set);
+                }
             }
         }
 
         public static async Task TechLoseGame(DatabaseService _db, Set set, Team teamLoser, Team teamEnemy)
         {
-            while (set.WinnerID == 0)
-            {
-                await new ScoreBoardPage(_db).AddScore(teamEnemy);
-            }
+            await TechLoseSet(_db, set, teamLoser, teamEnemy);
 
             var Sets = await _db.GetSetAsync();
 
-            int winCount = Sets.Where(x => x.WinnerID != teamLoser.Id).Count();
+            int winCount = Sets.Where(x => x.WinnerID == teamEnemy.Id).Count();
 
             if (Setting.MaxSet == 5)
             {
@@ -138,8 +189,6 @@ namespace MauiApp1
                     }
                 }
             }
-
-            await new ScoreBoardPage(_db).EndGame();
         }
     }
 }

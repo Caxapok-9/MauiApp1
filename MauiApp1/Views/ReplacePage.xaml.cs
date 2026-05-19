@@ -16,7 +16,9 @@ public partial class ReplacePage : ContentPage
 
     string _mode;
 
-    public ReplacePage(DatabaseService db, Team targetTeam, Team enemyTeam, Set set, List<Player> roster, string mode = null)
+    object _sender;
+
+    public ReplacePage(DatabaseService db, Team targetTeam, Team enemyTeam, Set set, List<Player> roster, string mode = null, Player sender = null)
     {
         InitializeComponent();
 
@@ -31,6 +33,8 @@ public partial class ReplacePage : ContentPage
         _roster = roster;
 
         _mode = mode;
+
+        _sender = sender;
     }
 
     protected override async void OnAppearing()
@@ -41,9 +45,7 @@ public partial class ReplacePage : ContentPage
 
         ListPlayerIn.ItemsSource = _line.Select(c => _roster.Find(x => x.Id == c.Value)).ToList();
 
-        var listHealth = _roster.Where(x => x.IsInjury && x.InjurySetId != _set.Id).ToList();
-
-        ListIsInjury.ItemsSource = listHealth;
+        await SelectItem();
     }
 
     private async void OnReplaceButtonClick(object sender, EventArgs e)
@@ -56,30 +58,6 @@ public partial class ReplacePage : ContentPage
             IsBusy = true;
 
             await Replace();
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    private async void OnHealthClick(object sender, EventArgs e)
-    {
-        if (IsBusy)
-            return;
-
-        try
-        {
-            IsBusy = true;
-
-            if (sender is Button but && but.BindingContext is Player player)
-            {
-                player.IsInjury = false;
-
-                await _db.SaveRosterAsync(player);
-
-                await SelectItem();
-            }
         }
         finally
         {
@@ -111,11 +89,12 @@ public partial class ReplacePage : ContentPage
 
     private async Task SelectItem()
     {
-        var listHealth = _roster.Where(x => x.IsInjury && x.InjurySetId != _set.Id).ToList();
+        if(ListPlayerIn.SelectedItem == null && _sender != null)
+        {
+            ListPlayerIn.SelectedItem = _sender;
+        }
 
-        ListIsInjury.ItemsSource = listHealth;
-
-        var listBench = _roster.Where(x => !_line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
+        var listBench = _roster.Where(x => !_line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury && x.Id != -1 && x.Id != -2).ToList();
 
         Player targetPlayer = ListPlayerIn.SelectedItem as Player;
 
@@ -141,7 +120,7 @@ public partial class ReplacePage : ContentPage
                         }
                         else
                         {
-                            if (WarningHealth.IsChecked || WarningRemove.IsChecked)
+                            if (WarningHealth.IsChecked)
                             {
                                 ListPlayerOut.ItemsSource = listBench;
                             }
@@ -152,16 +131,69 @@ public partial class ReplacePage : ContentPage
                         }
                     }
                 }
+                else
+                {
+                    listBench = _roster.Where(x => !_line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && x.InjurySetId == _set.Id).ToList();
+
+                    if (listBench.Count > 0)
+                    {
+                        ListPlayerOut.ItemsSource = listBench;
+                    }
+                    else
+                    {
+                        if (_mode == "Remove")
+                        {
+                            await DisplayAlert("Внимание!", $"Так как у команды {_targetTeam.Name} нет возможных замен, засчитывается техническое поражение в этой партии", "Ок");
+
+                            await TechLosing.TechLoseSet(_db, _set, _targetTeam, _enemyTeam);
+                        }
+
+                        if (_mode == "Disqual")
+                        {
+                            await DisplayAlert("Внимание!", $"Так как у команды {_targetTeam.Name} нет возможных замен, засчитывается техническое поражение в этом матче", "Ок");
+
+                            await TechLosing.TechLoseGame(_db, _set, _targetTeam, _enemyTeam);
+                        }
+
+                        if (_mode == "Injury")
+                        {
+                            await DisplayAlert("Внимание!", $"Так как у команды {_targetTeam.Name} нет возможных замен, засчитывается техническое поражение в этой партии", "Ок");
+
+                            await TechLosing.TechLoseSet(_db, _set, _targetTeam, _enemyTeam);
+                        }
+                    }
+                }
             }
             else
             {
-                if (WarningHealth.IsChecked || WarningRemove.IsChecked)
+                listBench = _roster.Where(x => !_line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && x.InjurySetId == _set.Id).ToList();
+
+                if (listBench.Count > 0)
                 {
                     ListPlayerOut.ItemsSource = listBench;
                 }
                 else
                 {
-                    ListPlayerOut.ItemsSource = null;
+                    if (_mode == "Remove")
+                    {
+                        await DisplayAlert("Внимание!", $"Так как у команды {_targetTeam.Name} нет возможных замен, засчитывается техническое поражение в этой партии", "Ок");
+
+                        await TechLosing.TechLoseSet(_db, _set, _targetTeam, _enemyTeam);
+                    }
+
+                    if (_mode == "Disqual")
+                    {
+                        await DisplayAlert("Внимание!", $"Так как у команды {_targetTeam.Name} нет возможных замен, засчитывается техническое поражение в этом матче", "Ок");
+
+                        await TechLosing.TechLoseGame(_db, _set, _targetTeam, _enemyTeam);
+                    }
+
+                    if (_mode == "Injury")
+                    {
+                        await DisplayAlert("Внимание!", $"Так как у команды {_targetTeam.Name} нет возможных замен, засчитывается техническое поражение в этой партии", "Ок");
+
+                        await TechLosing.TechLoseSet(_db, _set, _targetTeam, _enemyTeam);
+                    }
                 }
             }
         }
@@ -173,7 +205,7 @@ public partial class ReplacePage : ContentPage
 
         Player benchPlayer = ListPlayerOut.SelectedItem as Player;
 
-        if (WarningHealth.IsChecked || WarningRemove.IsChecked)
+        if (WarningHealth.IsChecked)
         {
             benchPlayer.ReplaceID = (int)courtPlayer.Id;
 
@@ -184,14 +216,11 @@ public partial class ReplacePage : ContentPage
                 _roster.Find(x => x.Id == (int)courtPlayer.Id).IsInjury = true;
             }
 
-            if(WarningRemove.IsChecked)
-            {
-                if(_mode == "Remove")
-                    _roster.Find(x => x.Id == (int)courtPlayer.Id).IsRemove = true;
+            if(_mode == "Remove")
+                _roster.Find(x => x.Id == (int)courtPlayer.Id).IsRemove = true;
 
-                if(_mode == "Disqual")
-                    _roster.Find(x => x.Id == (int)courtPlayer.Id).IsDisqual = true;
-            }
+            if(_mode == "Disqual")
+                _roster.Find(x => x.Id == (int)courtPlayer.Id).IsDisqual = true;
 
             Event ev = new Event();
 

@@ -196,6 +196,37 @@ public partial class LineupPage : ContentPage
         }
     }
 
+    private async void OnTechLoseClick(object sender, EventArgs e)
+    {
+        string result = await DisplayActionSheet("Завершение матча", "Отмена", null, $"Техническое поражение {TeamHome.Name}", $"Техническое поражение {TeamGuest.Name}");
+
+        if (result != null)
+        {
+            if (result.Contains(TeamHome.Name))
+            {
+                string warning = await DisplayActionSheet($"Уверены что хотите заврешить матч техническим поражением {TeamHome.Name}", null, null, "Да", "Нет");
+
+                if (warning == "Да")
+                {
+                    await TechLosing.TechLoseGame(_db, set, TeamHome, TeamGuest);
+
+                    await new ScoreBoardPage(_db).EndGame();
+                }
+            }
+            else if (result.Contains(TeamGuest.Name))
+            {
+                string warning = await DisplayActionSheet($"Уверены что хотите заврешить матч техническим поражением {TeamGuest.Name}", null, null, "Да", "Нет");
+
+                if (warning == "Да")
+                {
+                    await TechLosing.TechLoseGame(_db, set, TeamGuest, TeamHome);
+
+                    await new ScoreBoardPage(_db).EndGame();
+                }
+            }
+        }
+    }
+
     private async Task CreateSet()
     {
         List<Set> sets = await _db.GetSetAsync();
