@@ -52,6 +52,9 @@ public partial class SignaturePage : ContentPage
             LabelProtest.IsVisible = true;
             LabelProtest.IsEnabled = true;
 
+            BorderProtest.IsVisible = true;
+            BorderProtest.IsEnabled = true;
+
             MVP.IsVisible = true;
             MVP.IsEnabled = true;
             PickerMVP.ItemsSource = _db.RosterGuest;
@@ -64,6 +67,9 @@ public partial class SignaturePage : ContentPage
             LabelProtest.IsVisible = true;
             LabelProtest.IsEnabled = true;
 
+            BorderProtest.IsVisible = true;
+            BorderProtest.IsEnabled = true;
+
             MVP.IsVisible = true;
             MVP.IsEnabled = true;
             PickerMVP.ItemsSource = _db.RosterHome;
@@ -75,6 +81,9 @@ public partial class SignaturePage : ContentPage
 
             EditorProtest.IsVisible = false;
             EditorProtest.IsEnabled = false;
+
+            BorderProtest.IsVisible = false;
+            BorderProtest.IsEnabled = false;
 
             LabelProtest.IsVisible = false;
             LabelProtest.IsEnabled = false;

@@ -93,7 +93,7 @@ public partial class EndGamePage : TabbedPage
 
             await _db.ClearAsync();
 
-            Application.Current.MainPage = new StartPage(_db);
+            Application.Current.MainPage = new NavigationPage(new StartPage(_db));
         }
         finally
         {

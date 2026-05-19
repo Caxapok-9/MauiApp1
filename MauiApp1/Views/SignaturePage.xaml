@@ -7,7 +7,7 @@
         
         <VerticalStackLayout>
 
-            <HorizontalStackLayout x:Name="MVP" Margin="0,15,0,0">
+            <HorizontalStackLayout x:Name="MVP" Margin="0,10,0,10">
 
                 <Label x:Name="LabelMVP"
                        Text="Лучший игрок соперника (Необязательно)"
@@ -32,8 +32,8 @@
 
             </HorizontalStackLayout>
 
-            <Label x:Name="LabelProtest" Text="Протест" FontAttributes="Bold" FontSize="Subtitle" TextColor="White" Margin="25,15,0,0"/>
-            <Border  HeightRequest="150" Margin="15,10,15,15" Stroke="{DynamicResource MainColor}">
+            <Label x:Name="LabelProtest" Text="Протест" FontAttributes="Bold" FontSize="Subtitle" TextColor="White" Margin="25,10,0,10"/>
+            <Border x:Name="BorderProtest" HeightRequest="150" Margin="15,0,15,0" Stroke="{DynamicResource MainColor}">
 
                 <Border.StrokeShape>
 
@@ -50,8 +50,8 @@
 
             </Border>
 
-            <Label Text="Замечания" FontAttributes="Bold" FontSize="Subtitle" TextColor="White" Margin="25,0,0,0"/>
-            <Border  HeightRequest="150" Margin="15,10,15,15" Stroke="{DynamicResource MainColor}">
+            <Label Text="Замечания" FontAttributes="Bold" FontSize="Subtitle" TextColor="White" Margin="25,10,0,10"/>
+            <Border  HeightRequest="150" Margin="15,0,15,0" Stroke="{DynamicResource MainColor}">
 
                 <Border.StrokeShape>
 
@@ -68,8 +68,8 @@
 
             </Border>
 
-            <Label Text="Ваша подпись" FontAttributes="Bold" FontSize="Subtitle" TextColor="White" Margin="25,0,0,0"/>
-            <Border HeightRequest="200" HorizontalOptions="Start" Margin="15,10,15,0" Stroke="{DynamicResource MainColor}">
+            <Label Text="Ваша подпись" FontAttributes="Bold" FontSize="Subtitle" TextColor="White" Margin="25,10,0,10"/>
+            <Border HeightRequest="200" HorizontalOptions="Start" Margin="15,0,15,0" Stroke="{DynamicResource MainColor}">
 
                 <Border.StrokeShape>
 
@@ -89,7 +89,7 @@
 
             </Border>
 
-            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,0,0,15">
+            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,10,0,10">
 
                 <Button Text="Очистить" TextColor="White" HorizontalOptions="Center" FontSize="Subtitle" Clicked="OnClearButtonClick" Margin="0,10,10,0">
 
