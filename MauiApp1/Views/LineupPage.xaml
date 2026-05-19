@@ -4,20 +4,6 @@
              x:Class="MauiApp1.Views.LineupPage"
              Title="Начальные расстановки">
 
-    <ContentPage.ToolbarItems>
-
-        <ToolbarItem Clicked="OnTechLoseClick" Priority="0" Order="Primary">
-
-            <ToolbarItem.IconImageSource>
-
-                <FontImageSource Glyph="⋮" Size="30" Color="White"/>
-
-            </ToolbarItem.IconImageSource>
-
-        </ToolbarItem>
-
-    </ContentPage.ToolbarItems>
-
     <ScrollView>
 
         <Grid x:Name="MainGrid" RowDefinitions="auto,*" ColumnDefinitions="35*,15*,35*">

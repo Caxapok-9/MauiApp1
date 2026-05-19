@@ -94,6 +94,13 @@
 
             </HorizontalStackLayout>
 
+            <HorizontalStackLayout>
+
+                <Label Text="Удаление (если нет допустимых замен)" TextColor="White" VerticalOptions="Center" Margin="10,0,0,0"/>
+                <CheckBox x:Name="WarningRemove" VerticalOptions="Center" CheckedChanged="OnSelectItem"/>
+
+            </HorizontalStackLayout>
+
         </HorizontalStackLayout>
 
         <Label Grid.Column="1" Grid.Row="0" Text="Игроки на замене" FontSize="Large" Margin="0,5,0,5" HorizontalOptions="Center" VerticalOptions="Start" FontAttributes="Bold" TextColor="White"/>
@@ -247,7 +254,125 @@
 
                 </VisualStateManager.VisualStateGroups>
 
-            </Button>           
+            </Button>
+
+            <VerticalStackLayout Grid.Row="2">
+
+                <Label Text="Травмированные" TextColor="White" FontSize="Large" HorizontalOptions="Center" Margin="0,0,0,5"/>
+
+                <Border Stroke="{DynamicResource HealthColor}" Background="Transparent" Padding="5" Margin="15,0,15,0" VerticalOptions="Fill">
+
+                    <Border.StrokeShape>
+
+                        <RoundRectangle CornerRadius="10"/>
+
+                    </Border.StrokeShape>
+
+                    <CollectionView x:Name="ListIsInjury" SelectionMode="Single" ItemSizingStrategy="MeasureFirstItem">
+
+                        <CollectionView.ItemsLayout>
+
+                            <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
+
+                        </CollectionView.ItemsLayout>
+
+                        <CollectionView.ItemTemplate>
+
+                            <DataTemplate>
+
+                                <Border Stroke="{DynamicResource HealthColor}">
+
+                                    <VisualStateManager.VisualStateGroups>
+
+                                        <VisualStateGroupList>
+
+                                            <VisualStateGroup x:Name="CommonStates">
+
+                                                <VisualState x:Name="Normal">
+
+                                                    <VisualState.Setters>
+
+                                                        <Setter Property="Background" Value="#141414"/>
+
+                                                    </VisualState.Setters>
+
+                                                </VisualState>
+
+                                                <VisualState x:Name="Selected">
+
+                                                    <VisualState.Setters>
+
+                                                        <Setter Property="Background" Value="{DynamicResource PointHealthColor}"/>
+
+                                                    </VisualState.Setters>
+
+                                                </VisualState>
+
+                                            </VisualStateGroup>
+
+                                        </VisualStateGroupList>
+
+                                    </VisualStateManager.VisualStateGroups>
+
+                                    <Border.StrokeShape>
+
+                                        <RoundRectangle CornerRadius="10"/>
+
+                                    </Border.StrokeShape>
+
+                                    <Grid ColumnDefinitions="auto,*,auto" VerticalOptions="Center">
+
+                                        <Label Grid.Column="0" Text="{Binding Number}" Margin="10,5,10,5" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Subtitle"/>
+                                        <Label Grid.Column="1" Text="{Binding Name}" Margin="10,5,0,5" VerticalOptions="Center" HorizontalOptions="Start" FontSize="Subtitle"/>
+                                        <Button Grid.Column="2" Text="X" FontSize="Subtitle" FontAttributes="Bold" TextColor="White" Clicked="OnHealthClick" VerticalOptions="Center" HorizontalOptions="Center">
+
+                                            <VisualStateManager.VisualStateGroups>
+
+                                                <VisualStateGroupList>
+
+                                                    <VisualStateGroup x:Name="CommonStates">
+
+                                                        <VisualState x:Name="Normal">
+
+                                                            <VisualState.Setters>
+
+                                                                <Setter Property="Background" Value="{DynamicResource ExitColor}"/>
+
+                                                            </VisualState.Setters>
+
+                                                        </VisualState>
+
+                                                        <VisualState x:Name="PointerOver">
+
+                                                            <VisualState.Setters>
+
+                                                                <Setter Property="Background" Value="{DynamicResource PointExitColor}"/>
+
+                                                            </VisualState.Setters>
+
+                                                        </VisualState>
+
+                                                    </VisualStateGroup>
+
+                                                </VisualStateGroupList>
+
+                                            </VisualStateManager.VisualStateGroups>
+
+                                        </Button>
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+
+                        </CollectionView.ItemTemplate>
+
+                    </CollectionView>
+
+                </Border>
+
+            </VerticalStackLayout>
             
         </Grid>
         

@@ -316,7 +316,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            await AddScore(TeamHome, TeamGuest, set);
+            await AddScore(TeamHome);
         }
         finally
         {
@@ -335,7 +335,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            await AddScore(TeamGuest, TeamHome, set);
+            await AddScore(TeamGuest);
         }
         finally
         {
@@ -377,9 +377,7 @@ public partial class ScoreBoardPage : ContentPage
         }
         finally
         {
-            await CheckEndSet(set);
-
-            await UpdateData();
+            UpdateData();
 
             IsBusy = false;
         }
@@ -548,47 +546,47 @@ public partial class ScoreBoardPage : ContentPage
         }
     }
 
-    public async Task AddScore(Team teamTarget, Team teamEnemy, Set _set)
+    public async Task AddScore(Team team)
     {
-        if (teamTarget.IsHome)
+        if (team.IsHome)
         {
             Event ev = new Event();
 
-            ev.TeamID = teamTarget.Id;
-            ev.SetID = _set.Id;
+            ev.TeamID = TeamHome.Id;
+            ev.SetID = set.Id;
             ev.EventID = _db.EventsCategories["Очко"];
-            ev.ScoreHome = _set.ScoreHome;
-            ev.ScoreGuest = _set.ScoreGuest;
+            ev.ScoreHome = set.ScoreHome;
+            ev.ScoreGuest = set.ScoreGuest;
 
             await _db.SaveEventAsync(ev);
 
-            ++_set.ScoreHome;
+            ++set.ScoreHome;
 
-            await _db.UpdateSetAsync(_set);
+            await _db.UpdateSetAsync(set);
 
-            await CheckEndSet(_set);
+            await CheckEndSet();
 
-            ScoreHomeButton.Text = _set.ScoreHome.ToString();
+            ScoreHomeButton.Text = set.ScoreHome.ToString();
         }
         else
         {
             Event ev = new Event();
 
-            ev.TeamID = teamEnemy.Id;
-            ev.SetID = _set.Id;
+            ev.TeamID = TeamGuest.Id;
+            ev.SetID = set.Id;
             ev.EventID = _db.EventsCategories["Очко"];
-            ev.ScoreHome = _set.ScoreHome;
-            ev.ScoreGuest = _set.ScoreGuest;
+            ev.ScoreHome = set.ScoreHome;
+            ev.ScoreGuest = set.ScoreGuest;
 
             await _db.SaveEventAsync(ev);
 
-            ++_set.ScoreGuest;
+            ++set.ScoreGuest;
 
-            await _db.UpdateSetAsync(_set);
+            await _db.UpdateSetAsync(set);
 
-            await CheckEndSet(_set);
+            await CheckEndSet();
 
-            ScoreGuestButton.Text = _set.ScoreGuest.ToString();
+            ScoreGuestButton.Text = set.ScoreGuest.ToString();
         }
     }
 
@@ -624,13 +622,13 @@ public partial class ScoreBoardPage : ContentPage
         }
     }
 
-    private async Task CheckEndSet(Set _set)
+    private async Task CheckEndSet()
     {
-        if (!_set.IsShort)
+        if (!set.IsShort)
         {
-            if (_set.ScoreHome > (Setting.MaxScore - 1) || _set.ScoreGuest > (Setting.MaxScore - 1))
+            if (set.ScoreHome > (Setting.MaxScore - 1) || set.ScoreGuest > (Setting.MaxScore - 1))
             {
-                if (Math.Abs(_set.ScoreHome - _set.ScoreGuest) > 1)
+                if (Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
                 {
                     if (CheckTech)
                     {
@@ -642,20 +640,20 @@ public partial class ScoreBoardPage : ContentPage
 
                             if (result == "Завершить партию")
                             {
-                                if (_set.ScoreHome > _set.ScoreGuest)
+                                if (set.ScoreHome > set.ScoreGuest)
                                 {
-                                    _set.WinnerID = TeamHome.Id;
+                                    set.WinnerID = TeamHome.Id;
                                 }
                                 else
                                 {
-                                    _set.WinnerID = TeamGuest.Id;
+                                    set.WinnerID = TeamGuest.Id;
                                 }
 
-                                await _db.UpdateSetAsync(_set);
+                                await _db.UpdateSetAsync(set);
 
-                                var _Sets = await _db.GetSetAsync();
+                                Sets = await _db.GetSetAsync();
 
-                                var WinTeams = _Sets.GroupBy(x => x.WinnerID).ToList();
+                                var WinTeams = Sets.GroupBy(x => x.WinnerID).ToList();
 
                                 foreach (var team in WinTeams)
                                 {
@@ -708,16 +706,16 @@ public partial class ScoreBoardPage : ContentPage
                     }
                     else
                     {
-                        if (_set.ScoreHome > _set.ScoreGuest)
+                        if (set.ScoreHome > set.ScoreGuest)
                         {
-                            _set.WinnerID = TeamHome.Id;
+                            set.WinnerID = TeamHome.Id;
                         }
                         else
                         {
-                            _set.WinnerID = TeamGuest.Id;
+                            set.WinnerID = TeamGuest.Id;
                         }
 
-                        await _db.UpdateSetAsync(_set);
+                        await _db.UpdateSetAsync(set);
                     }
 
                     await _db.ClearRemove();
@@ -726,9 +724,9 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            if (_set.ScoreHome > (Setting.MaxScoreInShortSet - 1) || _set.ScoreGuest > (Setting.MaxScoreInShortSet - 1))
+            if (set.ScoreHome > (Setting.MaxScoreInShortSet - 1) || set.ScoreGuest > (Setting.MaxScoreInShortSet - 1))
             {
-                if (Math.Abs(_set.ScoreHome - _set.ScoreGuest) > 1)
+                if (Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
                 {
                     if (CheckTech)
                     {
@@ -740,20 +738,20 @@ public partial class ScoreBoardPage : ContentPage
 
                             if (result == "Завершить партию")
                             {
-                                if (_set.ScoreHome > _set.ScoreGuest)
+                                if (set.ScoreHome > set.ScoreGuest)
                                 {
-                                    _set.WinnerID = TeamHome.Id;
+                                    set.WinnerID = TeamHome.Id;
                                 }
                                 else
                                 {
-                                    _set.WinnerID = TeamGuest.Id;
+                                    set.WinnerID = TeamGuest.Id;
                                 }
 
-                                await _db.UpdateSetAsync(_set);
+                                await _db.UpdateSetAsync(set);
 
-                                var _Sets = await _db.GetSetAsync();
+                                Sets = await _db.GetSetAsync();
 
-                                var WinTeams = _Sets.GroupBy(x => x.WinnerID).ToList();
+                                var WinTeams = Sets.GroupBy(x => x.WinnerID).ToList();
 
                                 foreach (var team in WinTeams)
                                 {
@@ -806,16 +804,16 @@ public partial class ScoreBoardPage : ContentPage
                     }  
                     else
                     {
-                        if (_set.ScoreHome > _set.ScoreGuest)
+                        if (set.ScoreHome > set.ScoreGuest)
                         {
-                            _set.WinnerID = TeamHome.Id;
+                            set.WinnerID = TeamHome.Id;
                         }
                         else
                         {
-                            _set.WinnerID = TeamGuest.Id;
+                            set.WinnerID = TeamGuest.Id;
                         }
 
-                        await _db.UpdateSetAsync(_set);
+                        await _db.UpdateSetAsync(set);
                     }
 
                     await _db.ClearRemove();
