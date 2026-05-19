@@ -47,8 +47,6 @@
 
             <Label x:Name="NoIndicator" Grid.Column="2" Text=":" VerticalOptions="Center" FontSize="Title"/>
 
-            <ActivityIndicator x:Name="Indicator" Grid.Column="2" IsRunning="True" Color="White"/>
-
             <Label x:Name="CountSetGuest"
                    Grid.Column="3" 
                    FontSize="Title" 

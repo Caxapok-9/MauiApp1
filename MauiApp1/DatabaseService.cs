@@ -133,6 +133,8 @@ public class DatabaseService
 
     public async Task<List<Player>> GetPlayerAsync() => await _db.Table<Player>().ToListAsync();
 
+    public async Task<List<Player>> GetPlayerAsync(Team team) => await _db.Table<Player>().Where(x => x.TeamID == team.Id).ToListAsync();
+
     public async Task<int> DeletePlayerAsync() => await _db.DeleteAllAsync<Player>();
 
     #endregion
@@ -180,6 +182,8 @@ public class DatabaseService
     public async Task<int> DeleteLineUpBeginAsync() => await _db.DeleteAllAsync<LineUpBegin>();
 
     public async Task<List<LineUpBegin>> GetLineUpBeginAsync() => await _db.Table<LineUpBegin>().ToListAsync();
+
+    public async Task<LineUpBegin> GetLineUpBeginAsync(Set set) => await _db.Table<LineUpBegin>().Where(x => x.SetId == set.Id).FirstOrDefaultAsync();
 
     public async Task<LineUpBegin> GetLineUpBeginAsync(Set set, Team team) => await _db.Table<LineUpBegin>().Where(x => x.SetId == set.Id && x.TeamId == team.Id).FirstOrDefaultAsync();
 

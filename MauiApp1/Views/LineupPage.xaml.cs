@@ -2,13 +2,13 @@ namespace MauiApp1.Views;
 
 public partial class LineupPage : ContentPage
 {
+    private Set set;
+
     private Team TeamHome;
 
     private Team TeamGuest;
 
     private DatabaseService _db;
-
-    private Set set = new Set();
 
     private List<Player> rosterHome;
 
@@ -58,6 +58,8 @@ public partial class LineupPage : ContentPage
         NameTeamHome.Text = TeamHome.Name;
 
         NameTeamGuest.Text = TeamGuest.Name;
+
+        set = await _db.GetLastSetAsync();
 
         await ReverseCheck();
 

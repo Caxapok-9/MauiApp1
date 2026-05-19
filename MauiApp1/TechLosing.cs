@@ -13,62 +13,54 @@ namespace MauiApp1
         {
             if (!set.IsShort)
             {
-                if (teamLoser.IsHome)
+                while (set.WinnerID == 0)
                 {
-                    set.ScoreGuest++;
-
-                    while (set.ScoreGuest <= Setting.MaxScore && Math.Abs(set.ScoreHome - set.ScoreGuest) < 2)
+                    if (teamLoser.IsHome)
                     {
                         set.ScoreGuest++;
+
+                        if (set.ScoreGuest >= Setting.MaxScore && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+                        {
+                            set.WinnerID = teamEnemy.Id;
+                        }
                     }
-
-                    set.WinnerID = teamEnemy.Id;
-
-                    await _db.UpdateSetAsync(set);
-                }
-                else
-                {
-                    set.ScoreHome++;
-
-                    while (set.ScoreGuest <= Setting.MaxScore && Math.Abs(set.ScoreHome - set.ScoreGuest) < 2)
+                    else
                     {
                         set.ScoreHome++;
+
+                        if (set.ScoreHome >= Setting.MaxScore && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+                        {
+                            set.WinnerID = teamEnemy.Id;
+                        }
                     }
-
-                    set.WinnerID = teamEnemy.Id;
-
-                    await _db.UpdateSetAsync(set);
                 }
             }
             else
             {
-                if (teamLoser.IsHome)
+                while (set.WinnerID == 0)
                 {
-                    set.ScoreGuest++;
-
-                    while (set.ScoreGuest <= Setting.MaxScoreInShortSet && Math.Abs(set.ScoreHome - set.ScoreGuest) < 2)
+                    if (teamLoser.IsHome)
                     {
                         set.ScoreGuest++;
+
+                        if (set.ScoreGuest >= Setting.MaxScoreInShortSet && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+                        {
+                            set.WinnerID = teamEnemy.Id;
+                        }
                     }
-
-                    set.WinnerID = teamEnemy.Id;
-
-                    await _db.UpdateSetAsync(set);
-                }
-                else
-                {
-                    set.ScoreHome++;
-
-                    while (set.ScoreGuest <= Setting.MaxScoreInShortSet && Math.Abs(set.ScoreHome - set.ScoreGuest) < 2)
+                    else
                     {
                         set.ScoreHome++;
+
+                        if (set.ScoreHome >= Setting.MaxScoreInShortSet && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+                        {
+                            set.WinnerID = teamEnemy.Id;
+                        }
                     }
-
-                    set.WinnerID = teamEnemy.Id;
-
-                    await _db.UpdateSetAsync(set);
                 }
             }
+
+            await _db.UpdateSetAsync(set);
         }
 
         public static async Task TechLoseGame(DatabaseService _db, Set set, Team teamLoser, Team teamEnemy)
@@ -83,7 +75,7 @@ namespace MauiApp1
             {
                 if (winCount < 3)
                 {
-                    while (winCount < 3)
+                    while (winCount != 3)
                     {
                         var lastSet = await _db.GetLastSetAsync();
 

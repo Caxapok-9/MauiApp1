@@ -156,9 +156,11 @@ public partial class StartPage : ContentPage
             {
                 var Teams = await _db.GetTeamAsync();
 
-                Set set = Sets.Last();
+                _db.RosterHome = await _db.GetPlayerAsync(Teams.Find(x => x.IsHome));
 
-                Application.Current.MainPage = new ScoreBoardPage(_db);
+                _db.RosterGuest = await _db.GetPlayerAsync(Teams.Find(x => !x.IsHome));
+
+                Application.Current.MainPage = new NavigationPage(new ScoreBoardPage(_db));
             }
             else
             {

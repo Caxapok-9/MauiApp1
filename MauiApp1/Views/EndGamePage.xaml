@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:local="clr-namespace:MauiApp1.Views"
+            x:Class="MauiApp1.Views.EndGamePage"
+            Title="Подписи и замечания"
+            x:Name="thisPage">
+
+    <TabbedPage.ToolbarItems>
+
+        <ToolbarItem Clicked="OnEndClick" Priority="0" Order="Primary" Text="Сформировать протокол"/>
+
+    </TabbedPage.ToolbarItems>
+
+</TabbedPage>

@@ -4,56 +4,88 @@ namespace MauiApp1.Views;
 
 public partial class SignaturePage : ContentPage
 {
-    string title;
-
-    string mode;
-
-    List<Player> roster;
-
     DatabaseService _db;
 
-	public SignaturePage(DatabaseService db, string Title, string Mode = null, List<Player> Roster = null)
-	{
+    public SignaturePage(DatabaseService db)
+    {
         InitializeComponent();
 
-        title = Title;
-
-        roster = Roster;
-
-        mode = Mode;
-
         _db = db;
-	}
+
+#if ANDROID
+        var activty = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
+        if (activty != null)
+            activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+
+        Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping("NoUnderLine", (handler, view) =>
+        {
+            handler.PlatformView.Background = null;
+            handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+            handler.PlatformView.Touch += (sender, e) =>
+            {
+                Android.Widget.EditText ed = sender as Android.Widget.EditText;
+                
+                if(!string.IsNullOrWhiteSpace(ed.Text))
+                    handler.PlatformView.Parent?.RequestDisallowInterceptTouchEvent(true);
+
+                e.Handled = false;
+            };
+        });
+
+        Microsoft.Maui.Handlers.PickerHandler.Mapper.AppendToMapping("NoUnderLine", (handler, view) =>
+        {
+            handler.PlatformView.Background = null;
+            handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+        });
+#endif
+        }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        if(roster == null)
+        if (this.Title == "Капитан А")
         {
-            PickerMVP.IsVisible = false;
-            LabelMVP.IsVisible = false;
+            EditorProtest.IsVisible = true;
+            EditorProtest.IsEnabled = true;
+
+            LabelProtest.IsVisible = true;
+            LabelProtest.IsEnabled = true;
+
+            MVP.IsVisible = true;
+            MVP.IsEnabled = true;
+            PickerMVP.ItemsSource = _db.RosterGuest;
         }
+        else if (this.Title == "Капитан Б")
+        {
+            EditorProtest.IsVisible = true;
+            EditorProtest.IsEnabled = true;
+
+            LabelProtest.IsVisible = true;
+            LabelProtest.IsEnabled = true;
+
+            MVP.IsVisible = true;
+            MVP.IsEnabled = true;
+            PickerMVP.ItemsSource = _db.RosterHome;
+        }    
         else
         {
-            PickerMVP.IsVisible = true;
-            LabelMVP.IsVisible = true;
-            PickerMVP.ItemsSource = roster;
-        }
+            MVP.IsVisible = false;
+            MVP.IsEnabled = false;
 
-        Label.Text = $"{title} поставьте вашу подпись";        
+            EditorProtest.IsVisible = false;
+            EditorProtest.IsEnabled = false;
+
+            LabelProtest.IsVisible = false;
+            LabelProtest.IsEnabled = false;
+        }
     }
 
-    private readonly TaskCompletionSource<byte[]> result = new();
-
-    public Task<byte[]> ResultTask => result.Task;
-
-    private async void OnSignButtonClick(object sender, EventArgs e)
+    public async Task<byte[]> GetSignature()
     {
-        if(SignaturePad.Lines.Count == 0)
+        if (SignaturePad.Lines.Count == 0)
         {
-            await DisplayAlert("Ошибка!", "Нужна ваша подпись", "Ок");
-            return;
+            return null;
         }
 
         var lines = SignaturePad.Lines;
@@ -64,45 +96,56 @@ public partial class SignaturePage : ContentPage
 
         Stream imageStream = await DrawingViewService.GetImageStream(options);
 
-        if(imageStream != null)
+        if (imageStream != null)
         {
-            var MainInfo = await _db.GetMainInfoAsync();
-
-            Player p = PickerMVP.SelectedItem as Player;
-
-            if (p != null)
-            {
-                if (mode == "Home")
-                {
-                    MainInfo.MVPGuest = (int)p.Id;
-                }
-                else
-                {
-                    MainInfo.MVPHome = (int)p.Id;
-                }
-
-                var res = await _db.UpdateMainInfoAsync(MainInfo);
-            }
-
             using MemoryStream memoryStream = new MemoryStream();
 
             await imageStream.CopyToAsync(memoryStream);
 
             byte[] signature = memoryStream.ToArray();
 
-            await Navigation.PopModalAsync();
-
-            result.SetResult(signature);
+            return signature;
         }
         else
         {
-            await DisplayAlert("Ошибка!", "Некорректная подпись", "Ок");
-            return;
+            return null;
         }
+    }
+
+    public string GetProtest()
+    {
+        if (!string.IsNullOrWhiteSpace(EditorProtest.Text))
+            return EditorProtest.Text;
+        else
+            return null;
+    }
+
+    public string GetRemark()
+    {
+        if (!string.IsNullOrWhiteSpace(EditorRemark.Text))
+            return EditorRemark.Text;
+        else
+            return null;
+    }
+
+    public Player GetMVP()
+    {
+        if (PickerMVP.SelectedIndex != -1)
+            return PickerMVP.SelectedItem as Player;
+        else
+            return null;
     }
 
     private async void OnClearButtonClick(object sender, EventArgs e)
     {
         SignaturePad.Lines.Clear();
+    }
+
+    private async void OnCancelButtonClick(object sender, EventArgs e)
+    {
+        if(SignaturePad.Lines.Count > 0)
+        {
+            SignaturePad.Lines.RemoveAt(SignaturePad.Lines.Count - 1);
+        }        
     }
 }

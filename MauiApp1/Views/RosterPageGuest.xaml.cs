@@ -247,7 +247,7 @@ public partial class RosterPageGuest : ContentPage
 
         #endregion
 
-        Application.Current.MainPage = new ScoreBoardPage(_db);
+        Application.Current.MainPage = new NavigationPage(new ScoreBoardPage(_db));
     }
 
     private async Task GetNameTeam()

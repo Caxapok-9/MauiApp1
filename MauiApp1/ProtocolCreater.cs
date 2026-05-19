@@ -18,8 +18,12 @@ namespace MauiApp1
 {
     public static class ProtocolCreater
     {
-        public static async Task<byte[]> CreatePDF(Dictionary<string, WriteText> info, Dictionary<string, byte[]> Signs)
+        public static async Task CreatePDF(DatabaseService _db, Dictionary<string, byte[]> Signs)
         {
+            ProtocolInfo info = new ProtocolInfo(_db);
+
+            var dict = await info.GetDataDictionary();
+
             MemoryStream outputStream = new MemoryStream();
 
             try
@@ -36,7 +40,7 @@ namespace MauiApp1
 
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
 
-                foreach (var item in info)
+                foreach (var item in dict)
                 {
                     var field = form.GetField(item.Key);
 
@@ -56,7 +60,7 @@ namespace MauiApp1
 
                                 Rectangle rectangle = field.GetWidgets().FirstOrDefault().GetRectangle().ToRectangle();
 
-                                image.SetFixedPosition(rectangle.GetLeft() + 3, rectangle.GetBottom() + 3);
+                                image.SetFixedPosition(rectangle.GetLeft() + 6, rectangle.GetBottom() + 3);
 
                                 Document layout = new Document(doc);
 
@@ -84,15 +88,26 @@ namespace MauiApp1
 
                 outputStream.Position = 0;
 
-                return outputStream.ToArray();
+                var res = await FileSaver.Default.SaveAsync("VolleyProtocol.pdf", outputStream, CancellationToken.None);
+
+                if (res.IsSuccessful)
+                {
+                    await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
+                }
+                else
+                {
+                    // сохранение БД
+
+                    await App.Current.MainPage.DisplayAlert("Информация", "Ошибка формирования PDF", "OK");
+                }
             }
             catch(Exception e) 
             {
+                // сохранение БД
+
                 await App.Current.MainPage.DisplayAlert("Информация", e.Message, "OK");
 
                 outputStream.Close();
-
-                return null;
             }
         }
     }

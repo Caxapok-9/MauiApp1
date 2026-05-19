@@ -36,17 +36,55 @@ public partial class ScoreBoardPage : ContentPage
     {
         base.OnAppearing();
 
-        sets = await _db.GetSetAsync();
+        try
+        {
+            IsBusy = true;
 
-        set = await _db.GetLastSetAsync();
+            TeamHome = await _db.GetTeamHomeAsync();
 
-        TeamHome = await _db.GetTeamHomeAsync();
+            TeamGuest = await _db.GetTeamGuestAsync();
 
-        TeamGuest = await _db.GetTeamGuestAsync();
+            sets = await _db.GetSetAsync();
 
-        await UpdateData();
+            if (sets.Count == 0)
+            {
+                await CreateSet();
 
-        ReverseCheck();
+                sets = await _db.GetSetAsync();
+
+                set = await _db.GetLastSetAsync();
+            }
+            else
+            {
+                set = await _db.GetLastSetAsync();
+
+                if (set.WinnerID != 0)
+                {
+                    await CreateSet(set);
+
+                    sets = await _db.GetSetAsync();
+
+                    set = await _db.GetLastSetAsync();
+                }
+                else
+                {
+                    var lines = await _db.GetLineUpBeginAsync(set);
+
+                    if (lines == null)
+                    {
+                        await Navigation.PushModalAsync(new LineupPage(_db));
+                    }
+                }
+            }
+
+            await UpdateData();
+
+            await ReverseCheck();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private async void OnReverseClick(object sender, EventArgs e)
@@ -66,7 +104,7 @@ public partial class ScoreBoardPage : ContentPage
 
             await _db.UpdateTeamAsync(TeamGuest);
 
-            ReverseCheck();
+            await ReverseCheck();
         }
         finally
         {
@@ -74,93 +112,52 @@ public partial class ScoreBoardPage : ContentPage
         }
     }
 
-    private void ReverseCheck()
-    {
-        if(TeamHome.IsLeft)
-        {
-            GridUp.SetColumn(NameHomeBorder, 0);
-            GridUp.SetColumn(CountSetHome, 1);
-            
-            GridUp.SetColumn(CountSetGuest, 3);
-            GridUp.SetColumn(NameGuestBorder, 4);
-
-            GridCenter.SetColumn(ScoreHomeButton, 0);
-
-            GridCenter.SetColumn(ScoreGuestButton, 2);
-
-            GridDown.SetColumn(LineUpHomeButton, 0);
-            GridDown.SetColumn(TimeOutHomeButton, 1);
-            GridDown.SetColumn(ReplaceHomeButton, 2);
-
-            GridDown.SetColumn(ReplaceGuestButton, 3);
-            GridDown.SetColumn(TimeOutGuestButton, 4);
-            GridDown.SetColumn(LineUpGuestButton, 5);
-
-            LineUpHomeButton.Margin = new Thickness(15, 0, 5, 0);
-            ReplaceHomeButton.Margin = new Thickness(5, 0, 10, 0);
-            ReplaceGuestButton.Margin = new Thickness(10, 0, 5, 0);
-            LineUpGuestButton.Margin = new Thickness(5, 0, 15, 0);
-        }
-        else
-        {
-            GridUp.SetColumn(NameHomeBorder, 4);
-            GridUp.SetColumn(CountSetHome, 3);
-
-            GridUp.SetColumn(CountSetGuest, 1);
-            GridUp.SetColumn(NameGuestBorder, 0);
-
-            GridCenter.SetColumn(ScoreHomeButton, 2);
-
-            GridCenter.SetColumn(ScoreGuestButton, 0);
-
-            GridDown.SetColumn(LineUpHomeButton, 5);
-            GridDown.SetColumn(TimeOutHomeButton, 4);
-            GridDown.SetColumn(ReplaceHomeButton, 3);
-
-            GridDown.SetColumn(ReplaceGuestButton, 2);
-            GridDown.SetColumn(TimeOutGuestButton, 1);
-            GridDown.SetColumn(LineUpGuestButton, 0);
-
-            LineUpHomeButton.Margin = new Thickness(5, 0, 15, 0);
-            ReplaceHomeButton.Margin = new Thickness(10, 0, 5, 0);
-            ReplaceGuestButton.Margin = new Thickness(5, 0, 10, 0);
-            LineUpGuestButton.Margin = new Thickness(15, 0, 5, 0);
-        }
-    }
-
     private async void OnTechLoseClick(object sender, EventArgs e)
     {
-        //string result = await DisplayActionSheet("Завершение матча", "Отмена", null, $"Техническое поражение {TeamHome.Name}", $"Техническое поражение {TeamGuest.Name}");
+        try
+        {
+            IsBusy = true;
 
-        //if (result != null)
-        //{
-        //    if (result.Contains(TeamHome.Name))
-        //    {
-        //        string warning = await DisplayActionSheet($"Уверены что хотите заврешить матч техническим поражением {TeamHome.Name}", null, null, "Да", "Нет");
+            string result = await DisplayActionSheet("Завершение матча", "Отмена", null, "Закончить матч и стереть данные без формирования протокола", $"Техническое поражение {TeamHome.Name}", $"Техническое поражение {TeamGuest.Name}");
 
-        //        if (warning == "Да")
-        //        {
-        //            CheckTech = false;
+            if (result != null)
+            {
+                if (result.Contains(TeamHome.Name))
+                {
+                    string warning = await DisplayActionSheet($"Уверены что хотите заврешить матч техническим поражением {TeamHome.Name}", null, null, "Да", "Нет");
 
-        //            await TechLosing.TechLoseGame(_db, set, TeamHome, TeamGuest);
+                    if (warning == "Да")
+                    {
+                        await TechLosing.TechLoseGame(_db, set, TeamHome, TeamGuest);
 
-        //            await EndGame();
-        //        }
-        //    }
-        //    else if (result.Contains(TeamGuest.Name))
-        //    {
-        //        string warning = await DisplayActionSheet($"Уверены что хотите заврешить матч техническим поражением {TeamGuest.Name}", null, null, "Да", "Нет");
+                        await EndGame();
+                    }
+                }
 
-        //        if (warning == "Да")
-        //        {
-        //            CheckTech = false;
+                if (result.Contains(TeamGuest.Name))
+                {
+                    string warning = await DisplayActionSheet($"Уверены что хотите заврешить матч техническим поражением {TeamGuest.Name}", null, null, "Да", "Нет");
 
-        //            await TechLosing.TechLoseGame(_db, set, TeamGuest, TeamHome);
+                    if (warning == "Да")
+                    {
+                        await TechLosing.TechLoseGame(_db, set, TeamGuest, TeamHome);
 
-        //            await EndGame();
-        //        }
-        //    }
-        //}
+                        await EndGame();
+                    }
+                }
+
+                if (result.Contains("Закончить матч"))
+                {
+                    await _db.ClearAsync();
+
+                    Application.Current.MainPage = new StartPage(_db);
+                }
+            }
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private async void OnTimeOutHomeClick(object sender, EventArgs e)
@@ -462,6 +459,125 @@ public partial class ScoreBoardPage : ContentPage
 
         TimeOutHomeButton.Text = $"Тайм-аут \n({2 - EventsTimeOut.Where(x => x.TeamID == TeamHome.Id).Count()})";
         TimeOutGuestButton.Text = $"Тайм-аут \n({2 - EventsTimeOut.Where(x => x.TeamID == TeamGuest.Id).Count()})";
+    }
+
+    private async Task ReverseCheck()
+    {
+        if (TeamHome.IsLeft)
+        {
+            GridUp.SetColumn(NameHomeBorder, 0);
+            GridUp.SetColumn(CountSetHome, 1);
+
+            GridUp.SetColumn(CountSetGuest, 3);
+            GridUp.SetColumn(NameGuestBorder, 4);
+
+            GridCenter.SetColumn(ScoreHomeButton, 0);
+
+            GridCenter.SetColumn(ScoreGuestButton, 2);
+
+            GridDown.SetColumn(LineUpHomeButton, 0);
+            GridDown.SetColumn(TimeOutHomeButton, 1);
+            GridDown.SetColumn(ReplaceHomeButton, 2);
+
+            GridDown.SetColumn(ReplaceGuestButton, 3);
+            GridDown.SetColumn(TimeOutGuestButton, 4);
+            GridDown.SetColumn(LineUpGuestButton, 5);
+
+            LineUpHomeButton.Margin = new Thickness(15, 0, 5, 0);
+            ReplaceHomeButton.Margin = new Thickness(5, 0, 10, 0);
+            ReplaceGuestButton.Margin = new Thickness(10, 0, 5, 0);
+            LineUpGuestButton.Margin = new Thickness(5, 0, 15, 0);
+        }
+        else
+        {
+            GridUp.SetColumn(NameHomeBorder, 4);
+            GridUp.SetColumn(CountSetHome, 3);
+
+            GridUp.SetColumn(CountSetGuest, 1);
+            GridUp.SetColumn(NameGuestBorder, 0);
+
+            GridCenter.SetColumn(ScoreHomeButton, 2);
+
+            GridCenter.SetColumn(ScoreGuestButton, 0);
+
+            GridDown.SetColumn(LineUpHomeButton, 5);
+            GridDown.SetColumn(TimeOutHomeButton, 4);
+            GridDown.SetColumn(ReplaceHomeButton, 3);
+
+            GridDown.SetColumn(ReplaceGuestButton, 2);
+            GridDown.SetColumn(TimeOutGuestButton, 1);
+            GridDown.SetColumn(LineUpGuestButton, 0);
+
+            LineUpHomeButton.Margin = new Thickness(5, 0, 15, 0);
+            ReplaceHomeButton.Margin = new Thickness(10, 0, 5, 0);
+            ReplaceGuestButton.Margin = new Thickness(5, 0, 10, 0);
+            LineUpGuestButton.Margin = new Thickness(15, 0, 5, 0);
+        }
+    }
+
+    private async Task CreateSet()
+    {
+        Set newSet = new Set() { NumberSet = 1, ScoreGuest = 0, ScoreHome = 0, IsShort = false };
+
+        await _db.SaveSetAsync(newSet);
+
+        string WhyServ = null;
+
+        while (WhyServ == null)
+        {
+            WhyServ = await DisplayActionSheet("Выбор подающей команды", null, null, TeamHome.Name, TeamGuest.Name);
+
+            if(WhyServ == TeamHome.Name)
+            {
+                TeamHome.FirstSetServ = true;
+
+                await _db.UpdateTeamAsync(TeamHome);
+            }
+
+            if (WhyServ == TeamGuest.Name)
+            {
+                TeamGuest.FirstSetServ = true;
+
+                await _db.UpdateTeamAsync(TeamGuest);
+            }
+        }
+
+        await Navigation.PushModalAsync(new LineupPage(_db));
+    }
+
+    private async Task CreateSet(Set s)
+    {
+        Set newSet = new Set() { NumberSet = s.NumberSet + 1, ScoreGuest = 0, ScoreHome = 0 };
+
+        newSet.IsShort = newSet.NumberSet == Setting.MaxSet ? true : false;
+
+        await _db.SaveSetAsync(newSet);
+
+        if (newSet.IsShort)
+        {
+            string WhyServ = null;
+
+            while (WhyServ == null)
+            {
+                WhyServ = await DisplayActionSheet("Выбор подающей команды", null, null, TeamHome.Name, TeamGuest.Name);
+
+                if (WhyServ == TeamHome.Name)
+                {
+                    TeamHome.FinalySetServ = true;
+
+                    await _db.UpdateTeamAsync(TeamHome);
+                }
+
+                if (WhyServ == TeamGuest.Name)
+                {
+                    TeamGuest.FinalySetServ = true;
+
+                    await _db.UpdateTeamAsync(TeamGuest);
+                }
+            }
+        }
+
+        await Navigation.PushModalAsync(new LineupPage(_db));
     }
 
     //private async Task TakeTimeOut(Team team)
@@ -792,109 +908,19 @@ public partial class ScoreBoardPage : ContentPage
     //    }
     //}
 
-    //public async Task EndGame()
-    //{
-    //    try
-    //    {
-    //        IsBusy = true;
+    public async Task EndGame()
+    {
+        try
+        {
+            IsBusy = true;
 
-    //        Game = false;
-
-    //        var info = await _db.GetMainInfoAsync();
-
-    //        SignaturePage pageSecretary = new SignaturePage(_db, $"Секретарь {info.FirstOrDefault().Secretary}");
-
-    //        await Navigation.PushModalAsync(pageSecretary);
-
-    //        byte[] SecretarySignature = await pageSecretary.ResultTask;
-
-    //        SignaturePage pageFirstReferee = new SignaturePage(_db, $"Главный судья {info.FirstOrDefault().FirstReferee}");
-
-    //        await Navigation.PushModalAsync(pageFirstReferee);
-
-    //        byte[] FirstRefereeSignature = await pageFirstReferee.ResultTask;
-
-    //        byte[] ToRefereeSignature = null;
-
-    //        if (info.FirstOrDefault().ToReferee != null)
-    //        {
-    //            SignaturePage pageToReferee = new SignaturePage(_db, $"Второй судья {info.FirstOrDefault().ToReferee}");
-
-    //            await Navigation.PushModalAsync(pageToReferee);
-
-    //            ToRefereeSignature = await pageToReferee.ResultTask;
-    //        }
-
-    //        SignaturePage pageCaptainHome = new SignaturePage(_db, $"Капитан команды {TeamHome.Name} - {RosterHome.Find(x => x.IsCaptain).Name}", "Home", RosterGuest);
-
-    //        await Navigation.PushModalAsync(pageCaptainHome);
-
-    //        byte[] CaptainHomeSignature = await pageCaptainHome.ResultTask;
-
-    //        SignaturePage pageCaptainGuest = new SignaturePage(_db, $"Капитан команды {TeamGuest.Name} - {RosterGuest.Find(x => x.IsCaptain).Name}", "Guest", RosterHome);
-
-    //        await Navigation.PushModalAsync(pageCaptainGuest);
-
-    //        byte[] CaptainGuestSignature = await pageCaptainGuest.ResultTask;
-
-    //        await CreateAndViewPDF(FirstRefereeSignature, ToRefereeSignature, SecretarySignature, CaptainHomeSignature, CaptainGuestSignature);
-    //    }
-    //    finally
-    //    {
-    //        IsBusy = false;
-    //    }
-    //}
-
-    //private async Task OptionalPages()
-    //{
-    //    await Navigation.PushAsync(new ProtestPage());
-    //}
-
-    //private async Task CreateAndViewPDF(byte[] signatureFirstReferee, byte[] signatureToReferee, byte[] signatureSecretary, byte[] signatureCaptainHome, byte[] signatureCaptainGuest)
-    //{
-    //    try
-    //    {
-    //        IsBusy = true;
-
-    //        ProtocolInfo info = new ProtocolInfo(_db);
-
-    //        var dict = await info.GetDataDictionary();
-
-    //        Dictionary<string, byte[]> sign = new Dictionary<string, byte[]>
-    //        {
-    //            {"SignFirstReferee", signatureFirstReferee },
-    //            {"SignToReferee", signatureToReferee },
-    //            {"SignSecretary", signatureSecretary },
-    //            {"SignCaptainHome", signatureCaptainHome },
-    //            {"SignCaptainGuest", signatureCaptainGuest }
-    //        };
-
-    //        var array = await ProtocolCreater.CreatePDF(dict, sign);
-
-    //        if (array != null)
-    //        {
-    //            var res = await FileSaver.Default.SaveAsync("VolleyProtocol.pdf", new MemoryStream(array), CancellationToken.None);
-
-    //            if (res.IsSuccessful)
-    //            {
-    //                await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
-    //            }
-    //            else
-    //            {
-    //                // сохранение БД
-    //                await App.Current.MainPage.DisplayAlert("Информация", "Ошибка формирования PDF", "OK");
-    //            }
-    //        }
-
-    //        await _db.DeleteAsync();
-
-    //        Application.Current.Quit();
-    //    }
-    //    finally
-    //    {
-    //        IsBusy = false;
-    //    }
-    //}
+            Application.Current.MainPage = new EndGamePage(_db);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
 
     protected override bool OnBackButtonPressed()
     {        
