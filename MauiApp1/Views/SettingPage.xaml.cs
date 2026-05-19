@@ -58,11 +58,11 @@ public partial class SettingPage : ContentPage
         Setting.MaxScore = maxScore;
         Setting.MaxScoreInShortSet = maxScoreInShortSet;
 
-        await Navigation.PopAsync();
+        await Navigation.PopModalAsync();
     }
 
     private async void OnCancelAsync(object sender, EventArgs e)
     {
-        await Navigation.PopAsync();
+        await Navigation.PopModalAsync();
     }
 }

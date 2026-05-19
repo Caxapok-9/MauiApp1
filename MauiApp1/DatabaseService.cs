@@ -14,30 +14,45 @@ public class DatabaseService
 
     public Dictionary<string, int> EventsCategories;
 
-    public List<SanctionIn> SanctionsCategories;
+    public Dictionary<string, int> SanctionsCategories;
 
-    public Dictionary<int, LineUp> LineUpBegin = new Dictionary<int, LineUp>();
+    public List<Player> RosterHome;
 
-    public async Task<int> DeleteAsync() =>
-        await _db.DeleteAllAsync<Event>()
-        & await _db.DeleteAllAsync<Set>()
-        & await _db.DeleteAllAsync<Player>()
-        & await _db.DeleteAllAsync<LineUp>()
-        & await _db.DeleteAllAsync<Team>()
-        & await _db.DeleteAllAsync<MainInformation>()
-        & await _db.DeleteAllAsync<EventCategory>()
-        & await _db.DeleteAllAsync<SanctionPDF>();
+    public List<Player> RosterGuest;
+
+    public async Task ClearAsync()
+    {
+        await _db.DeleteAllAsync<Event>();
+        await _db.DeleteAllAsync<Set>();
+        await _db.DeleteAllAsync<Player>();
+        await _db.DeleteAllAsync<LineUpBegin>();
+        await _db.DeleteAllAsync<Team>();
+        await _db.DeleteAllAsync<MainInformation>();
+        await _db.DeleteAllAsync<EventCategory>();
+        await _db.DeleteAllAsync<Sanction>();
+        await _db.DeleteAllAsync<SanctionCategory>();
+    }
+
+    public async Task InizializeAllTablesAsync()
+    {
+        await _db.CreateTableAsync<MainInformation>();
+        await _db.CreateTableAsync<Event>();
+        await _db.CreateTableAsync<Set>();
+        await _db.CreateTableAsync<Player>();
+        await _db.CreateTableAsync<LineUpBegin>();
+        await _db.CreateTableAsync<Team>();
+        await _db.CreateTableAsync<EventCategory>();
+        await _db.CreateTableAsync<Sanction>();
+        await _db.CreateTableAsync<SanctionCategory>();
+    }
 
     #region MainInfo
 
-    public async Task InitializeMainInfoAsync()
-    {
-        await _db.CreateTableAsync<MainInformation>();
-    }
+    public async Task InitializeMainInfoAsync() => await _db.CreateTableAsync<MainInformation>();
+
+    public async Task<MainInformation> GetMainInfoAsync() => await _db.Table<MainInformation>().FirstOrDefaultAsync();
 
     public async Task<int> SaveMainInfoAsync(MainInformation info) => await _db.InsertAsync(info);
-
-    public async Task<List<MainInformation>> GetMainInfoAsync() => await _db.Table<MainInformation>().ToListAsync();
 
     public async Task<int> UpdateMainInfoAsync(MainInformation Info) => await _db.UpdateAsync(Info);
 
@@ -50,201 +65,149 @@ public class DatabaseService
     public async Task InitializeEventCategoryAsync()
     {
         await _db.CreateTableAsync<EventCategory>();
-    }
 
-    public async Task FillEventCategoryAsync()
-    {
+        await _db.DeleteAllAsync<EventCategory>();
+
         var list = new List<EventCategory>
         {
-            new EventCategory() {NameCategory = "Очко"},
-            new EventCategory() {NameCategory = "Тайм-аут"},
-            new EventCategory() {NameCategory = "Замена"},
-            new EventCategory() {NameCategory = "RЗамена"},
-            new EventCategory() {NameCategory = "WЗамена"}
+            new EventCategory() {Name = "S"},
+            new EventCategory() {Name = "T"},
+            new EventCategory() {Name = "R"},
+            new EventCategory() {Name = "RR"},
+            new EventCategory() {Name = "WR"}
         };
 
         await _db.InsertAllAsync(list);
 
         var l = await _db.Table<EventCategory>().ToListAsync();
 
-        EventsCategories = l.ToDictionary(x => x.NameCategory, x => x.IdCategory);
+        EventsCategories = l.ToDictionary(x => x.Name, x => x.Id);
     }
-
-    public async Task<List<EventCategory>> GetEventCategoryAsync() => await _db.Table<EventCategory>().ToListAsync();
-
-    public async Task<int> DeleteEventCategoryAsync() => await _db.DeleteAllAsync<EventCategory>();
 
     #endregion
 
-    #region Roster
+    #region SanctionCategory
 
-    public async Task InitializeRosterAsync()
+    public async Task InitializeSanctionCategoryAsync()
     {
-        await _db.CreateTableAsync<Player>();
-    }
+        await _db.CreateTableAsync<SanctionCategory>();
 
-    public async Task ClearReplaceID()
-    {
-        await _db.ExecuteAsync("UPDATE Player SET ReplaceID = 0", false);
-    }
+        await _db.DeleteAllAsync<SanctionCategory>();
 
-    public async Task ClearRemove()
-    {
-        await _db.ExecuteAsync("UPDATE Player SET IsRemove = FALSE", false);
-    }
-
-    public async Task SaveRosterAsync(Player player)
-    {
-        if(player.Id == null)
+        var list = new List<SanctionCategory>
         {
-            await _db.InsertAsync(player);
-        }
-        else
-        {
-            await _db.UpdateAsync(player);
-        }
-    }
-    public async Task<List<Player>> GetRosterAsync(int teamID)
-    {
-        return await _db.Table<Player>().Where(x => x.TeamID == teamID).ToListAsync();
+            new SanctionCategory() {Name = "Предупреждение (Жёлтая карточка)"},
+            new SanctionCategory() {Name = "Замечание (Красная карточка)"},
+            new SanctionCategory() {Name = "Удаление (Две карточки в одной руке)"},
+            new SanctionCategory() {Name = "Дисквалификация (Две карточки в двух руках)"}
+        };
+
+        await _db.InsertAllAsync(list);
+
+        var l = await _db.Table<SanctionCategory>().ToListAsync();
+
+        SanctionsCategories = l.ToDictionary(x => x.Name, x => x.Id);
     }
 
-    public async Task<int> DeleteRosterAsync() => await _db.DeleteAllAsync<Player>();
+    #endregion
+
+    #region Player
+
+    public async Task InitializePlayerAsync() => await _db.CreateTableAsync<Player>();
+
+    public async Task ClearReplaceID() => await _db.ExecuteAsync("UPDATE Player SET ReplaceID = 0", false);
+
+    public async Task ClearRemove() => await _db.ExecuteAsync("UPDATE Player SET IsRemove = FALSE", false);
+
+    public async Task SavePlayerAsync(Player player) => await _db.InsertAsync(player);
+
+    public async Task UpdatePlayerAsync(Player player) => await _db.UpdateAsync(player);
+
+    public async Task<List<Player>> GetPlayerAsync() => await _db.Table<Player>().ToListAsync();
+
+    public async Task<int> DeletePlayerAsync() => await _db.DeleteAllAsync<Player>();
 
     #endregion
 
     #region Set
 
-    public async Task InitializeSetAsync()
-    {
-        await _db.CreateTableAsync<Set>();
-    }
+    public async Task InitializeSetAsync() => await _db.CreateTableAsync<Set>();
 
     public async Task<int> SaveSetAsync(Set set) => await _db.InsertAsync(set);
 
-    public async Task<List<Set>> GetSetAsync()
-    {
-        int count = await _db.Table<Set>().CountAsync();
-
-        if(count == 0)
-        {
-            return null;
-        }
-        else
-        {
-            return await _db.Table<Set>().ToListAsync();
-        }
-    }
-
     public async Task<int> DeleteSetAsync() => await _db.DeleteAllAsync<Set>();
 
-    public async Task<int> UpdateSetAsync(Set set) => await _db.UpdateAsync(set); 
+    public async Task<int> UpdateSetAsync(Set set) => await _db.UpdateAsync(set);
+
+    public async Task<List<Set>> GetSetAsync() => await _db.Table<Set>().ToListAsync();
+
+    public async Task<Set> GetLastSetAsync() => await _db.Table<Set>().OrderByDescending(x => x.Id).FirstAsync();
 
     #endregion
 
     #region Team
 
-    public async Task InitializeTeamAsync()
-    {
-        await _db.CreateTableAsync<Team>();
-    }
+    public async Task InitializeTeamAsync() => await _db.CreateTableAsync<Team>();
 
     public async Task<int> SaveTeamAsync(Team team) => await _db.InsertAsync(team);
-
-    public async Task<List<Team>> GetTeamAsync() => await _db.Table<Team>().ToListAsync();
 
     public async Task<int> DeleteTeamAsync() => await _db.DeleteAllAsync<Team>();
 
     public async Task<int> UpdateTeamAsync(Team team) => await _db.UpdateAsync(team);
 
+    public async Task<List<Team>> GetTeamAsync() => await _db.Table<Team>().ToListAsync();
+
+    public async Task<Team> GetTeamHomeAsync() => await _db.Table<Team>().Where(x => x.IsHome).FirstAsync();
+
+    public async Task<Team> GetTeamGuestAsync() => await _db.Table<Team>().Where(x => !x.IsHome).FirstAsync();
+
     #endregion
 
-    #region LineUp
+    #region LineUpBegin 
 
-    public async Task InitializeLineUpBeginAsync()
-    {
-        await _db.CreateTableAsync<LineUp>();
-    }
+    public async Task InitializeLineUpBeginAsync() => await _db.CreateTableAsync<LineUpBegin>();
 
-    public async Task<int> SaveLineUpAsync(LineUp lineup) => await _db.InsertAsync(lineup);
+    public async Task<int> SaveLineUpBeginAsync(LineUpBegin lineup) => await _db.InsertAsync(lineup);
 
-    public async Task<List<LineUp>> GetLineUpAsync(int setID, int teamID)
-    {
-        return await _db.Table<LineUp>().Where(x => x.SetId == setID && x.TeamId == teamID).ToListAsync();
-    }
+    public async Task<List<LineUpBegin>> GetLineUpBeginAsync() => await _db.Table<LineUpBegin>().ToListAsync();
 
-    public async Task<List<LineUp>> GetLineUpAsync(int setID)
-    {
-        return await _db.Table<LineUp>().Where(x => x.SetId == setID).ToListAsync();
-    }
-
-    public async Task<List<LineUp>> GetLineUpAsync()
-    {
-        return await _db.Table<LineUp>().ToListAsync();
-    }
-
-    public async Task<int> DeleteLineUpAsync() => await _db.DeleteAllAsync<LineUp>();
+    public async Task<int> DeleteLineUpBeginAsync() => await _db.DeleteAllAsync<LineUpBegin>();
 
     #endregion
 
     #region Event
 
-    public async Task InitializeEventAsync()
-    {
-        await _db.CreateTableAsync<Event>();
-    }
+    public async Task InitializeEventAsync() => await _db.CreateTableAsync<Event>();
 
     public async Task<int> SaveEventAsync(Event ev) => await _db.InsertAsync(ev);
 
+    public async Task<int> UpdateEventAsync(Event ev) => await _db.UpdateAsync(ev);
+
     public async Task<int> DeleteSelectEventAsync(Event ev) => await _db.DeleteAsync(ev);
-
-    public async Task<List<Event>> GetEventAsync(int setID, int teamID, List<int> eventsID)
-    {
-        return await _db.Table<Event>().Where(x => x.SetID == setID && x.TeamID == teamID && eventsID.Contains(x.EventID)).ToListAsync();
-    }
-
-    public async Task<List<Event>> GetEventAsync(int setID, int eventID)
-    {
-        return await _db.Table<Event>().Where(x => x.SetID == setID && x.EventID == eventID).ToListAsync();
-    }
-
-    public async Task<List<Event>> GetEventAsync(int setID)
-    {
-        return await _db.Table<Event>().Where(x => x.SetID == setID).ToListAsync();
-    }
-
-    public async Task<List<Event>> GetEventAsync()
-    {
-        return await _db.Table<Event>().ToListAsync();
-    }
 
     public async Task<int> DeleteEventAsync() => await _db.DeleteAllAsync<Event>();
 
+    public async Task<List<Event>> GetEventAsync() => await _db.Table<Event>().ToListAsync();
+
+    public async Task<List<Event>> GetEventAsync(int ID_set) => await _db.Table<Event>().Where(x => x.SetID == ID_set).ToListAsync();
+
+    public async Task<List<Event>> GetEventAsync(int ID_set, List<int> IDs_Events) => await _db.Table<Event>().Where(x => x.SetID == ID_set && IDs_Events.Contains(x.EventID)).ToListAsync();
+
     #endregion
 
-    #region
+    #region Sanction
 
-    public async Task InitializeSanctionAsync()
-    {
-        await _db.CreateTableAsync<SanctionPDF>();
-    }
+    public async Task InitializeSanctionAsync() => await _db.CreateTableAsync<Sanction>();
 
-    public async Task<int> SaveSanctionAsync(SanctionPDF info) => await _db.InsertAsync(info);
+    public async Task<int> SaveSanctionAsync(Sanction sanction) => await _db.InsertAsync(sanction);
 
-    public async Task<List<SanctionPDF>> GetSanctionAsync() => await _db.Table<SanctionPDF>().ToListAsync();
+    public async Task<int> UpdateSanctionAsync(Sanction sanction) => await _db.UpdateAsync(sanction);
 
-    public async Task<int> DeleteSanctionAsync() => await _db.DeleteAllAsync<SanctionPDF>();
+    public async Task<int> DeleteSelectSanctionAsync(Sanction sanction) => await _db.DeleteAsync(sanction);
 
-    public void FillSanctionCategoryAsync()
-    {
-        SanctionsCategories = new List<SanctionIn>
-        {
-            new SanctionIn() { Id = 1, Name = "Предупреждение (Жёлтая карточка)"},
-            new SanctionIn() { Id = 2, Name = "Замечание (Красная карточка)"},
-            new SanctionIn() { Id = 3, Name = "Удаление (Две карточки в одной руке)"},
-            new SanctionIn() { Id = 4, Name = "Дисквалификация (Две карточки в обеих руках)"},
-        };
-    }
+    public async Task<List<Sanction>> GetSanctionAsync() => await _db.Table<Sanction>().ToListAsync();
+
+    public async Task<int> DeleteSanctionAsync() => await _db.DeleteAllAsync<Sanction>();
 
     #endregion
 }

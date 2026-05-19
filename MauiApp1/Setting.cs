@@ -43,14 +43,14 @@ namespace MauiApp1
             CalibriBold = PdfFontFactory.CreateFont(fontBytes2, PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
         }
 
-        public static void GetSetting()
+        public static async Task GetSettings()
         {
             MaxSet = Preferences.Default.Get("MaxCountSet", 5);
             MaxScore = Preferences.Default.Get("MaxScoreSet", 25);
             MaxScoreInShortSet = Preferences.Default.Get("MaxScoreInShort", 15);
         }
 
-        public static void SaveColor()
+        public static async Task SetColors()
         {
             Application.Current.Resources["MainColorHome"] = Microsoft.Maui.Graphics.Color.FromRgba("#007ACC");
             Application.Current.Resources["PointColorHome"] = Colors.DodgerBlue;

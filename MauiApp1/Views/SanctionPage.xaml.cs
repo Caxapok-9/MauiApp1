@@ -12,7 +12,7 @@ public partial class SanctionPage : ContentPage
 
 	List<Player> RosterGuest;
 
-	List<SanctionIn> Sanctions;
+	List<SanctionCategory> Sanctions;
 
 	Set _set;
 
@@ -68,11 +68,11 @@ public partial class SanctionPage : ContentPage
 
         if (res == null)
 		{
-			var sanction = PickerSanction.SelectedItem as SanctionIn;
+			var sanction = PickerSanction.SelectedItem as SanctionCategory;
             var team = PickerTeams.SelectedItem as Team;
             var target = PickerPTC.SelectedItem as Player;
 
-            SanctionPDF sanctionPDF = new SanctionPDF();
+            Sanction sanctionPDF = new Sanction();
             sanctionPDF.SanctionId = sanction.Id;
             sanctionPDF.TeamId = team.Id;
             sanctionPDF.TargetId = (int)target.Id;
@@ -111,7 +111,7 @@ public partial class SanctionPage : ContentPage
 	   
 	private async Task ReplaceRemoveAndDisqual(Team team, Player target)
 	{
-        var sanction = PickerSanction.SelectedItem as SanctionIn;
+        var sanction = PickerSanction.SelectedItem as SanctionCategory;
 
         if (team.IsHome)
 		{

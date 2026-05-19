@@ -48,8 +48,8 @@ namespace MauiApp1
 
                     #region Line
 
-                    LineUp lineHome = LineUps.Where(x => x.SetId == set.Id && x.TeamId == TeamHome.Id).FirstOrDefault();
-                    LineUp lineGuest = LineUps.Where(x => x.SetId == set.Id && x.TeamId == TeamGuest.Id).FirstOrDefault();
+                    LineUpBegin lineHome = LineUps.Where(x => x.SetId == set.Id && x.TeamId == TeamHome.Id).FirstOrDefault();
+                    LineUpBegin lineGuest = LineUps.Where(x => x.SetId == set.Id && x.TeamId == TeamGuest.Id).FirstOrDefault();
 
                     if (lineHome != null)
                     {
@@ -194,7 +194,7 @@ namespace MauiApp1
 
             for (int i = 0; i < Sanctions.Count; i++)
             {
-                SanctionPDF sanction = Sanctions[i];
+                Sanction sanction = Sanctions[i];
 
                 int number = i + 1;
 
@@ -355,7 +355,7 @@ namespace MauiApp1
             return dictionary;
         }
 
-        private void FillLineUp(List<Event> ReplaceList, LineUp line, List<Player> roster, string numberSet, string vector)
+        private void FillLineUp(List<Event> ReplaceList, LineUpBegin line, List<Player> roster, string numberSet, string vector)
         {
             foreach (var ev in ReplaceList)
             {

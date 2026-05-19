@@ -16,16 +16,10 @@ public partial class RosterPageGuest : ContentPage
     {
         InitializeComponent();
 
-        guestPlayers = new ObservableCollection<Player>();
-
-        TeamGuestList.ItemsSource = guestPlayers;
-
         _db = db;
-
-        GetNamesTeams();
     }
 
-    protected override void OnAppearing()
+    protected async override void OnAppearing()
     {
         base.OnAppearing();
 
@@ -36,10 +30,15 @@ public partial class RosterPageGuest : ContentPage
             activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
 
 #endif
-        CheckList();
+
+        guestPlayers = new ObservableCollection<Player>();
+
+        TeamGuestList.ItemsSource = guestPlayers;
+
+        await GetNameTeam();
     }
 
-    private async void NextPageClick(object sender, EventArgs e)
+    private async void NextClick(object sender, EventArgs e)
     {
         if (IsBusy)
             return;
@@ -48,144 +47,12 @@ public partial class RosterPageGuest : ContentPage
         {
             IsBusy = true;
 
-            string res = CheckData();
-
-            if (res != null)
-            {
-                await DisplayAlert("Ошибка", res, "OK");
-            }
-            else
-            {
-                foreach (Player player in guestPlayers)
-                {
-                    await _db.SaveRosterAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamGuest.Id });
-                }
-
-                while (true)
-                {
-                    string result = await DisplayPromptAsync("Ввод данных", "Введите ФИО тренера (Необязательно)", "Ок", null);
-
-                    if (!string.IsNullOrWhiteSpace(result))
-                    {
-                        string errorValidation;
-
-                        if (!Validation.ValidationFIO(result, out errorValidation))
-                        {
-                            await DisplayAlert("Ошибка", errorValidation, "OK");
-                        }
-                        else
-                        {
-                            TeamGuest.Coach = result;
-                            await _db.UpdateTeamAsync(TeamGuest);
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                await _db.UpdateTeamAsync(TeamGuest);
-
-                await Navigation.PushAsync(new LineupPage(_db, true));
-            }
+            await SaveRosterGuest();
         }
         finally
         {
             IsBusy = false;
         }
-    }
-
-    private void CheckList()
-    {
-
-        if (guestPlayers.Count == 0)
-        {
-            GuestFrame.IsVisible = false;
-        }
-        else
-        {
-            GuestFrame.IsVisible = true;
-        }
-    }
-    private string CheckData()
-    {
-        if (guestPlayers.Count < 6)
-        {
-            return $"В заявке должно быть минимум 6 игроков";
-        }
-
-        if (guestPlayers.Count > 14)
-        {
-            return $"Максимальное кол-во игроков в заявке 14 человек";
-        }
-
-        int capGuest = 0;
-
-        foreach (var player in guestPlayers)
-        {
-            if (player.IsCaptain)
-            {
-                capGuest++;
-            }
-        }
-
-        if (capGuest != 1)
-        {
-            return $"Должен быть выбран 1 капитан";
-        }
-
-        int NoLibGuest = 0;
-        int LibGuest = 0;
-
-        foreach (var player in guestPlayers)
-        {
-            if (player.IsLibero)
-            {
-                LibGuest++;
-            }
-            else
-            {
-                NoLibGuest++;
-            }
-        }
-
-        if (NoLibGuest < 6)
-        {
-            return $"В заявке должно быть минимум 6 полевых игроков (Не либеро)";
-        }
-
-        if (NoLibGuest > 12)
-        {
-            return $"В заявке может быть максимум 12 полевых игроков (Не либеро)";
-        }
-
-        if (LibGuest > 2)
-        {
-            return $"В заявке может быть максимум 2 либеро";
-        }
-
-        string error;
-
-        foreach (var player in guestPlayers)
-        {
-            if (!Validation.ValidationNumber(player.Number, out error))
-                return error;
-        }
-
-        if (guestPlayers.GroupBy(x => x.Number).Count() < guestPlayers.Count)
-        {
-            return $"Не должно быть одинаковых номеров";
-        }
-
-        foreach (var player in guestPlayers)
-        {
-            if (!Validation.ValidationFIO(player.Name, out error))
-                return error;
-        }
-
-        return null;
     }
 
     private void OnAddPlayerGuestClicked(object sender, EventArgs e)
@@ -200,15 +67,17 @@ public partial class RosterPageGuest : ContentPage
             if (guestPlayers.Count < 14)
             {
                 Player player = new Player();
+
                 guestPlayers.Add(player);
+
                 TeamGuestList.ScrollTo(player);
             }
-                
         }
         finally
         {
-            CheckList();
-            IsBusy = false; 
+            GuestFrame.IsVisible = guestPlayers.Count == 0 ? false : true;
+
+            IsBusy = false;
         }
     }
 
@@ -222,6 +91,7 @@ public partial class RosterPageGuest : ContentPage
             IsBusy = true;
 
             var button = sender as Button;
+
             var player = button?.CommandParameter as Player;
 
             if (player == null)
@@ -245,6 +115,7 @@ public partial class RosterPageGuest : ContentPage
             IsBusy = true;
 
             var button = sender as Button;
+
             var player = button?.CommandParameter as Player;
 
             if (player == null)
@@ -274,19 +145,117 @@ public partial class RosterPageGuest : ContentPage
         }
         finally
         {
-            CheckList();
+            GuestFrame.IsVisible = guestPlayers.Count == 0 ? false : true;
+
             IsBusy = false;
         }
     }
 
-    private async Task GetNamesTeams()
+    private async Task SaveRosterGuest()
     {
-        var info = await _db.GetTeamAsync();
+        #region Проверка данных
 
-        TeamGuest = info.Where(x => !x.IsHome).First();
+        string error;
+
+        if (guestPlayers.Count < 6 || guestPlayers.Count > 14)
+        {
+            await DisplayAlert("Ошибка", "Минимальное кол-во игроков в заявке 6 человек\nМаксимальное кол-во игроков в заявке 14 человек", "OK");
+            return;
+        }
+
+        if (guestPlayers.Where(x => !x.IsLibero).Count() < 6 || guestPlayers.Where(x => !x.IsLibero).Count() > 12)
+        {
+            await DisplayAlert("Ошибка", "Минимальное кол-во полевых игроков (не либеро) в заявке 6 человек\nМаксимальное кол-во полевых игроков (не либеро) в заявке 12 человек", "OK");
+            return;
+        }
+
+        if (guestPlayers.Where(x => x.IsLibero).Count() > 2)
+        {
+            await DisplayAlert("Ошибка", "Максимум может быть 2 либеро", "OK");
+            return;
+        }
+
+        if (guestPlayers.Where(x => x.IsCaptain).Count() != 1)
+        {
+            await DisplayAlert("Ошибка", "Должен быть выбран 1 капитан", "OK");
+            return;
+        }
+
+        foreach (var player in guestPlayers)
+        {
+            if (!Validation.ValidationNumber(player.Number, out error))
+            {
+                await DisplayAlert("Ошибка", error, "OK");
+                return;
+            }
+        }
+
+        if (guestPlayers.GroupBy(x => x.Number).Count() < guestPlayers.Count)
+        {
+            await DisplayAlert("Ошибка", "Не должно быть одинаковых номеров", "OK");
+            return;
+        }
+
+        foreach (var player in guestPlayers)
+        {
+            if (!Validation.ValidationFIO(player.Name, out error))
+            {
+                await DisplayAlert("Ошибка", error, "OK");
+                return;
+            }
+        }
+
+        #endregion
+
+        #region Запись данных
+
+        foreach (Player player in guestPlayers)
+        {
+            await _db.SavePlayerAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamGuest.Id });
+        }
+
+        while (true)
+        {
+            string result = await DisplayPromptAsync("Ввод данных", "Введите ФИО тренера (Необязательно)", "Ок", null);
+
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                string errorValidation;
+
+                if (!Validation.ValidationFIO(result, out errorValidation))
+                {
+                    await DisplayAlert("Ошибка", errorValidation, "OK");
+                }
+                else
+                {
+                    TeamGuest.Coach = result;
+
+                    break;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        await _db.UpdateTeamAsync(TeamGuest);
+
+        var players = await _db.GetPlayerAsync();
+
+        _db.RosterGuest = players.Where(x => x.TeamID == TeamGuest.Id).ToList();
+
+        #endregion
+
+        Application.Current.MainPage = new ScoreBoardPage(_db);
+    }
+
+    private async Task GetNameTeam()
+    {
+        TeamGuest = await _db.GetTeamGuestAsync();
 
         this.Title = "Заявка команды - " + TeamGuest.Name;
 
-        return;
+        GuestFrame.IsVisible = guestPlayers.Count == 0 ? false : true;
     }
 }

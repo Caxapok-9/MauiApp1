@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MauiApp1
 {
-    public class SanctionPDF
+    public class Sanction
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

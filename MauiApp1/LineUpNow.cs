@@ -14,9 +14,9 @@ namespace MauiApp1
 
             var SelectEvents = Events.Where(x => x.SetID == _set.Id && (x.EventID == _db.EventsCategories["Очко"] || x.EventID == _db.EventsCategories["Замена"] || x.EventID == _db.EventsCategories["RЗамена"] || x.EventID == _db.EventsCategories["WЗамена"])).ToList();
 
-            LineUp BeginLineUp = _db.LineUpBegin[_teamTarget.Id];
+            LineUpBegin BeginLineUp = _db.LineUpBegin[_teamTarget.Id];
 
-            LineUp line = new LineUp();
+            LineUpBegin line = new LineUpBegin();
 
             line.PostPosition(BeginLineUp.GetPosition());
 

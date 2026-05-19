@@ -282,7 +282,7 @@ public partial class LineupPage : ContentPage
             {
                 _db.LineUpBegin.Clear();
 
-                LineUp lineUpBeginHome = new LineUp();
+                LineUpBegin lineUpBeginHome = new LineUpBegin();
 
                 lineUpBeginHome.SetId = set.Id;
                 lineUpBeginHome.TeamId = TeamHome.Id;
@@ -293,7 +293,7 @@ public partial class LineupPage : ContentPage
                 lineUpBeginHome.Zone5PlayerID = (int)rosterHome.Find(x => x == homePosPicker5.SelectedItem).Id;
                 lineUpBeginHome.Zone6PlayerID = (int)rosterHome.Find(x => x == homePosPicker6.SelectedItem).Id;
 
-                LineUp lineUpBeginGuest = new LineUp();
+                LineUpBegin lineUpBeginGuest = new LineUpBegin();
 
                 lineUpBeginGuest.SetId = set.Id;
                 lineUpBeginGuest.TeamId = TeamGuest.Id;

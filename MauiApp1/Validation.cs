@@ -23,7 +23,7 @@ namespace MauiApp1
 
             input = input.TrimEnd();
 
-            if (input.Length > 49)
+            if (input.Length > 50)
             {
                 error = $"Слишком длинное ФИО {input}\nНе больше 50 символов";
                 return false;
@@ -81,6 +81,21 @@ namespace MauiApp1
 
             error = null;
 
+            return true;
+        }
+
+        public static bool ValidationEmpty(List<string> inputList, out string? error)
+        {
+            foreach(string input in inputList)
+            {
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    error = "Есть незаполненные поля";
+                    return false;
+                }
+            }
+
+            error = null;
             return true;
         }
     }

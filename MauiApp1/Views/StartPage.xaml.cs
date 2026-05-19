@@ -8,71 +8,11 @@ public partial class StartPage : ContentPage
 {
     private readonly DatabaseService _db;
 
-    string tournament = "";
-    string teamHome = "";
-    string teamGuest = "";
-    string freferee = "";
-    string treferee = "";
-    string secretary = "";
-    string group = "";
-
     public StartPage(DatabaseService db)
 	{
-        Setting.SaveColor();
-
-        Setting.GetSetting();
-
         _db = db;
 
-        db.FillSanctionCategoryAsync();
-
         InitializeComponent();        
-    }
-
-    private async Task CheckDataBase()
-    {
-        var Sets = await _db.GetSetAsync();
-
-        if (Sets != null)
-        {
-            await _db.InitializeEventCategoryAsync();
-
-            string result = null;
-
-            while (string.IsNullOrWhiteSpace(result))
-            {
-                result = await DisplayActionSheet("Восстановить состояние с прошлой игры ?", null, null, "Да", "Нет");
-            }
-
-            if (result == "Да")
-            {
-                var Teams = await _db.GetTeamAsync();
-
-                Set set = Sets.LastOrDefault();
-
-                var LineUps = await _db.GetLineUpAsync(set.Id);
-
-                if (LineUps.Count > 0)
-                {
-                    _db.LineUpBegin.Add(Teams.Find(x => x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => x.IsHome).Id));
-                    _db.LineUpBegin.Add(Teams.Find(x => !x.IsHome).Id, LineUps.Find(x => x.TeamId == Teams.Find(x => !x.IsHome).Id));
-
-                    await Navigation.PushAsync(new ScoreBoardPage(_db));
-                }
-                else
-                {
-                    await Navigation.PushAsync(new LineupPage(_db, false));
-                }
-            }
-            else
-            {
-                await _db.DeleteAsync();
-            }
-        }
-        else
-        {
-            await _db.DeleteAsync();
-        }
     }
 
     protected override async void OnAppearing()
@@ -87,42 +27,20 @@ public partial class StartPage : ContentPage
 
 #endif
 
-        await InizializeTables();
+        await Setting.SetColors();
 
-        await CheckDataBase();
+        await Setting.GetSettings();
 
         await Setting.GetFonts();
-    }
 
-    private async Task InizializeTables()
-    {
-        await _db.InitializeEventCategoryAsync();
+        await _db.InizializeAllTablesAsync();
 
-        var eC = await _db.GetEventCategoryAsync();
-
-        if(eC.Count == 0)
-        {
-            await _db.FillEventCategoryAsync();
-        }
-        else
-        {
-            var l = await _db.GetEventCategoryAsync();
-
-            _db.EventsCategories = l.ToDictionary(x => x.NameCategory, x => x.IdCategory);
-        }
-
-            await _db.InitializeMainInfoAsync();
-        await _db.InitializeRosterAsync();
-        await _db.InitializeSetAsync();
-        await _db.InitializeLineUpBeginAsync();
-        await _db.InitializeEventAsync();
-        await _db.InitializeTeamAsync();
-        await _db.InitializeSanctionAsync();
+        await CheckDataBase();
     }
 
     private async void OnSettingClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new SettingPage());
+        await Navigation.PushModalAsync(new SettingPage());
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
@@ -134,98 +52,122 @@ public partial class StartPage : ContentPage
         {
             IsBusy = true;
 
-            tournament = EntryTournament.Text;
-            teamHome = EntryTeamHome.Text;
-            teamGuest = EntryTeamGuest.Text;
-            freferee = EntryFirstReferee.Text;
-            treferee = EntryToReferee.Text;
-            secretary = EntrySecretary.Text;
-            group = EntryGroup.Text;
-
-            if 
-            (
-                string.IsNullOrWhiteSpace(teamHome) || 
-                string.IsNullOrWhiteSpace(teamGuest) || 
-                string.IsNullOrWhiteSpace(tournament) || 
-                string.IsNullOrWhiteSpace(freferee) ||
-                string.IsNullOrWhiteSpace(secretary)
-            )
-            {
-                await DisplayAlert("Ошибка", "Все поля должны быть заполнены!", "OK");
-                return;
-            }
-
-            if(teamHome.Length > 20 || teamGuest.Length > 20)
-            {
-                await DisplayAlert("Ошибка", "Кол-во символов в названиях команд не должно быть больше 20", "OK");
-                return;
-            }
-
-            if (tournament.Length > 50)
-            {
-                await DisplayAlert("Ошибка", "Кол-во символов в названии турнира не должно быть больше 50", "OK");
-                return;
-            }
-
-            if (teamHome == teamGuest)
-            {
-                await DisplayAlert("Ошибка", "У команд должны быть разные названия", "OK");
-                return;
-            }
-
-            string error;
-
-            if (!Validation.ValidationFIO(freferee, out error))
-            {
-                await DisplayAlert("Ошибка", error, "OK");
-                return;
-            }
-
-            if (!string.IsNullOrWhiteSpace(treferee) && !Validation.ValidationFIO(treferee, out error))
-            {
-                await DisplayAlert("Ошибка", error, "OK");
-                return;
-            }
-
-            if (!Validation.ValidationFIO(secretary, out error))
-            {
-                await DisplayAlert("Ошибка", error, "OK");
-                return;
-            }
-
-            Team TeamHome = new Team();
-            TeamHome.Name = teamHome;
-            TeamHome.IsHome = true;
-            TeamHome.IsLeft = true;
-
-            await _db.SaveTeamAsync(TeamHome);        
-
-            Team TeamGuest = new Team();
-            TeamGuest.Name = teamGuest;
-            TeamGuest.IsHome = false;
-            TeamGuest.IsLeft = false;
-
-            await _db.SaveTeamAsync(TeamGuest);
-
-            var ListTeam = await _db.GetTeamAsync();
-
-            MainInformation information = new MainInformation();
-
-            information.NameTournament = tournament;
-            information.TeamHome = ListTeam.Where(x => x.IsHome).First().Id;
-            information.TeamGuest = ListTeam.Where(x => !x.IsHome).First().Id;
-            information.FirstReferee = freferee;
-            information.ToReferee = string.IsNullOrWhiteSpace(treferee) ? null : treferee;
-            information.Secretary = secretary; 
-            information.Group = string.IsNullOrWhiteSpace(group) ? null : group;
-
-            await _db.SaveMainInfoAsync(information);
-
-            await Navigation.PushAsync(new RosterPageHome(_db));
+            await SaveMainInformation();
         }
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    private async Task SaveMainInformation()
+    {
+        #region Проверка данных 
+
+        string error;
+
+        if(Validation.ValidationEmpty(new List<string> { EntryTournament.Text, EntryTeamHome.Text, EntryTeamGuest.Text, EntryFirstReferee.Text, EntrySecretary.Text }, out error))
+        {
+            await DisplayAlert("Ошибка", "Все обязательные поля должны быть заполнены!", "OK");
+            return;
+        }
+
+        //if (EntryTeamHome.Text.Length > 20 || EntryTeamGuest.Text.Length > 20)
+        //{
+        //    await DisplayAlert("Ошибка", "Кол-во символов в названиях команд не должно быть больше 20", "OK");
+        //    return;
+        //}
+
+        //if (EntryTournament.Text.Length > 50)
+        //{
+        //    await DisplayAlert("Ошибка", "Кол-во символов в названии турнира не должно быть больше 50", "OK");
+        //    return;
+        //}
+
+        if (EntryTeamHome.Text == EntryTeamGuest.Text)
+        {
+            await DisplayAlert("Ошибка", "У команд должны быть разные названия", "OK");
+            return;
+        }        
+
+        if (!Validation.ValidationFIO(EntryFirstReferee.Text, out error))
+        {
+            await DisplayAlert("Ошибка", error, "OK");
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(EntryToReferee.Text) && !Validation.ValidationFIO(EntryToReferee.Text, out error))
+        {
+            await DisplayAlert("Ошибка", error, "OK");
+            return;
+        }
+
+        if (!Validation.ValidationFIO(EntrySecretary.Text, out error))
+        {
+            await DisplayAlert("Ошибка", error, "OK");
+            return;
+        }
+
+        #endregion
+
+        #region Запись данных
+
+        Team TeamHome = new Team() { Name = EntryTeamHome.Text, IsHome = true, IsLeft = true };
+
+        await _db.SaveTeamAsync(TeamHome);
+
+        Team TeamGuest = new Team() { Name = EntryTeamGuest.Text, IsHome = false, IsLeft = false };
+
+        await _db.SaveTeamAsync(TeamGuest);
+
+        List<Team> ListTeam = await _db.GetTeamAsync();
+
+        MainInformation information = new MainInformation();
+
+        information.NameTournament = EntryTournament.Text;
+        information.TeamHome = ListTeam.Where(x => x.IsHome).First().Id;
+        information.TeamGuest = ListTeam.Where(x => !x.IsHome).First().Id;
+        information.FirstReferee = EntryFirstReferee.Text;
+        information.ToReferee = string.IsNullOrWhiteSpace(EntryToReferee.Text) ? null : EntryToReferee.Text;
+        information.Secretary = EntrySecretary.Text;
+        information.Group = string.IsNullOrWhiteSpace(EntryGroup.Text) ? null : EntryGroup.Text;
+
+        await _db.SaveMainInfoAsync(information);
+
+        #endregion
+
+        await Navigation.PushAsync(new RosterPageHome(_db));
+    }
+
+    private async Task CheckDataBase()
+    {
+        var Sets = await _db.GetSetAsync();
+
+        if (Sets != null)
+        {
+            string result = null;
+
+            while (string.IsNullOrWhiteSpace(result))
+            {
+                result = await DisplayActionSheet("Восстановить состояние с прошлой игры ?", null, null, "Да", "Нет");
+            }
+
+            if (result == "Да")
+            {
+                var Teams = await _db.GetTeamAsync();
+
+                Set set = Sets.Last();
+
+                Application.Current.MainPage = new ScoreBoardPage(_db);
+            }
+            else
+            {
+                await _db.ClearAsync();
+            }
+        }
+        else
+        {
+            await _db.ClearAsync();
         }
     }
 }
