@@ -76,7 +76,7 @@ public partial class ReplacePage : ContentPage
             {
                 player.IsInjury = false;
 
-                await _db.SaveRosterAsync(player);
+                await _db.UpdatePlayerAsync(player);
 
                 await SelectItem();
             }
@@ -205,8 +205,8 @@ public partial class ReplacePage : ContentPage
 
             await _db.SaveEventAsync(ev);
 
-            await _db.SaveRosterAsync(courtPlayer);
-            await _db.SaveRosterAsync(benchPlayer);
+            await _db.UpdatePlayerAsync(courtPlayer);
+            await _db.UpdatePlayerAsync(benchPlayer);
 
             await Navigation.PopModalAsync();
         }
@@ -228,7 +228,7 @@ public partial class ReplacePage : ContentPage
 
                 await _db.SaveEventAsync(ev);
 
-                await _db.SaveRosterAsync(courtPlayer);
+                await _db.UpdatePlayerAsync(courtPlayer);
 
                 await Navigation.PopModalAsync();
             }
@@ -246,7 +246,7 @@ public partial class ReplacePage : ContentPage
 
                 await _db.SaveEventAsync(ev);
 
-                await _db.SaveRosterAsync(courtPlayer);
+                await _db.UpdatePlayerAsync(courtPlayer);
 
                 await Navigation.PopModalAsync();
             }

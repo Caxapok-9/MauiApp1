@@ -74,14 +74,14 @@ public partial class SignaturePage : ContentPage
             {
                 if (mode == "Home")
                 {
-                    MainInfo.FirstOrDefault().MVPGuest = (int)p.Id;
+                    MainInfo.MVPGuest = (int)p.Id;
                 }
                 else
                 {
-                    MainInfo.FirstOrDefault().MVPHome = (int)p.Id;
+                    MainInfo.MVPHome = (int)p.Id;
                 }
 
-                var res = await _db.UpdateMainInfoAsync(MainInfo.First());
+                var res = await _db.UpdateMainInfoAsync(MainInfo);
             }
 
             using MemoryStream memoryStream = new MemoryStream();

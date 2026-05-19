@@ -41,9 +41,17 @@ public class DatabaseService
         await _db.CreateTableAsync<Player>();
         await _db.CreateTableAsync<LineUpBegin>();
         await _db.CreateTableAsync<Team>();
-        await _db.CreateTableAsync<EventCategory>();
+        await InitializeEventCategoryAsync();
         await _db.CreateTableAsync<Sanction>();
-        await _db.CreateTableAsync<SanctionCategory>();
+        await InitializeSanctionCategoryAsync();
+    }
+
+    public List<Player> GetRoster(Team team)
+    {
+        if (team.IsHome)
+            return RosterHome;
+        else
+            return RosterGuest;
     }
 
     #region MainInfo
@@ -141,7 +149,7 @@ public class DatabaseService
 
     public async Task<List<Set>> GetSetAsync() => await _db.Table<Set>().ToListAsync();
 
-    public async Task<Set> GetLastSetAsync() => await _db.Table<Set>().OrderByDescending(x => x.Id).FirstAsync();
+    public async Task<Set> GetLastSetAsync() => await _db.Table<Set>().OrderByDescending(x => x.Id).FirstOrDefaultAsync();
 
     #endregion
 
@@ -157,9 +165,9 @@ public class DatabaseService
 
     public async Task<List<Team>> GetTeamAsync() => await _db.Table<Team>().ToListAsync();
 
-    public async Task<Team> GetTeamHomeAsync() => await _db.Table<Team>().Where(x => x.IsHome).FirstAsync();
+    public async Task<Team> GetTeamHomeAsync() => await _db.Table<Team>().Where(x => x.IsHome).FirstOrDefaultAsync();
 
-    public async Task<Team> GetTeamGuestAsync() => await _db.Table<Team>().Where(x => !x.IsHome).FirstAsync();
+    public async Task<Team> GetTeamGuestAsync() => await _db.Table<Team>().Where(x => !x.IsHome).FirstOrDefaultAsync();
 
     #endregion
 
@@ -169,9 +177,11 @@ public class DatabaseService
 
     public async Task<int> SaveLineUpBeginAsync(LineUpBegin lineup) => await _db.InsertAsync(lineup);
 
+    public async Task<int> DeleteLineUpBeginAsync() => await _db.DeleteAllAsync<LineUpBegin>();
+
     public async Task<List<LineUpBegin>> GetLineUpBeginAsync() => await _db.Table<LineUpBegin>().ToListAsync();
 
-    public async Task<int> DeleteLineUpBeginAsync() => await _db.DeleteAllAsync<LineUpBegin>();
+    public async Task<LineUpBegin> GetLineUpBeginAsync(Set set, Team team) => await _db.Table<LineUpBegin>().Where(x => x.SetId == set.Id && x.TeamId == team.Id).FirstOrDefaultAsync();
 
     #endregion
 
@@ -189,9 +199,13 @@ public class DatabaseService
 
     public async Task<List<Event>> GetEventAsync() => await _db.Table<Event>().ToListAsync();
 
-    public async Task<List<Event>> GetEventAsync(int ID_set) => await _db.Table<Event>().Where(x => x.SetID == ID_set).ToListAsync();
+    public async Task<List<Event>> GetEventAsync(Set set) => await _db.Table<Event>().Where(x => x.SetID == set.Id).ToListAsync();
 
-    public async Task<List<Event>> GetEventAsync(int ID_set, List<int> IDs_Events) => await _db.Table<Event>().Where(x => x.SetID == ID_set && IDs_Events.Contains(x.EventID)).ToListAsync();
+    public async Task<List<Event>> GetEventAsync(Set set, List<int> IDs_events) => await _db.Table<Event>().Where(x => x.SetID == set.Id && IDs_events.Contains(x.EventID)).ToListAsync();
+
+    public async Task<List<Event>> GetEventAsync(Team team, List<int> IDs_events) => await _db.Table<Event>().Where(x => x.TeamID == team.Id && IDs_events.Contains(x.EventID)).ToListAsync();
+
+    public async Task<List<Event>> GetEventAsync(Set set, Team team, List<int> IDs_events) => await _db.Table<Event>().Where(x => x.SetID == set.Id && x.TeamID == team.Id && IDs_events.Contains(x.EventID)).ToListAsync();
 
     #endregion
 

@@ -32,20 +32,18 @@ public partial class SanctionPage : ContentPage
 		var Teams = await _db.GetTeamAsync();
 
 		PickerTeams.ItemsSource = Teams;
-		TeamHome = Teams.Find(x => x.IsHome);
-		TeamGuest = Teams.Find(x => !x.IsHome);
+		TeamHome = await _db.GetTeamHomeAsync();
+		TeamGuest = await _db.GetTeamGuestAsync();
 
-        var roster = await _db.GetRosterAsync(TeamHome.Id);
-		RosterHome = roster;
-		RosterHome.Add(new Player() { Id = -1, Number = "Тренер" });
+		RosterHome = _db.RosterHome;
+        RosterHome.Add(new Player() { Id = -1, Number = "Тренер" });
         RosterHome.Add(new Player() { Id = -2, Number = "Команда" });
 
-        roster = await _db.GetRosterAsync(TeamGuest.Id);
-		RosterGuest = roster;
+		RosterGuest = _db.RosterGuest;
         RosterGuest.Add(new Player() { Id = -1, Number = "Тренер" });
         RosterGuest.Add(new Player() { Id = -2, Number = "Команда" });
 
-		PickerSanction.ItemsSource = _db.SanctionsCategories;
+		PickerSanction.ItemsSource = _db.SanctionsCategories.Keys.ToList();
     }
 
 	private async void OnTeamsChanged(object sender, EventArgs e)
@@ -86,7 +84,7 @@ public partial class SanctionPage : ContentPage
 			{
 				target.IsDisqual = true;
 
-				await _db.SaveRosterAsync(target);
+				await _db.UpdatePlayerAsync(target);
 
 				await ReplaceRemoveAndDisqual(team, target);
 
@@ -96,7 +94,7 @@ public partial class SanctionPage : ContentPage
             {
                 target.IsRemove = true;
 
-                await _db.SaveRosterAsync(target);
+                await _db.UpdatePlayerAsync(target);
 
                 await ReplaceRemoveAndDisqual(team, target);
             }

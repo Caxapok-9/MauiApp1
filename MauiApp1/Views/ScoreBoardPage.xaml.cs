@@ -128,230 +128,230 @@ public partial class ScoreBoardPage : ContentPage
         }
     }
 
-    //private async void OnTechLoseClick(object sender, EventArgs e)
-    //{
-    //    string result = await DisplayActionSheet("Завершение матча", "Отмена", null, $"Техническое поражение {TeamHome.Name}", $"Техническое поражение {TeamGuest.Name}");
+    private async void OnTechLoseClick(object sender, EventArgs e)
+    {
+        //string result = await DisplayActionSheet("Завершение матча", "Отмена", null, $"Техническое поражение {TeamHome.Name}", $"Техническое поражение {TeamGuest.Name}");
 
-    //    if (result != null)
-    //    {
-    //        if (result.Contains(TeamHome.Name))
-    //        {
-    //            string warning = await DisplayActionSheet($"Уверены что хотите заврешить матч техническим поражением {TeamHome.Name}", null, null, "Да", "Нет");
+        //if (result != null)
+        //{
+        //    if (result.Contains(TeamHome.Name))
+        //    {
+        //        string warning = await DisplayActionSheet($"Уверены что хотите заврешить матч техническим поражением {TeamHome.Name}", null, null, "Да", "Нет");
 
-    //            if (warning == "Да")
-    //            {
-    //                CheckTech = false;
+        //        if (warning == "Да")
+        //        {
+        //            CheckTech = false;
 
-    //                await TechLosing.TechLoseGame(_db, set, TeamHome, TeamGuest);
+        //            await TechLosing.TechLoseGame(_db, set, TeamHome, TeamGuest);
 
-    //                await EndGame();
-    //            }
-    //        }
-    //        else if (result.Contains(TeamGuest.Name))
-    //        {
-    //            string warning = await DisplayActionSheet($"Уверены что хотите заврешить матч техническим поражением {TeamGuest.Name}", null, null, "Да", "Нет");
+        //            await EndGame();
+        //        }
+        //    }
+        //    else if (result.Contains(TeamGuest.Name))
+        //    {
+        //        string warning = await DisplayActionSheet($"Уверены что хотите заврешить матч техническим поражением {TeamGuest.Name}", null, null, "Да", "Нет");
 
-    //            if (warning == "Да")
-    //            {
-    //                CheckTech = false;
+        //        if (warning == "Да")
+        //        {
+        //            CheckTech = false;
 
-    //                await TechLosing.TechLoseGame(_db, set, TeamGuest, TeamHome);
+        //            await TechLosing.TechLoseGame(_db, set, TeamGuest, TeamHome);
 
-    //                await EndGame();
-    //            }
-    //        }
-    //    }
-    //}
+        //            await EndGame();
+        //        }
+        //    }
+        //}
+    }
 
-    //private async void OnTimeOutHomeClick(object sender, EventArgs e)
-    //{
-    //    if (IsBusy)
-    //        return;
+    private async void OnTimeOutHomeClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
 
-    //    try
-    //    {
-    //        IsBusy = true;
+        try
+        {
+            IsBusy = true;
 
-    //        await TakeTimeOut(TeamHome);
-    //    }
-    //    finally
-    //    {
-    //        await UpdateData();
+            //await TakeTimeOut(TeamHome);
+        }
+        finally
+        {
+            await UpdateData();
 
-    //        IsBusy = false;
-    //    }
-    //}
+            IsBusy = false;
+        }
+    }
 
-    //private async void OnTimeOutGuestClick(object sender, EventArgs e)
-    //{
-    //    if (IsBusy)
-    //        return;
+    private async void OnTimeOutGuestClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
 
-    //    try
-    //    {
-    //        IsBusy = true;
+        try
+        {
+            IsBusy = true;
 
-    //        await TakeTimeOut(TeamGuest);
-    //    }
-    //    finally
-    //    {
-    //        await UpdateData();
+            //await TakeTimeOut(TeamGuest);
+        }
+        finally
+        {
+            await UpdateData();
 
-    //        IsBusy = false;
-    //    }
-    //}
+            IsBusy = false;
+        }
+    }
 
-    //private async void OnReplaceHomeClick(object sender, EventArgs e)
-    //{
-    //    if (IsBusy)
-    //        return;
+    private async void OnReplaceHomeClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
 
-    //    try
-    //    {
-    //        IsBusy = true;
+        try
+        {
+            IsBusy = true;
 
-    //        await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, TeamGuest, set, RosterHome));
-    //    }
-    //    finally
-    //    {
-    //        await UpdateData();
+            //await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, TeamGuest, set, RosterHome));
+        }
+        finally
+        {
+            await UpdateData();
 
-    //        IsBusy = false;
-    //    }
-    //}
+            IsBusy = false;
+        }
+    }
 
-    //private async void OnReplaceGuestClick(object sender, EventArgs e)
-    //{
-    //    if (IsBusy)
-    //        return;
+    private async void OnReplaceGuestClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
 
-    //    try
-    //    {
-    //        IsBusy = true;
+        try
+        {
+            IsBusy = true;
 
-    //        await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, TeamHome, set, RosterGuest));
-    //    }
-    //    finally
-    //    {
-    //        await UpdateData();
+            //await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, TeamHome, set, RosterGuest));
+        }
+        finally
+        {
+            await UpdateData();
 
-    //        IsBusy = false;
-    //    }
-    //}
+            IsBusy = false;
+        }
+    }
 
-    //private async void OnNowLineUpHomeClick(object sender, EventArgs e)
-    //{
-    //    if (IsBusy)
-    //        return;
+    private async void OnNowLineUpHomeClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
 
-    //    try
-    //    {
-    //        IsBusy = true;
+        try
+        {
+            IsBusy = true;
 
-    //        Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorHome"];
+            //Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorHome"];
 
-    //        await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
-    //    }
-    //    finally
-    //    {
-    //        IsBusy = false;
-    //    }
-    //}
+            //await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
 
-    //private async void OnNowLineUpGuestClick(object sender, EventArgs e)
-    //{
-    //    if (IsBusy)
-    //        return;
+    private async void OnNowLineUpGuestClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
 
-    //    try
-    //    {
-    //        IsBusy = true;
+        try
+        {
+            IsBusy = true;
 
-    //        Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorGuest"];
+            //Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorGuest"];
 
-    //        await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
-    //    }
-    //    finally
-    //    {
-    //        IsBusy = false;
-    //    }
-    //}
+            //await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
 
-    //private async void OnScoreHomeClick(object sender, EventArgs e)
-    //{
-    //    if (IsBusy)
-    //        return;
+    private async void OnScoreHomeClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
 
-    //    try
-    //    {
-    //        IsBusy = true;
+        try
+        {
+            IsBusy = true;
 
-    //        await AddScore(TeamHome);
-    //    }
-    //    finally
-    //    {
-    //        await UpdateData();
+            //await AddScore(TeamHome);
+        }
+        finally
+        {
+            await UpdateData();
 
-    //        IsBusy = false;
-    //    }
-    //}
+            IsBusy = false;
+        }
+    }
 
-    //private async void OnScoreGuestClick(object sender, EventArgs e)
-    //{
-    //    if (IsBusy)
-    //        return;
+    private async void OnScoreGuestClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
 
-    //    try
-    //    {
-    //        IsBusy = true;
+        try
+        {
+            IsBusy = true;
 
-    //        await AddScore(TeamGuest);
-    //    }
-    //    finally
-    //    {
-    //        await UpdateData();
+            //await AddScore(TeamGuest);
+        }
+        finally
+        {
+            await UpdateData();
 
-    //        IsBusy = false;
-    //    }
-    //}
+            IsBusy = false;
+        }
+    }
 
-    //private async void OnCancelScoreClick(object sender, EventArgs e)
-    //{
-    //    if (IsBusy)
-    //        return;
+    private async void OnCancelScoreClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
 
-    //    try
-    //    {
-    //        IsBusy = true;
+        try
+        {
+            IsBusy = true;
 
-    //        await CancelScore();
-    //    }
-    //    finally
-    //    {
-    //        await UpdateData();
+            //await CancelScore();
+        }
+        finally
+        {
+            await UpdateData();
 
-    //        IsBusy = false;
-    //    }
-    //}
+            IsBusy = false;
+        }
+    }
 
-    //private async void OnSanctionClick(object sender, EventArgs e)
-    //{
-    //    if (IsBusy)
-    //        return;
+    private async void OnSanctionClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
 
-    //    try
-    //    {
-    //        IsBusy = true;
+        try
+        {
+            IsBusy = true;
 
-    //        await Navigation.PushModalAsync(new SanctionPage(_db, set));
-    //    }
-    //    finally
-    //    {
-    //        UpdateData();
+            //await Navigation.PushModalAsync(new SanctionPage(_db, set));
+        }
+        finally
+        {
+            UpdateData();
 
-    //        IsBusy = false;
-    //    }
-    //}
+            IsBusy = false;
+        }
+    }
 
     private async Task UpdateData()
     {
@@ -446,7 +446,7 @@ public partial class ScoreBoardPage : ContentPage
             }
         }
 
-        var EventsTimeOut = await _db.GetEventAsync(set.Id, new List<int> { _db.EventsCategories["T"] });
+        var EventsTimeOut = await _db.GetEventAsync(set, new List<int> { _db.EventsCategories["T"] });
 
         if (EventsTimeOut.Where(x => x.TeamID == TeamHome.Id).Count() > 1)
         {

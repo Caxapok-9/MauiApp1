@@ -96,7 +96,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+                                    <Setter Property="Background" Value="{DynamicResource ExitColor}"/>
 
                                 </VisualState.Setters>
 
@@ -106,7 +106,7 @@
 
                                 <VisualState.Setters>
 
-                                    <Setter Property="Background" Value="{DynamicResource PointColor}"/>
+                                    <Setter Property="Background" Value="{DynamicResource PointExitColor}"/>
 
                                 </VisualState.Setters>
 

@@ -28,7 +28,7 @@ public partial class LineupNowPage : ContentPage
 	{
         base.OnAppearing(); 
 
-		var Rosters = await _db.GetRosterAsync(_teamTarget.Id);
+		var Rosters = _db.GetRoster(_teamTarget);
 
 		var Roster = Rosters.ToDictionary(x => (int)x.Id, x => x.Number);
 

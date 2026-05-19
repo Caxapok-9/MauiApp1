@@ -66,7 +66,7 @@ public partial class StartPage : ContentPage
 
         string error;
 
-        if(Validation.ValidationEmpty(new List<string> { EntryTournament.Text, EntryTeamHome.Text, EntryTeamGuest.Text, EntryFirstReferee.Text, EntrySecretary.Text }, out error))
+        if(!Validation.ValidationEmpty(new List<string> { EntryTournament.Text, EntryTeamHome.Text, EntryTeamGuest.Text, EntryFirstReferee.Text, EntrySecretary.Text }, out error))
         {
             await DisplayAlert("Ошибка", "Все обязательные поля должны быть заполнены!", "OK");
             return;
@@ -143,7 +143,7 @@ public partial class StartPage : ContentPage
     {
         var Sets = await _db.GetSetAsync();
 
-        if (Sets != null)
+        if (Sets.Count > 0)
         {
             string result = null;
 

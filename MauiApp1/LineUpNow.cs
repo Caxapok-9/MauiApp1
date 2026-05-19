@@ -10,27 +10,21 @@ namespace MauiApp1
     {
         public static async Task<Dictionary<int, int>> GetNowLineUp(DatabaseService _db, Team _teamTarget, Team _teamEnemy, Set _set)
         {
-            var Events = await _db.GetEventAsync();
+            var Events = await _db.GetEventAsync(_set, new List<int> { _db.EventsCategories["S"], _db.EventsCategories["R"], _db.EventsCategories["RR"], _db.EventsCategories["WR"] });
 
-            var SelectEvents = Events.Where(x => x.SetID == _set.Id && (x.EventID == _db.EventsCategories["Очко"] || x.EventID == _db.EventsCategories["Замена"] || x.EventID == _db.EventsCategories["RЗамена"] || x.EventID == _db.EventsCategories["WЗамена"])).ToList();
-
-            LineUpBegin BeginLineUp = _db.LineUpBegin[_teamTarget.Id];
+            LineUpBegin BeginLineUp = await _db.GetLineUpBeginAsync(_set, _teamTarget);
 
             LineUpBegin line = new LineUpBegin();
 
             line.PostPosition(BeginLineUp.GetPosition());
 
-            TeamL target = new TeamL();
-            target.Id = _teamTarget.Id;
-            target.IsServe = _set.IsShort ? _teamTarget.FinalySetServ : CheckServ(_teamTarget, _set);
+            TeamL target = new TeamL() { Id = _teamTarget.Id, IsServe = _set.IsShort ? _teamTarget.FinalySetServ : CheckServ(_teamTarget, _set) };
 
-            TeamL enemy = new TeamL();
-            enemy.Id = _teamEnemy.Id;
-            enemy.IsServe = !target.IsServe;
+            TeamL enemy = new TeamL() { Id = _teamEnemy.Id, IsServe = !target.IsServe };
 
-            foreach (Event e in SelectEvents)
+            foreach (Event e in Events)
             {
-                if (e.EventID == _db.EventsCategories["Очко"])
+                if (e.EventID == _db.EventsCategories["S"])
                 {
                     if (e.TeamID == target.Id)
                     {
@@ -55,7 +49,7 @@ namespace MauiApp1
                     }
                 }
 
-                if (e.EventID == _db.EventsCategories["Замена"] || e.EventID == _db.EventsCategories["RЗамена"] || e.EventID == _db.EventsCategories["WЗамена"])
+                if (e.EventID == _db.EventsCategories["R"] || e.EventID == _db.EventsCategories["RR"] || e.EventID == _db.EventsCategories["WR"])
                 {
                     if (line.Zone1PlayerID == e.PlayerInID)
                     {

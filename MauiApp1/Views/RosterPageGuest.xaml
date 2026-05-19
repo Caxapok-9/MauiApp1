@@ -258,7 +258,7 @@
                          HorizontalOptions="Fill"
                          VerticalOptions="End"
                          Margin="20,10,20,10"
-                         Clicked="NextPageClick">
+                         Clicked="NextClick">
 
                 <VisualStateManager.VisualStateGroups>
 
