@@ -42,10 +42,6 @@ public partial class ScoreBoardPage : ContentPage
 
             await CheckSetAndCreate();
 
-            await UpdateData();
-
-            await ReverseCheck();
-
             var info = await _db.GetMainInfoAsync();
 
             if(info.TimeBegin == null)
@@ -57,6 +53,8 @@ public partial class ScoreBoardPage : ContentPage
         }
         finally
         {
+            await ReverseCheck();
+
             IsBusy = false;
         }
     }
@@ -183,7 +181,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            //await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, TeamGuest, set, RosterHome));
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome));
         }
         finally
         {
@@ -202,7 +200,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            //await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, TeamHome, set, RosterGuest));
+            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest));
         }
         finally
         {
@@ -221,9 +219,11 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
+            Set set = await _db.GetLastSetAsync();
+
             Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorHome"];
 
-            //await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome));
         }
         finally
         {
@@ -240,9 +240,11 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
+            Set set = await _db.GetLastSetAsync();
+
             Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorGuest"];
 
-            //await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
+            await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest));
         }
         finally
         {
@@ -316,12 +318,19 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            //await Navigation.PushModalAsync(new SanctionPage(_db, set));
+            var task = new TaskCompletionSource<bool>();
+
+            await Navigation.PushModalAsync(new SanctionPage(_db, task));
+
+            await task.Task;
+
+            if(task.Task.Result)
+            {
+                await ReplaceSanction();
+            }
         }
         finally
         {
-            await UpdateData();
-
             IsBusy = false;
         }
     }
@@ -351,7 +360,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             int countReplace = 0;
 
-            var line = await LineUpNow.GetNowLineUp(_db, TeamHome, TeamGuest, set);
+            var line = await LineUpNow.GetNowLineUp(_db, TeamHome, TeamGuest);
 
             var linePlayers = line.Select(x => _db.RosterHome.Find(p => p.Id == x.Value)).ToList();
 
@@ -392,7 +401,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             int countReplace = 0;
 
-            var line = await LineUpNow.GetNowLineUp(_db, TeamGuest, TeamHome, set);
+            var line = await LineUpNow.GetNowLineUp(_db, TeamGuest, TeamHome);
 
             var linePlayers = line.Select(x => _db.RosterGuest.Find(p => p.Id == x.Value)).ToList();
 
@@ -534,8 +543,6 @@ public partial class ScoreBoardPage : ContentPage
                 await _db.UpdateTeamAsync(TeamGuest);
             }
         }
-
-        await Navigation.PushModalAsync(new LineupPage(_db));
     }
 
     private async Task CreateSet(Set s)
@@ -570,7 +577,11 @@ public partial class ScoreBoardPage : ContentPage
             }
         }
 
-        await Navigation.PushModalAsync(new LineupPage(_db));
+        var task = new TaskCompletionSource<bool>();
+
+        await Navigation.PushModalAsync(new LineupPage(_db, task));
+
+        await task.Task;
     }
 
     private async Task CheckSetAndCreate()
@@ -579,6 +590,8 @@ public partial class ScoreBoardPage : ContentPage
 
         Set set = await _db.GetLastSetAsync();
 
+        var task = new TaskCompletionSource<bool>();
+
         if (sets.Count == 0)
         {
             await CreateSet();
@@ -586,6 +599,10 @@ public partial class ScoreBoardPage : ContentPage
             sets = await _db.GetSetAsync();
 
             set = await _db.GetLastSetAsync();
+
+            await Navigation.PushModalAsync(new LineupPage(_db, task));
+
+            await task.Task;
         }
         else
         {
@@ -605,10 +622,14 @@ public partial class ScoreBoardPage : ContentPage
 
                 if (lines == null)
                 {
-                    await Navigation.PushModalAsync(new LineupPage(_db));
+                    await Navigation.PushModalAsync(new LineupPage(_db, task));
+
+                    await task.Task;
                 }
             }
         }
+
+        await UpdateData();
     }
 
     private async Task TakeTimeOut(Team team)
@@ -663,44 +684,7 @@ public partial class ScoreBoardPage : ContentPage
 
         if(checkEndSet)
         {
-            var sets = await _db.GetSetAsync();
-
-            if(Setting.MaxSet == 5)
-            {
-                if (sets.Where(x => x.WinnerID == TeamHome.Id).Count() == 3)
-                {
-                    await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamHome.Name}", "Ок");
-                    await EndGame();
-                }
-                else if(sets.Where(x => x.WinnerID == TeamGuest.Id).Count() == 3)
-                {
-                    await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamGuest.Name}", "Ок");
-                    await EndGame();
-                }
-                else
-                {
-                    await DisplayAlert("Информация", "Партия закончена", "Ок");
-                    await CheckSetAndCreate();
-                }
-            }
-            else
-            {
-                if (sets.Where(x => x.WinnerID == TeamHome.Id).Count() == 2)
-                {
-                    await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamHome.Name}", "Ок");
-                    await EndGame();
-                }
-                else if (sets.Where(x => x.WinnerID == TeamGuest.Id).Count() == 2)
-                {
-                    await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamGuest.Name}", "Ок");
-                    await EndGame();
-                }
-                else
-                {
-                    await DisplayAlert("Информация", "Партия закончена", "Ок");
-                    await CheckSetAndCreate();
-                }
-            }            
+            await CheckEndGame();
         }
     }
 
@@ -780,6 +764,48 @@ public partial class ScoreBoardPage : ContentPage
         }
     }
 
+    private async Task CheckEndGame()
+    {
+        var sets = await _db.GetSetAsync();
+
+        if (Setting.MaxSet == 5)
+        {
+            if (sets.Where(x => x.WinnerID == TeamHome.Id).Count() == 3)
+            {
+                await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamHome.Name}", "Ок");
+                await EndGame();
+            }
+            else if (sets.Where(x => x.WinnerID == TeamGuest.Id).Count() == 3)
+            {
+                await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamGuest.Name}", "Ок");
+                await EndGame();
+            }
+            else
+            {
+                await DisplayAlert("Информация", "Партия закончена", "Ок");
+                await CheckSetAndCreate();
+            }
+        }
+        else
+        {
+            if (sets.Where(x => x.WinnerID == TeamHome.Id).Count() == 2)
+            {
+                await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamHome.Name}", "Ок");
+                await EndGame();
+            }
+            else if (sets.Where(x => x.WinnerID == TeamGuest.Id).Count() == 2)
+            {
+                await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamGuest.Name}", "Ок");
+                await EndGame();
+            }
+            else
+            {
+                await DisplayAlert("Информация", "Партия закончена", "Ок");
+                await CheckSetAndCreate();
+            }
+        }
+    }
+
     public async Task EndGame()
     {
         try
@@ -791,6 +817,54 @@ public partial class ScoreBoardPage : ContentPage
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    private async Task ReplaceSanction()
+    {
+        var sanction = await _db.GetLastSanctionAsync();
+
+        Team team = await _db.GetTeamAsync(sanction.TeamId);
+
+        Player player = await _db.GetPlayerAsync(sanction.TargetId);
+
+        bool ch = await ReplaceService.CheckReplacePlayer(_db, team);
+
+        if (ch)
+        {
+            //замена
+        }
+        else
+        {
+            Set set = await _db.GetLastSetAsync();
+
+            if (sanction.Id == _db.SanctionsCategories.Find(x => x.Name == "Remark").Id)
+            {
+                if (team.IsHome)
+                {
+                    await TechLosing.TechLoseSet(_db, set, TeamHome, TeamGuest);
+                }
+                else
+                {
+                    await TechLosing.TechLoseSet(_db, set, TeamGuest, TeamHome);
+                }
+
+                await CheckEndGame();
+            }
+
+            if(sanction.Id == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
+            {
+                if(team.IsHome)
+                {
+                    await TechLosing.TechLoseGame(_db, set, TeamHome, TeamGuest);
+                }
+                else
+                {
+                    await TechLosing.TechLoseGame(_db, set, TeamGuest, TeamHome);
+                }
+
+                await EndGame();
+            }
         }
     }
 

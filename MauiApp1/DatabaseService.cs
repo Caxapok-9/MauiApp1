@@ -14,7 +14,7 @@ public class DatabaseService
 
     public Dictionary<string, int> EventsCategories;
 
-    public Dictionary<string, int> SanctionsCategories;
+    public List<SanctionCategory> SanctionsCategories;
 
     public List<Player> RosterHome;
 
@@ -54,6 +54,19 @@ public class DatabaseService
             return RosterGuest;
     }
 
+    public async Task UpdateRoster()
+    {
+        var players = await GetPlayerAsync();
+
+        var TeamHome = await GetTeamHomeAsync();
+
+        var TeamGuest = await GetTeamGuestAsync();
+
+        RosterHome = players.Where(x => x.TeamID == TeamHome.Id).ToList();
+
+        RosterGuest = players.Where(x => x.TeamID == TeamGuest.Id).ToList();
+    }
+
     #region MainInfo
 
     public async Task InitializeMainInfoAsync() => await _db.CreateTableAsync<MainInformation>();
@@ -74,18 +87,21 @@ public class DatabaseService
     {
         await _db.CreateTableAsync<EventCategory>();
 
-        await _db.DeleteAllAsync<EventCategory>();
+        var evcat = await _db.Table<EventCategory>().ToListAsync();
 
-        var list = new List<EventCategory>
+        if (evcat.Count == 0)
         {
-            new EventCategory() {Name = "S"},
-            new EventCategory() {Name = "T"},
-            new EventCategory() {Name = "R"},
-            new EventCategory() {Name = "RR"},
-            new EventCategory() {Name = "WR"}
-        };
+            var list = new List<EventCategory>
+            {
+                new EventCategory() {Name = "S"},
+                new EventCategory() {Name = "T"},
+                new EventCategory() {Name = "R"},
+                new EventCategory() {Name = "RR"},
+                new EventCategory() {Name = "WR"}
+            };
 
-        await _db.InsertAllAsync(list);
+            await _db.InsertAllAsync(list);
+        }
 
         var l = await _db.Table<EventCategory>().ToListAsync();
 
@@ -100,21 +116,22 @@ public class DatabaseService
     {
         await _db.CreateTableAsync<SanctionCategory>();
 
-        await _db.DeleteAllAsync<SanctionCategory>();
+        var sancat = await _db.Table<SanctionCategory>().ToListAsync();
 
-        var list = new List<SanctionCategory>
+        if (sancat.Count == 0)
         {
-            new SanctionCategory() {Name = "Предупреждение (Жёлтая карточка)"},
-            new SanctionCategory() {Name = "Замечание (Красная карточка)"},
-            new SanctionCategory() {Name = "Удаление (Две карточки в одной руке)"},
-            new SanctionCategory() {Name = "Дисквалификация (Две карточки в двух руках)"}
-        };
+            var list = new List<SanctionCategory>
+            {
+                new SanctionCategory() {Name = "Warning", DisplayName = "Предупреждение (Жёлтая карточка)"},
+                new SanctionCategory() {Name = "Remark", DisplayName = "Замечание (Красная карточка)"},
+                new SanctionCategory() {Name = "Remove", DisplayName = "Удаление (Две карточки в одной руке)"},
+                new SanctionCategory() {Name = "Disqual", DisplayName = "Дисквалификация (Две карточки в двух руках)"}
+            };
 
-        await _db.InsertAllAsync(list);
+            await _db.InsertAllAsync(list);
+        }
 
-        var l = await _db.Table<SanctionCategory>().ToListAsync();
-
-        SanctionsCategories = l.ToDictionary(x => x.Name, x => x.Id);
+        SanctionsCategories = await _db.Table<SanctionCategory>().ToListAsync();
     }
 
     #endregion
@@ -132,6 +149,8 @@ public class DatabaseService
     public async Task UpdatePlayerAsync(Player player) => await _db.UpdateAsync(player);
 
     public async Task<List<Player>> GetPlayerAsync() => await _db.Table<Player>().ToListAsync();
+
+    public async Task<Player> GetPlayerAsync(int id) => await _db.Table<Player>().Where(x => x.Id == id).FirstOrDefaultAsync();
 
     public async Task<List<Player>> GetPlayerAsync(Team team) => await _db.Table<Player>().Where(x => x.TeamID == team.Id).ToListAsync();
 
@@ -166,6 +185,8 @@ public class DatabaseService
     public async Task<int> UpdateTeamAsync(Team team) => await _db.UpdateAsync(team);
 
     public async Task<List<Team>> GetTeamAsync() => await _db.Table<Team>().ToListAsync();
+
+    public async Task<Team> GetTeamAsync(int id) => await _db.Table<Team>().Where(x => x.Id == id).FirstOrDefaultAsync();
 
     public async Task<Team> GetTeamHomeAsync() => await _db.Table<Team>().Where(x => x.IsHome).FirstOrDefaultAsync();
 
@@ -223,9 +244,11 @@ public class DatabaseService
 
     public async Task<int> DeleteSelectSanctionAsync(Sanction sanction) => await _db.DeleteAsync(sanction);
 
+    public async Task<int> DeleteSanctionAsync() => await _db.DeleteAllAsync<Sanction>();
+
     public async Task<List<Sanction>> GetSanctionAsync() => await _db.Table<Sanction>().ToListAsync();
 
-    public async Task<int> DeleteSanctionAsync() => await _db.DeleteAllAsync<Sanction>();
+    public async Task<Sanction> GetLastSanctionAsync() => await _db.Table<Sanction>().OrderByDescending(x => x.Id).FirstOrDefaultAsync();
 
     #endregion
 }

@@ -14,7 +14,7 @@
                 <Picker x:Name="PickerTeams" Margin="0,10,0,15" ItemDisplayBinding="{Binding Name}"  SelectedIndexChanged="OnTeamsChanged"/>
 
                 <Label Text="Выберите уровень санкции:" Margin="5,0,0,0"/>
-                <Picker x:Name="PickerSanction" Margin="0,10,0,15" ItemDisplayBinding="{Binding Name}"/>
+                <Picker x:Name="PickerSanction" Margin="0,10,0,15"/>
 
                 <Label Text="Выберите для кого санкция (команда, тренер, игрок):" Margin="5,0,0,0"/>
                 <Picker x:Name="PickerPTC" Margin="0,10,0,15" ItemDisplayBinding="{Binding Number}"/>

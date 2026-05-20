@@ -5,34 +5,30 @@ public partial class LineupNowPage : ContentPage
 {
 	DatabaseService _db;
 
-	Set _set;
-
 	Team _teamTarget;
 
-    Team _teamEnemy;
-
-    public LineupNowPage(DatabaseService db, Team teamTarget, Team teamEnemy, Set set)
+    public LineupNowPage(DatabaseService db, Team teamTarget)
 	{
         InitializeComponent();
 
 		_db = db;
 
 		_teamTarget = teamTarget;
-
-		_teamEnemy = teamEnemy;
-
-		_set = set;
     }
 
     protected override async void OnAppearing()
 	{
-        base.OnAppearing(); 
+        base.OnAppearing();
 
-		var Rosters = _db.GetRoster(_teamTarget);
+		Team TeamHome = await _db.GetTeamHomeAsync();
 
-		var Roster = Rosters.ToDictionary(x => (int)x.Id, x => x.Number);
+        Team TeamGuest = await _db.GetTeamHomeAsync();
 
-		var data = await LineUpNow.GetNowLineUp(_db, _teamTarget, _teamEnemy, _set);
+        Set set = await _db.GetLastSetAsync();
+
+        var Roster = _db.GetRoster(_teamTarget).ToDictionary(x => (int)x.Id, x => x.Number);
+
+		var data = await LineUpNow.GetNowLineUp(_db, _teamTarget, _teamTarget.IsHome ? TeamGuest : TeamHome);
 
         LabelZone1.Text = Roster[data[1]];
         LabelZone2.Text = Roster[data[2]];

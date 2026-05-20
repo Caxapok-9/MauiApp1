@@ -1,0 +1,128 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MauiApp1
+{
+    public static class ReplaceService
+    {
+        public async static Task<bool> CheckReplacePlayer(DatabaseService _db, Team _targetTeam)
+        {
+            Team TeamHome = await _db.GetTeamHomeAsync();
+
+            Team TeamGuest = await _db.GetTeamGuestAsync();
+
+            var line = await LineUpNow.GetNowLineUp(_db, _targetTeam, _targetTeam.IsHome ? TeamGuest : TeamHome);
+
+            var listBench = (_targetTeam.IsHome ? _db.RosterHome : _db.RosterGuest).Where(x => !line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
+
+            if(listBench.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async static Task<List<Player>> GetListPlayerReplace(DatabaseService _db, Team _targetTeam, Player _targetPlayer)
+        {
+            Team TeamHome = await _db.GetTeamHomeAsync();
+
+            Team TeamGuest = await _db.GetTeamGuestAsync();
+
+            var line = await LineUpNow.GetNowLineUp(_db, _targetTeam, _targetTeam.IsHome ? TeamGuest : TeamHome);
+
+            var listBench = (_targetTeam.IsHome ? _db.RosterHome : _db.RosterGuest).Where(x => !line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
+
+            if (_targetPlayer.ReplaceID == 0)
+            {
+                if (listBench.Count > 0)
+                {
+                    var listTarget = listBench.Where(x => x.ReplaceID == _targetPlayer.Id).ToList();
+
+                    if (listTarget.Count > 0)
+                    {
+                        return new List<Player> { listTarget.First() };
+                    }
+                    else
+                    {
+                        var listReplace = listBench.Where(x => x.ReplaceID == 0).ToList();
+
+                        if (listReplace.Count > 0)
+                        {
+                            return listReplace;
+                        }
+                        else
+                        {
+                            return listBench;
+                        }
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return listBench;
+            }
+        }
+
+        public async static Task Replace(DatabaseService _db, Team _targetTeam, Player courtPlayer, Player benchPlayer, bool injury = false, bool remark = false, bool disqual = false)
+        {
+            Set set = await _db.GetLastSetAsync();
+
+            Event ev = new Event() { SetID = set.Id, TeamID = _targetTeam.Id, ScoreGuest = set.ScoreGuest, ScoreHome = set.ScoreHome, PlayerInID = courtPlayer.Id, PlayerOutID = benchPlayer.Id };
+
+            if (injury || remark || disqual)
+            {
+                benchPlayer.ReplaceID = (int)courtPlayer.Id;
+
+                courtPlayer.ReplaceID = (int)benchPlayer.Id;
+
+                if(injury)
+                {
+                    courtPlayer.IsInjury = true;
+                }
+
+                if(remark)
+                {
+                    courtPlayer.IsRemove = true;
+                }
+
+                if(disqual)
+                {
+                    courtPlayer.IsDisqual = true;
+                }
+
+                ev.EventID = _db.EventsCategories["WR"];
+            }
+            else
+            {
+                courtPlayer.ReplaceID = (int)benchPlayer.Id;
+
+                if (benchPlayer.ReplaceID == 0)
+                {
+                    ev.EventID = _db.EventsCategories["R"];
+                }
+                else
+                {
+                    ev.EventID = _db.EventsCategories["RR"];
+                }
+            }
+
+            await _db.SaveEventAsync(ev);
+
+            await _db.UpdatePlayerAsync(courtPlayer);
+
+            await _db.UpdatePlayerAsync(benchPlayer);
+
+            await _db.UpdateRoster();
+        }
+    }
+}

@@ -10,6 +10,8 @@ public partial class LineupPage : ContentPage
 
     private DatabaseService _db;
 
+    private TaskCompletionSource<bool> _task;
+
     private List<Player> rosterHome;
 
     private List<Player> rosterGuest;
@@ -18,11 +20,11 @@ public partial class LineupPage : ContentPage
 
     private List<Picker> pickersGuest;
 
-    bool checkStart;
-
-    public LineupPage(DatabaseService db)
+    public LineupPage(DatabaseService db, TaskCompletionSource<bool> task)
 	{
         _db = db;
+
+        _task = task;
 
         InitializeComponent();
 
@@ -141,6 +143,8 @@ public partial class LineupPage : ContentPage
             lineUpBeginGuest.Zone6PlayerID = (int)_db.RosterGuest.Find(x => x == guestPosPicker6.SelectedItem).Id;
             
             await _db.SaveLineUpBeginAsync(lineUpBeginGuest);
+
+            _task.SetResult(true);
 
             await Navigation.PopModalAsync();
         }
@@ -279,9 +283,9 @@ public partial class LineupPage : ContentPage
 
         TeamGuest = await _db.GetTeamGuestAsync();
 
-        rosterHome = _db.RosterHome.Where(x => !x.IsLibero && !x.IsDisqual).ToList();
+        rosterHome = _db.RosterHome.Where(x => !x.IsLibero && !x.IsDisqual && !x.IsInjury).ToList();
 
-        rosterGuest = _db.RosterGuest.Where(x => !x.IsLibero && !x.IsDisqual).ToList();
+        rosterGuest = _db.RosterGuest.Where(x => !x.IsLibero && !x.IsDisqual && !x.IsInjury).ToList();
     }
 
     private async Task CheckServ()
@@ -336,25 +340,5 @@ public partial class LineupPage : ContentPage
                 }
             }
         }
-    }
-
-    protected override bool OnBackButtonPressed()
-    {
-        Device.BeginInvokeOnMainThread(async () =>
-        {
-            bool confirm = await DisplayAlert(
-                "Завершить матч?",
-                "Все несохранённые данные будут потеряны. Вы уверены?",
-                "Завершить",
-                "Остаться");
-
-            if (confirm)
-            {
-                _db.ClearAsync();
-                Navigation.PopToRootAsync();
-            }
-        });
-
-        return true;
     }
 }

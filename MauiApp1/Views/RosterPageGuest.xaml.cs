@@ -241,9 +241,7 @@ public partial class RosterPageGuest : ContentPage
 
         await _db.UpdateTeamAsync(TeamGuest);
 
-        var players = await _db.GetPlayerAsync();
-
-        _db.RosterGuest = players.Where(x => x.TeamID == TeamGuest.Id).ToList();
+        await _db.UpdateRoster();
 
         #endregion
 

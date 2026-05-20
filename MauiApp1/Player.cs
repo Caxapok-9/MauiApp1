@@ -34,8 +34,6 @@ namespace MauiApp1
 
         public bool IsInjury { get; set; }
 
-        public int InjurySetId { get; set; }
-
         public bool IsCaptain
         {
             get => _IsCaptain;

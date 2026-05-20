@@ -2,27 +2,27 @@ namespace MauiApp1.Views;
 
 public partial class SanctionPage : ContentPage
 {
-	DatabaseService _db;
+	private DatabaseService _db;
 
-	Team TeamHome;
+    private Team TeamHome;
 
-	Team TeamGuest;
+    private Team TeamGuest;
 
-	List<Player> RosterHome;
+    private List<Player> RosterHome;
 
-	List<Player> RosterGuest;
+    private List<Player> RosterGuest;
 
-	List<SanctionCategory> Sanctions;
+    private List<SanctionCategory> Sanctions;
 
-	Set _set;
+	private TaskCompletionSource<bool> _task;
 
-    public SanctionPage(DatabaseService db, Set set)
+    public SanctionPage(DatabaseService db, TaskCompletionSource<bool> task)
 	{
 		InitializeComponent();
 
 		_db = db;
 
-		_set = set;
+		_task = task;
 	}
 
     protected override async void OnAppearing()
@@ -43,14 +43,16 @@ public partial class SanctionPage : ContentPage
         RosterGuest.Add(new Player() { Id = -1, Number = "Тренер" });
         RosterGuest.Add(new Player() { Id = -2, Number = "Команда" });
 
-		PickerSanction.ItemsSource = _db.SanctionsCategories.Keys.ToList();
+		PickerSanction.ItemsSource = _db.SanctionsCategories.Select(x => x.DisplayName).ToList();
     }
 
 	private async void OnTeamsChanged(object sender, EventArgs e)
 	{
-		Picker p = sender as Picker;
+		Picker picker = sender as Picker;
 
-		if(p.SelectedItem == TeamHome)
+		Team team = picker.SelectedItem as Team;
+
+		if(team.IsHome)
 		{
 			PickerPTC.ItemsSource = RosterHome;
         }
@@ -66,38 +68,26 @@ public partial class SanctionPage : ContentPage
 
         if (res == null)
 		{
-			var sanction = PickerSanction.SelectedItem as SanctionCategory;
+			Set set = await _db.GetLastSetAsync();
+
+			var sanction = PickerSanction.SelectedItem.ToString();
             var team = PickerTeams.SelectedItem as Team;
             var target = PickerPTC.SelectedItem as Player;
 
             Sanction sanctionPDF = new Sanction();
-            sanctionPDF.SanctionId = sanction.Id;
+			sanctionPDF.SanctionId = _db.SanctionsCategories.Find(x => x.DisplayName == sanction).Id;
             sanctionPDF.TeamId = team.Id;
             sanctionPDF.TargetId = (int)target.Id;
-			sanctionPDF.ScoreHome = _set.ScoreHome;
-			sanctionPDF.ScoreGuest = _set.ScoreGuest;
-			sanctionPDF.SetId = _set.Id;
+			sanctionPDF.ScoreHome = set.ScoreHome;
+			sanctionPDF.ScoreGuest = set.ScoreGuest;
+			sanctionPDF.SetId = set.Id;
 	
 			await _db.SaveSanctionAsync(sanctionPDF);
-			
-			if(sanction.Id == 4)
-			{
-				target.IsDisqual = true;
 
-				await _db.UpdatePlayerAsync(target);
-
-				await ReplaceRemoveAndDisqual(team, target);
-
-            }
-
-            if (sanction.Id == 3)
-            {
-                target.IsRemove = true;
-
-                await _db.UpdatePlayerAsync(target);
-
-                await ReplaceRemoveAndDisqual(team, target);
-            }
+			if(sanction.Contains("Две") && target.Id != -2 && target.Id != -1)
+				_task.SetResult(true);
+			else
+                _task.SetResult(false);
 
             await Navigation.PopModalAsync();
         }
@@ -106,20 +96,6 @@ public partial class SanctionPage : ContentPage
 			await DisplayAlert("Ошибка!", res, "Ок");
 		}        
     }
-	   
-	private async Task ReplaceRemoveAndDisqual(Team team, Player target)
-	{
-        var sanction = PickerSanction.SelectedItem as SanctionCategory;
-
-        if (team.IsHome)
-		{
-			await Navigation.PushModalAsync(new ReplacePage(_db, TeamHome, TeamGuest, _set, RosterHome, sanction.Id == 3 ? "Remove" : "Disqual"));
-        }
-		else
-		{
-            await Navigation.PushModalAsync(new ReplacePage(_db, TeamGuest, TeamHome, _set, RosterGuest, sanction.Id == 3 ? "Remove" : "Disqual"));
-        }
-	}
 
 	private string CheckData()
 	{
@@ -137,6 +113,8 @@ public partial class SanctionPage : ContentPage
 
     private async void OnExitButtonClick(object sender, EventArgs e)
     {
+        _task.SetResult(false);
+
         await Navigation.PopModalAsync();
     }
 }
