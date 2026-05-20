@@ -149,7 +149,7 @@ namespace MauiApp1
             dictionary["DateNumber"] = new WriteText(DateTime.Now.Date.Day.ToString(), "main");
             dictionary["DateMonth"] = new WriteText(DateTime.Now.Date.ToString("MMMM", CultureInfo.GetCultureInfo("ru-RU")), "main");
             dictionary["DateYear"] = new WriteText(DateTime.Now.Date.ToString("yy"), "tournament");
-            dictionary["TimeBegin"] = new WriteText(MainInfo.TimeBegin.ToString("HH:mm"), "tournament");
+            dictionary["TimeBegin"] = new WriteText(MainInfo.TimeBegin?.ToString("HH:mm"), "tournament");
             dictionary["TimeEnd"] = new WriteText(DateTime.Now.ToString("HH:mm"), "tournament");
             dictionary["FirstReferee"] = new WriteText(MainInfo.FirstReferee, "tournament");
             dictionary["ToReferee"] = new WriteText(MainInfo.ToReferee, "tournament");

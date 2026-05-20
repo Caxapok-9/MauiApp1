@@ -29,7 +29,7 @@ namespace MauiApp1
 
         public string? Group { get; set; }
 
-        public DateTime TimeBegin {  get; set; }
+        public DateTime? TimeBegin { get; set; } = null;
 
         public bool ProtestHome { get; set; }
 

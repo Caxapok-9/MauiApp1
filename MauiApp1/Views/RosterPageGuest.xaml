@@ -249,7 +249,7 @@
 
             </Button>
 
-            <Button Text="К расстановкам"
+            <Button Text="Начать матч"
                          FontSize="18"
                          FontAttributes="Bold"
                          TextColor="White"

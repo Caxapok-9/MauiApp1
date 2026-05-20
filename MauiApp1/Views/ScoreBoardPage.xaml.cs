@@ -13,10 +13,6 @@ public partial class ScoreBoardPage : ContentPage
 
     private Team TeamGuest;
 
-    private List<Set> sets;
-
-    private Set set;
-
     public ScoreBoardPage(DatabaseService db)
 	{
 		InitializeComponent();
@@ -44,42 +40,20 @@ public partial class ScoreBoardPage : ContentPage
 
             TeamGuest = await _db.GetTeamGuestAsync();
 
-            sets = await _db.GetSetAsync();
-
-            if (sets.Count == 0)
-            {
-                await CreateSet();
-
-                sets = await _db.GetSetAsync();
-
-                set = await _db.GetLastSetAsync();
-            }
-            else
-            {
-                set = await _db.GetLastSetAsync();
-
-                if (set.WinnerID != 0)
-                {
-                    await CreateSet(set);
-
-                    sets = await _db.GetSetAsync();
-
-                    set = await _db.GetLastSetAsync();
-                }
-                else
-                {
-                    var lines = await _db.GetLineUpBeginAsync(set);
-
-                    if (lines == null)
-                    {
-                        await Navigation.PushModalAsync(new LineupPage(_db));
-                    }
-                }
-            }
+            await CheckSetAndCreate();
 
             await UpdateData();
 
             await ReverseCheck();
+
+            var info = await _db.GetMainInfoAsync();
+
+            if(info.TimeBegin == null)
+            {
+                info.TimeBegin = DateTime.Now;
+            }
+            
+            await _db.UpdateMainInfoAsync(info);
         }
         finally
         {
@@ -117,6 +91,8 @@ public partial class ScoreBoardPage : ContentPage
         try
         {
             IsBusy = true;
+
+            Set set = await _db.GetLastSetAsync();
 
             string result = await DisplayActionSheet("Завершение матча", "Отмена", null, "Закончить матч и стереть данные без формирования протокола", $"Техническое поражение {TeamHome.Name}", $"Техническое поражение {TeamGuest.Name}");
 
@@ -169,7 +145,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            //await TakeTimeOut(TeamHome);
+            await TakeTimeOut(TeamHome);
         }
         finally
         {
@@ -188,7 +164,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            //await TakeTimeOut(TeamGuest);
+            await TakeTimeOut(TeamGuest);
         }
         finally
         {
@@ -245,7 +221,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            //Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorHome"];
+            Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorHome"];
 
             //await Navigation.PushModalAsync(new LineupNowPage(_db, TeamHome, TeamGuest, set));
         }
@@ -264,7 +240,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            //Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorGuest"];
+            Application.Current.Resources["ColorLineUp"] = Application.Current.Resources["MainColorGuest"];
 
             //await Navigation.PushModalAsync(new LineupNowPage(_db, TeamGuest, TeamHome, set));
         }
@@ -283,7 +259,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            //await AddScore(TeamHome);
+            await AddScore(TeamHome);
         }
         finally
         {
@@ -302,7 +278,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            //await AddScore(TeamGuest);
+            await AddScore(TeamGuest);
         }
         finally
         {
@@ -321,7 +297,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
-            //await CancelScore();
+            await CancelScore();
         }
         finally
         {
@@ -344,7 +320,7 @@ public partial class ScoreBoardPage : ContentPage
         }
         finally
         {
-            UpdateData();
+            await UpdateData();
 
             IsBusy = false;
         }
@@ -352,6 +328,10 @@ public partial class ScoreBoardPage : ContentPage
 
     private async Task UpdateData()
     {
+        var sets = await _db.GetSetAsync();
+
+        Set set = await _db.GetLastSetAsync();
+
         NameHome.Text = TeamHome.Name;
         NameGuest.Text = TeamGuest.Name;
 
@@ -443,22 +423,35 @@ public partial class ScoreBoardPage : ContentPage
             }
         }
 
-        var EventsTimeOut = await _db.GetEventAsync(set, new List<int> { _db.EventsCategories["T"] });
+        var EventsTimeOutHome = await _db.GetEventAsync(set, TeamHome, new List<int> { _db.EventsCategories["T"] });
 
-        if (EventsTimeOut.Where(x => x.TeamID == TeamHome.Id).Count() > 1)
+        if (EventsTimeOutHome.Count() > 1)
         {
             TimeOutHomeButton.IsEnabled = false;
             TimeOutHomeButton.BackgroundColor = Colors.Grey;
         }
+        else
+        {
+            TimeOutHomeButton.IsEnabled = true;
+            TimeOutHomeButton.BackgroundColor = Color.FromRgba("#007ACC");
+        }
 
-        if (EventsTimeOut.Where(x => x.TeamID == TeamGuest.Id).Count() > 1)
+        TimeOutHomeButton.Text = $"Тайм-аут \n({2 - EventsTimeOutHome.Count()})";
+
+        var EventsTimeOutGuest = await _db.GetEventAsync(set, TeamGuest, new List<int> { _db.EventsCategories["T"] });
+
+        if (EventsTimeOutGuest.Count() > 1)
         {
             TimeOutGuestButton.IsEnabled = false;
             TimeOutGuestButton.BackgroundColor = Colors.Grey;
         }
+        else
+        {
+            TimeOutGuestButton.IsEnabled = true;
+            TimeOutHomeButton.BackgroundColor = Colors.Chocolate;
+        }
 
-        TimeOutHomeButton.Text = $"Тайм-аут \n({2 - EventsTimeOut.Where(x => x.TeamID == TeamHome.Id).Count()})";
-        TimeOutGuestButton.Text = $"Тайм-аут \n({2 - EventsTimeOut.Where(x => x.TeamID == TeamGuest.Id).Count()})";
+        TimeOutGuestButton.Text = $"Тайм-аут \n({2 - EventsTimeOutGuest.Count()})";
     }
 
     private async Task ReverseCheck()
@@ -580,333 +573,212 @@ public partial class ScoreBoardPage : ContentPage
         await Navigation.PushModalAsync(new LineupPage(_db));
     }
 
-    //private async Task TakeTimeOut(Team team)
-    //{
-    //    if(team.IsHome)
-    //    {
-    //        string result = null;
+    private async Task CheckSetAndCreate()
+    {
+        var sets = await _db.GetSetAsync();
 
-    //        while (string.IsNullOrWhiteSpace(result))
-    //        {
-    //            result = await DisplayActionSheet($"Команда {TeamHome.Name} берёт тайм-аут ?", null, null, "Да", "Нет");
-    //        }
+        Set set = await _db.GetLastSetAsync();
 
-    //        if (result == "Да")
-    //        {
-    //            Event ev = new Event();
+        if (sets.Count == 0)
+        {
+            await CreateSet();
 
-    //            ev.SetID = set.Id;
-    //            ev.TeamID = TeamHome.Id;
-    //            ev.EventID = _db.EventsCategories["Тайм-аут"];
-    //            ev.ScoreHome = set.ScoreHome;
-    //            ev.ScoreGuest = set.ScoreGuest;
+            sets = await _db.GetSetAsync();
 
-    //            await _db.SaveEventAsync(ev);
+            set = await _db.GetLastSetAsync();
+        }
+        else
+        {
+            set = await _db.GetLastSetAsync();
 
-    //            await DisplayAlert("Информация", "Тайм-аут взят!", "OK");
-    //        }
-    //    }
-    //    else
-    //    {
-    //        string result = null;
+            if (set.WinnerID != 0)
+            {
+                await CreateSet(set);
 
-    //        while (string.IsNullOrWhiteSpace(result))
-    //        {
-    //            result = await DisplayActionSheet($"Команда {TeamGuest.Name} берёт тайм-аут ?", null, null, "Да", "Нет");
-    //        }
+                sets = await _db.GetSetAsync();
 
-    //        if (result == "Да")
-    //        {
-    //            Event ev = new Event();
+                set = await _db.GetLastSetAsync();
+            }
+            else
+            {
+                var lines = await _db.GetLineUpBeginAsync(set);
 
-    //            ev.SetID = set.Id;
-    //            ev.TeamID = TeamGuest.Id;
-    //            ev.EventID = _db.EventsCategories["Тайм-аут"];
-    //            ev.ScoreHome = set.ScoreHome;
-    //            ev.ScoreGuest = set.ScoreGuest;
+                if (lines == null)
+                {
+                    await Navigation.PushModalAsync(new LineupPage(_db));
+                }
+            }
+        }
+    }
 
-    //            await _db.SaveEventAsync(ev);
+    private async Task TakeTimeOut(Team team)
+    {
+        string result = null;
 
-    //            await DisplayAlert("Информация", "Тайм-аут записан!", "OK");
-    //        }
-    //    }
-    //}
+        Set set = await _db.GetLastSetAsync();
 
-    //public async Task AddScore(Team team)
-    //{
-    //    if (team.IsHome)
-    //    {
-    //        Event ev = new Event();
+        while (string.IsNullOrWhiteSpace(result))
+        {
+            result = await DisplayActionSheet($"Команда {team.Name} берёт тайм-аут ?", null, null, "Да", "Нет");
+        }
 
-    //        ev.TeamID = TeamHome.Id;
-    //        ev.SetID = set.Id;
-    //        ev.EventID = _db.EventsCategories["Очко"];
-    //        ev.ScoreHome = set.ScoreHome;
-    //        ev.ScoreGuest = set.ScoreGuest;
+        if (result == "Да")
+        {
+            Event ev = new Event() { SetID = set.Id, TeamID = team.Id, EventID = _db.EventsCategories["T"], ScoreHome = set.ScoreHome, ScoreGuest = set.ScoreGuest };
 
-    //        await _db.SaveEventAsync(ev);
+            await _db.SaveEventAsync(ev);
 
-    //        ++set.ScoreHome;
+            await DisplayAlert("Информация", "Тайм-аут взят!", "OK");
+        }        
+    }
 
-    //        await _db.UpdateSetAsync(set);
+    public async Task AddScore(Team team)
+    {
+        Set set = await _db.GetLastSetAsync();
 
-    //        await CheckEndSet();
+        Event ev = new Event() { SetID = set.Id, ScoreHome = set.ScoreHome, ScoreGuest = set.ScoreGuest, EventID = _db.EventsCategories["S"] };
 
-    //        ScoreHomeButton.Text = set.ScoreHome.ToString();
-    //    }
-    //    else
-    //    {
-    //        Event ev = new Event();
+        if (team.IsHome)
+        {
+            ev.TeamID = TeamHome.Id;
 
-    //        ev.TeamID = TeamGuest.Id;
-    //        ev.SetID = set.Id;
-    //        ev.EventID = _db.EventsCategories["Очко"];
-    //        ev.ScoreHome = set.ScoreHome;
-    //        ev.ScoreGuest = set.ScoreGuest;
+            ++set.ScoreHome;
 
-    //        await _db.SaveEventAsync(ev);
+            ScoreHomeButton.Text = set.ScoreHome.ToString();
+        }
+        else
+        {
+            ev.TeamID = TeamGuest.Id;
 
-    //        ++set.ScoreGuest;
+            ++set.ScoreGuest;
 
-    //        await _db.UpdateSetAsync(set);
+            ScoreGuestButton.Text = set.ScoreGuest.ToString();
+        }
 
-    //        await CheckEndSet();
+        await _db.SaveEventAsync(ev);
 
-    //        ScoreGuestButton.Text = set.ScoreGuest.ToString();
-    //    }
-    //}
+        await _db.UpdateSetAsync(set);
 
-    //private async Task CancelScore()
-    //{
-    //    var events = await _db.GetEventAsync(set.Id);
+        bool checkEndSet = await CheckEndSet();
 
-    //    if (events != null && events.Count > 0)
-    //    {
-    //        Event ev = events.Last();
+        if(checkEndSet)
+        {
+            var sets = await _db.GetSetAsync();
 
-    //        if (ev.EventID == _db.EventsCategories["Очко"])
-    //        {
-    //            await _db.DeleteSelectEventAsync(ev);
+            if(Setting.MaxSet == 5)
+            {
+                if (sets.Where(x => x.WinnerID == TeamHome.Id).Count() == 3)
+                {
+                    await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamHome.Name}", "Ок");
+                    await EndGame();
+                }
+                else if(sets.Where(x => x.WinnerID == TeamGuest.Id).Count() == 3)
+                {
+                    await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamGuest.Name}", "Ок");
+                    await EndGame();
+                }
+                else
+                {
+                    await DisplayAlert("Информация", "Партия закончена", "Ок");
+                    await CheckSetAndCreate();
+                }
+            }
+            else
+            {
+                if (sets.Where(x => x.WinnerID == TeamHome.Id).Count() == 2)
+                {
+                    await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamHome.Name}", "Ок");
+                    await EndGame();
+                }
+                else if (sets.Where(x => x.WinnerID == TeamGuest.Id).Count() == 2)
+                {
+                    await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamGuest.Name}", "Ок");
+                    await EndGame();
+                }
+                else
+                {
+                    await DisplayAlert("Информация", "Партия закончена", "Ок");
+                    await CheckSetAndCreate();
+                }
+            }            
+        }
+    }
 
-    //            if (ev.TeamID == TeamHome.Id)
-    //            {
-    //                set.ScoreHome--;
+    private async Task<bool> CheckEndSet()
+    {
+        Set set = await _db.GetLastSetAsync();
 
-    //                await _db.UpdateSetAsync(set);
-    //            }
-    //            else
-    //            {
-    //                set.ScoreGuest--;
+        if (!set.IsShort)
+        {
+            if((set.ScoreHome >= Setting.MaxScore || set.ScoreGuest >= Setting.MaxScore) && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+            {                
+                if(set.ScoreHome > set.ScoreGuest)
+                {
+                    set.WinnerID = TeamHome.Id;
+                }
+                else
+                {
+                    set.WinnerID = TeamGuest.Id;
+                }
 
-    //                await _db.UpdateSetAsync(set);
-    //            }
-    //        }
-    //        else
-    //        {
-    //            await DisplayAlert("Информация", "Для последнего события в протоколе необходим счёт, поэтому дальше убирать очки нельзя!", "OK");
-    //        }
-    //    }
-    //}
+                await _db.UpdateSetAsync(set);
 
-    //private async Task CheckEndSet()
-    //{
-    //    if (!set.IsShort)
-    //    {
-    //        if (set.ScoreHome > (Setting.MaxScore - 1) || set.ScoreGuest > (Setting.MaxScore - 1))
-    //        {
-    //            if (Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
-    //            {
-    //                if (CheckTech)
-    //                {
-    //                    string result = null;
+                return true;
+            }
+        }
+        else
+        {
+            if ((set.ScoreHome >= Setting.MaxScoreInShortSet || set.ScoreGuest >= Setting.MaxScoreInShortSet) && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+            {
+                if (set.ScoreHome > set.ScoreGuest)
+                {
+                    set.WinnerID = TeamHome.Id;
+                }
+                else
+                {
+                    set.WinnerID = TeamGuest.Id;
+                }
 
-    //                    while (result == null)
-    //                    {
-    //                        result = await DisplayActionSheet("Завершить партию или вернуть очко?", null, null, "Вернуть очко", "Завершить партию");
+                await _db.UpdateSetAsync(set);
 
-    //                        if (result == "Завершить партию")
-    //                        {
-    //                            if (set.ScoreHome > set.ScoreGuest)
-    //                            {
-    //                                set.WinnerID = TeamHome.Id;
-    //                            }
-    //                            else
-    //                            {
-    //                                set.WinnerID = TeamGuest.Id;
-    //                            }
+                return true;
+            }
+        }
 
-    //                            await _db.UpdateSetAsync(set);
+        return false;
+    }
 
-    //                            Sets = await _db.GetSetAsync();
+    private async Task CancelScore()
+    {
+        Set set = await _db.GetLastSetAsync();
 
-    //                            var WinTeams = Sets.GroupBy(x => x.WinnerID).ToList();
+        var events = await _db.GetEventAsync(set);
 
-    //                            foreach (var team in WinTeams)
-    //                            {
-    //                                if (Setting.MaxSet == 5)
-    //                                {
-    //                                    if (team.Count() > 2)
-    //                                    {
-    //                                        if (team.First().WinnerID == TeamHome.Id)
-    //                                        {
-    //                                            await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
-    //                                        }
-    //                                        else
-    //                                        {
-    //                                            await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
-    //                                        }
+        if (events.Count > 0)
+        {
+            Event ev = events.Last();
 
-    //                                        await EndGame();
-    //                                    }
-    //                                }
-    //                                else
-    //                                {
-    //                                    if (team.Count() > 1)
-    //                                    {
-    //                                        if (team.First().WinnerID == TeamHome.Id)
-    //                                        {
-    //                                            await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
-    //                                        }
-    //                                        else
-    //                                        {
-    //                                            await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
-    //                                        }
+            if (ev.EventID == _db.EventsCategories["S"])
+            {
+                await _db.DeleteSelectEventAsync(ev);
 
-    //                                        await EndGame();
-    //                                    }
-    //                                }
-    //                            }
+                if (ev.TeamID == TeamHome.Id)
+                {
+                    set.ScoreHome--;                    
+                }
+                else
+                {
+                    set.ScoreGuest--;
+                }
 
-    //                            if (Game)
-    //                            {
-    //                                await Navigation.PushAsync(new LineupPage(_db, true));
-    //                            }
-    //                        }
-    //                        else if (result == "Вернуть очко")
-    //                        {
-    //                            await CancelScore();
-
-    //                            await UpdateData();
-    //                        }
-    //                    }
-    //                }
-    //                else
-    //                {
-    //                    if (set.ScoreHome > set.ScoreGuest)
-    //                    {
-    //                        set.WinnerID = TeamHome.Id;
-    //                    }
-    //                    else
-    //                    {
-    //                        set.WinnerID = TeamGuest.Id;
-    //                    }
-
-    //                    await _db.UpdateSetAsync(set);
-    //                }
-
-    //                await _db.ClearRemove();
-    //            }
-    //        }
-    //    }
-    //    else
-    //    {
-    //        if (set.ScoreHome > (Setting.MaxScoreInShortSet - 1) || set.ScoreGuest > (Setting.MaxScoreInShortSet - 1))
-    //        {
-    //            if (Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
-    //            {
-    //                if (CheckTech)
-    //                {
-    //                    string result = null;
-
-    //                    while (result == null)
-    //                    {
-    //                        result = await DisplayActionSheet("Завершить партию или вернуть очко?", null, null, "Вернуть очко", "Завершить партию");
-
-    //                        if (result == "Завершить партию")
-    //                        {
-    //                            if (set.ScoreHome > set.ScoreGuest)
-    //                            {
-    //                                set.WinnerID = TeamHome.Id;
-    //                            }
-    //                            else
-    //                            {
-    //                                set.WinnerID = TeamGuest.Id;
-    //                            }
-
-    //                            await _db.UpdateSetAsync(set);
-
-    //                            Sets = await _db.GetSetAsync();
-
-    //                            var WinTeams = Sets.GroupBy(x => x.WinnerID).ToList();
-
-    //                            foreach (var team in WinTeams)
-    //                            {
-    //                                if (Setting.MaxSet == 5)
-    //                                {
-    //                                    if (team.Count() > 2)
-    //                                    {
-    //                                        if (team.First().WinnerID == TeamHome.Id)
-    //                                        {
-    //                                            await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
-    //                                        }
-    //                                        else
-    //                                        {
-    //                                            await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
-    //                                        }
-
-    //                                        await EndGame();
-    //                                    }
-    //                                }
-    //                                else
-    //                                {
-    //                                    if (team.Count() > 1)
-    //                                    {
-    //                                        if (team.First().WinnerID == TeamHome.Id)
-    //                                        {
-    //                                            await DisplayAlert("Информация", $"Матч окончен победила команда {TeamHome.Name}!", "OK");
-    //                                        }
-    //                                        else
-    //                                        {
-    //                                            await DisplayAlert("Информация", $"Матч окончен победила команда {TeamGuest.Name}!", "OK");
-    //                                        }
-
-    //                                        await EndGame();
-    //                                    }
-    //                                }
-    //                            }
-
-    //                            if (Game)
-    //                            {
-    //                                await Navigation.PushAsync(new LineupPage(_db, true));
-    //                            }
-    //                        }
-    //                        else if (result == "Вернуть очко")
-    //                        {
-    //                            await CancelScore();
-
-    //                            await UpdateData();
-    //                        }
-    //                    }
-    //                }  
-    //                else
-    //                {
-    //                    if (set.ScoreHome > set.ScoreGuest)
-    //                    {
-    //                        set.WinnerID = TeamHome.Id;
-    //                    }
-    //                    else
-    //                    {
-    //                        set.WinnerID = TeamGuest.Id;
-    //                    }
-
-    //                    await _db.UpdateSetAsync(set);
-    //                }
-
-    //                await _db.ClearRemove();
-    //            }
-    //        }
-    //    }
-    //}
+                await _db.UpdateSetAsync(set);
+            }
+            else
+            {
+                await DisplayAlert("Информация", "Для последнего события в протоколе необходим счёт, поэтому дальше убирать очки нельзя!", "OK");
+            }
+        }
+    }
 
     public async Task EndGame()
     {
