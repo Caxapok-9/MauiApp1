@@ -165,11 +165,15 @@ public partial class StartPage : ContentPage
             else
             {
                 await _db.ClearAsync();
+
+                await _db.InizializeAllTablesAsync();
             }
         }
         else
         {
             await _db.ClearAsync();
+
+            await _db.InizializeAllTablesAsync();
         }
     }
 }

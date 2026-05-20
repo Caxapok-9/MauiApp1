@@ -46,6 +46,11 @@ public class DatabaseService
         await InitializeSanctionCategoryAsync();
     }
 
+    public int GetIdSanctionByName(string name)
+    {
+        return SanctionsCategories.Find(x => x.Name == name).Id;
+    }
+
     public List<Player> GetRoster(Team team)
     {
         if (team.IsHome)
@@ -146,7 +151,11 @@ public class DatabaseService
 
     public async Task SavePlayerAsync(Player player) => await _db.InsertAsync(player);
 
-    public async Task UpdatePlayerAsync(Player player) => await _db.UpdateAsync(player);
+    public async Task UpdatePlayerAsync(Player player)
+    {
+        await _db.UpdateAsync(player);
+        await UpdateRoster();
+    }
 
     public async Task<List<Player>> GetPlayerAsync() => await _db.Table<Player>().ToListAsync();
 
@@ -247,6 +256,8 @@ public class DatabaseService
     public async Task<int> DeleteSanctionAsync() => await _db.DeleteAllAsync<Sanction>();
 
     public async Task<List<Sanction>> GetSanctionAsync() => await _db.Table<Sanction>().ToListAsync();
+
+    public async Task<List<Sanction>> GetSanctionAsync(Set set) => await _db.Table<Sanction>().Where(x => x.SetId == set.Id).ToListAsync();
 
     public async Task<Sanction> GetLastSanctionAsync() => await _db.Table<Sanction>().OrderByDescending(x => x.Id).FirstOrDefaultAsync();
 

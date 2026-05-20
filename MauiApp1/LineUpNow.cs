@@ -8,9 +8,13 @@ namespace MauiApp1
 {
     public static class LineUpNow
     {
-        public static async Task<Dictionary<int, int>> GetNowLineUp(DatabaseService _db, Team _teamTarget, Team _teamEnemy)
+        public static async Task<Dictionary<int, int>> GetNowLineUp(DatabaseService _db, Team _teamTarget)
         {
             Set set = await _db.GetLastSetAsync();
+
+            Team TeamHome = await _db.GetTeamHomeAsync();
+
+            Team TeamGuest = await _db.GetTeamGuestAsync();
 
             var Events = await _db.GetEventAsync(set, new List<int> { _db.EventsCategories["S"], _db.EventsCategories["R"], _db.EventsCategories["RR"], _db.EventsCategories["WR"] });
 
@@ -22,7 +26,7 @@ namespace MauiApp1
 
             TeamL target = new TeamL() { Id = _teamTarget.Id, IsServe = set.IsShort ? _teamTarget.FinalySetServ : CheckServ(_teamTarget, set) };
 
-            TeamL enemy = new TeamL() { Id = _teamEnemy.Id, IsServe = !target.IsServe };
+            TeamL enemy = new TeamL() { Id = (_teamTarget.IsHome ? TeamGuest : TeamHome).Id, IsServe = !target.IsServe };
 
             foreach (Event e in Events)
             {

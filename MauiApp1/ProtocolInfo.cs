@@ -28,9 +28,7 @@ namespace MauiApp1
 
             var Sets = await db.GetSetAsync();
 
-            var LineUps = await db.GetLineUpBeginAsync();
-
-            var Sanctions = await db.GetSanctionAsync();            
+            var LineUps = await db.GetLineUpBeginAsync();            
 
             foreach(Set set in Sets)
             {
@@ -132,6 +130,8 @@ namespace MauiApp1
 
                     #region Sanction
 
+                    var Sanctions = await db.GetSanctionAsync();
+
                     FillSanction(Sanctions, set);
 
                     #endregion
@@ -148,17 +148,17 @@ namespace MauiApp1
             dictionary["NameTeamGuestRoster"] = new WriteText(TeamGuest.Name, "teamRoster");
             dictionary["DateNumber"] = new WriteText(DateTime.Now.Date.Day.ToString(), "main");
             dictionary["DateMonth"] = new WriteText(DateTime.Now.Date.ToString("MMMM", CultureInfo.GetCultureInfo("ru-RU")), "main");
-            dictionary["DateYear"] = new WriteText(DateTime.Now.Date.ToString("yy"), "tournament");
-            dictionary["TimeBegin"] = new WriteText(MainInfo.TimeBegin?.ToString("HH:mm"), "tournament");
-            dictionary["TimeEnd"] = new WriteText(DateTime.Now.ToString("HH:mm"), "tournament");
-            dictionary["FirstReferee"] = new WriteText(MainInfo.FirstReferee, "tournament");
-            dictionary["ToReferee"] = new WriteText(MainInfo.ToReferee, "tournament");
-            dictionary["Secretary"] = new WriteText(MainInfo.Secretary, "tournament");
+            dictionary["DateYear"] = new WriteText(DateTime.Now.Date.ToString("yy"), "main");
+            dictionary["TimeBegin"] = new WriteText(MainInfo.TimeBegin?.ToString("HH:mm"), "main");
+            dictionary["TimeEnd"] = new WriteText(DateTime.Now.ToString("HH:mm"), "main");
+            dictionary["FirstReferee"] = new WriteText(MainInfo.FirstReferee, "roster");
+            dictionary["ToReferee"] = new WriteText(MainInfo.ToReferee, "roster");
+            dictionary["Secretary"] = new WriteText(MainInfo.Secretary, "roster");
 
-            if(MainInfo.MVPHome != 0)
+            if(MainInfo.MVPHome != null)
                 dictionary["MVPHome"] = new WriteText(db.RosterHome.Find(x => x.Id == MainInfo.MVPHome).Number, "char");
 
-            if(MainInfo.MVPGuest != 0)
+            if(MainInfo.MVPGuest != null)
                 dictionary["MVPGuest"] = new WriteText(db.RosterGuest.Find(x => x.Id == MainInfo.MVPGuest).Number, "char");
 
             #endregion
@@ -217,7 +217,7 @@ namespace MauiApp1
 
                 dictionary["TeamSanction" + number.ToString()] = new WriteText(sanction.TeamId == TeamHome.Id ? "А" : "Б", "result");
 
-                if (sanction.SanctionId == 1)
+                if (sanction.SanctionId == db.GetIdSanctionByName("Warning"))
                 {
                     if (sanction.TargetId == -1)
                     {
@@ -233,7 +233,7 @@ namespace MauiApp1
                     }
                 }
 
-                if (sanction.SanctionId == 2)
+                if (sanction.SanctionId == db.GetIdSanctionByName("Remark"))
                 {
                     if (sanction.TargetId == -1)
                     {
@@ -249,7 +249,7 @@ namespace MauiApp1
                     }
                 }
 
-                if (sanction.SanctionId == 3)
+                if (sanction.SanctionId == db.GetIdSanctionByName("Remove"))
                 {
                     if (sanction.TargetId == -1)
                     {
@@ -265,7 +265,7 @@ namespace MauiApp1
                     }
                 }
 
-                if (sanction.SanctionId == 4)
+                if (sanction.SanctionId == db.GetIdSanctionByName("Disqual"))
                 {
                     if (sanction.TargetId == -1)
                     {
@@ -289,13 +289,13 @@ namespace MauiApp1
             {
                 if (line.Zone1PlayerID == ev.PlayerInID)
                 {
-                    if(ev.EventID == db.EventsCategories["Замена"])
+                    if(ev.EventID == db.EventsCategories["R"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Zone_1"] = new WriteText(roster.Find(x => x.Id == ev.PlayerOutID).Number, "lineup");
                         dictionary["Set_" + numberSet + "_" + vector + "_Score_Zone_1"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone1PlayerID = (int)ev.PlayerOutID;
                     }
-                    else
+                    else if (ev.EventID == db.EventsCategories["RR"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Score_Zone_1"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone1PlayerID = (int)ev.PlayerOutID;
@@ -304,13 +304,13 @@ namespace MauiApp1
 
                 if (line.Zone2PlayerID == ev.PlayerInID)
                 {
-                    if (ev.EventID == db.EventsCategories["Замена"])
+                    if (ev.EventID == db.EventsCategories["R"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Zone_2"] = new WriteText(roster.Find(x => x.Id == ev.PlayerOutID).Number, "lineup");
                         dictionary["Set_" + numberSet + "_" + vector + "_Score_Zone_2"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone2PlayerID = (int)ev.PlayerOutID;
                     }
-                    else
+                    else if (ev.EventID == db.EventsCategories["RR"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Score_Zone_2"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone2PlayerID = (int)ev.PlayerOutID;
@@ -319,13 +319,13 @@ namespace MauiApp1
 
                 if (line.Zone3PlayerID == ev.PlayerInID)
                 {
-                    if (ev.EventID == db.EventsCategories["Замена"])
+                    if (ev.EventID == db.EventsCategories["R"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Zone_3"] = new WriteText(roster.Find(x => x.Id == ev.PlayerOutID).Number, "lineup");
                         dictionary["Set_" + numberSet + "_" + vector + "_Score_Zone_3"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone3PlayerID = (int)ev.PlayerOutID;
                     }
-                    else
+                    else if (ev.EventID == db.EventsCategories["RR"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Score_Zone_3"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone3PlayerID = (int)ev.PlayerOutID;
@@ -334,13 +334,13 @@ namespace MauiApp1
 
                 if (line.Zone4PlayerID == ev.PlayerInID)
                 {
-                    if (ev.EventID == db.EventsCategories["Замена"])
+                    if (ev.EventID == db.EventsCategories["R"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Zone_4"] = new WriteText(roster.Find(x => x.Id == ev.PlayerOutID).Number, "lineup");
                         dictionary["Set_" + numberSet + "_" + vector + "_Score_Zone_4"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone4PlayerID = (int)ev.PlayerOutID;
                     }
-                    else
+                    else if (ev.EventID == db.EventsCategories["RR"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Score_Zone_4"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone4PlayerID = (int)ev.PlayerOutID;
@@ -349,13 +349,13 @@ namespace MauiApp1
 
                 if (line.Zone5PlayerID == ev.PlayerInID)
                 {
-                    if (ev.EventID == db.EventsCategories["Замена"])
+                    if (ev.EventID == db.EventsCategories["R"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Zone_5"] = new WriteText(roster.Find(x => x.Id == ev.PlayerOutID).Number, "lineup");
                         dictionary["Set_" + numberSet + "_" + vector + "_Score_Zone_5"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone5PlayerID = (int)ev.PlayerOutID;
                     }
-                    else
+                    else if (ev.EventID == db.EventsCategories["RR"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Score_Zone_5"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone5PlayerID = (int)ev.PlayerOutID;
@@ -364,13 +364,13 @@ namespace MauiApp1
 
                 if (line.Zone6PlayerID == ev.PlayerInID)
                 {   
-                    if (ev.EventID == db.EventsCategories["Замена"])
+                    if (ev.EventID == db.EventsCategories["R"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Zone_6"] = new WriteText(roster.Find(x => x.Id == ev.PlayerOutID).Number, "lineup");
                         dictionary["Set_" + numberSet + "_" + vector + "_Score_Zone_6"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone6PlayerID = (int)ev.PlayerOutID;
                     }
-                    else
+                    else if (ev.EventID == db.EventsCategories["RR"])
                     {
                         dictionary["R_Set_" + numberSet + "_" + vector + "_Score_Zone_6"] = new WriteText(ev.ScoreHome.ToString() + ":" + ev.ScoreGuest.ToString(), "scoreEvent");
                         line.Zone6PlayerID = (int)ev.PlayerOutID;
@@ -798,26 +798,14 @@ namespace MauiApp1
 
             if (mode == "rosterNumber")
             {
-                this.Size = 11;
+                this.Size = 10;
                 this.Align = iText.Layout.Properties.TextAlignment.CENTER;
                 this.Font = Setting.Calibri;
             }
 
             if (mode == "roster")
             {
-                if (Text.Length < 20)
-                {
-                    this.Size = 11;
-                }
-                else if (Text.Length < 30)
-                {
-                    this.Size = 9;
-                }
-                else
-                {
-                    this.Size = 7;
-                }
-
+                this.Size = 0;
                 this.Align = iText.Layout.Properties.TextAlignment.LEFT;
                 this.Font = Setting.Calibri;
             }

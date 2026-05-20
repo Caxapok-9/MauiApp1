@@ -8,13 +8,13 @@ public partial class SanctionPage : ContentPage
 
     private Team TeamGuest;
 
-    private List<Player> RosterHome;
+    private List<Player> RosterHome = new();
 
-    private List<Player> RosterGuest;
+    private List<Player> RosterGuest = new();
 
     private List<SanctionCategory> Sanctions;
 
-	private TaskCompletionSource<bool> _task;
+	private TaskCompletionSource<bool> IsReplace;
 
     public SanctionPage(DatabaseService db, TaskCompletionSource<bool> task)
 	{
@@ -22,7 +22,7 @@ public partial class SanctionPage : ContentPage
 
 		_db = db;
 
-		_task = task;
+		IsReplace = task;
 	}
 
     protected override async void OnAppearing()
@@ -35,11 +35,11 @@ public partial class SanctionPage : ContentPage
 		TeamHome = await _db.GetTeamHomeAsync();
 		TeamGuest = await _db.GetTeamGuestAsync();
 
-		RosterHome = _db.RosterHome;
+		RosterHome.AddRange(_db.RosterHome.Where(x => !x.IsRemove && !x.IsDisqual).ToArray());
         RosterHome.Add(new Player() { Id = -1, Number = "Тренер" });
         RosterHome.Add(new Player() { Id = -2, Number = "Команда" });
 
-		RosterGuest = _db.RosterGuest;
+		RosterGuest.AddRange(_db.RosterGuest.Where(x => !x.IsRemove && !x.IsDisqual).ToArray());
         RosterGuest.Add(new Player() { Id = -1, Number = "Тренер" });
         RosterGuest.Add(new Player() { Id = -2, Number = "Команда" });
 
@@ -84,10 +84,46 @@ public partial class SanctionPage : ContentPage
 	
 			await _db.SaveSanctionAsync(sanctionPDF);
 
-			if(sanction.Contains("Две") && target.Id != -2 && target.Id != -1)
-				_task.SetResult(true);
+			var line = await LineUpNow.GetNowLineUp(_db, team);
+
+            if (sanctionPDF.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
+			{
+                if (target.Id != -2 && target.Id != -1)
+				{
+                    target.IsRemove = true;
+
+					if(line.ContainsValue((int)target.Id))
+					{
+                        IsReplace.SetResult(true);
+                    }
+					else
+					{
+                        IsReplace.SetResult(false);
+                    }
+                } 
+            }	
+			else if (sanctionPDF.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
+			{
+                if (target.Id != -2 && target.Id != -1)
+                {
+                    target.IsDisqual = true;
+
+                    if (line.ContainsValue((int)target.Id))
+                    {
+                        IsReplace.SetResult(true);
+                    }
+                    else
+                    {
+                        IsReplace.SetResult(false);
+                    }
+                }
+            }
 			else
-                _task.SetResult(false);
+			{
+                IsReplace.SetResult(false);
+            }
+
+            await _db.UpdatePlayerAsync(target);
 
             await Navigation.PopModalAsync();
         }
@@ -113,7 +149,7 @@ public partial class SanctionPage : ContentPage
 
     private async void OnExitButtonClick(object sender, EventArgs e)
     {
-        _task.SetResult(false);
+        IsReplace.SetResult(false);
 
         await Navigation.PopModalAsync();
     }

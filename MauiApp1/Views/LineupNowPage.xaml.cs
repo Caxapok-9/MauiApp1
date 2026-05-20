@@ -28,7 +28,7 @@ public partial class LineupNowPage : ContentPage
 
         var Roster = _db.GetRoster(_teamTarget).ToDictionary(x => (int)x.Id, x => x.Number);
 
-		var data = await LineUpNow.GetNowLineUp(_db, _teamTarget, _teamTarget.IsHome ? TeamGuest : TeamHome);
+		var data = await LineUpNow.GetNowLineUp(_db, _teamTarget);
 
         LabelZone1.Text = Roster[data[1]];
         LabelZone2.Text = Roster[data[2]];

@@ -87,6 +87,24 @@ public partial class EndGamePage : TabbedPage
 
                     return;
                 }
+
+                if (signpage.Title == "Капитан А")
+                {
+                    var info = await _db.GetMainInfoAsync(); 
+
+                    info.MVPGuest = signpage.GetMVP()?.Id;
+
+                    await _db.UpdateMainInfoAsync(info);
+                }
+
+                if (signpage.Title == "Капитан Б")
+                {
+                    var info = await _db.GetMainInfoAsync();
+
+                    info.MVPHome = signpage.GetMVP()?.Id;
+
+                    await _db.UpdateMainInfoAsync(info);
+                }
             }
 
             await ProtocolCreater.CreatePDF(_db, signes);

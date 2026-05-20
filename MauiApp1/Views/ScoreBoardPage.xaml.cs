@@ -327,10 +327,13 @@ public partial class ScoreBoardPage : ContentPage
             if(task.Task.Result)
             {
                 await ReplaceSanction();
+
+                await UpdateData();
             }
         }
         finally
         {
+
             IsBusy = false;
         }
     }
@@ -360,7 +363,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             int countReplace = 0;
 
-            var line = await LineUpNow.GetNowLineUp(_db, TeamHome, TeamGuest);
+            var line = await LineUpNow.GetNowLineUp(_db, TeamHome);
 
             var linePlayers = line.Select(x => _db.RosterHome.Find(p => p.Id == x.Value)).ToList();
 
@@ -401,7 +404,7 @@ public partial class ScoreBoardPage : ContentPage
         {
             int countReplace = 0;
 
-            var line = await LineUpNow.GetNowLineUp(_db, TeamGuest, TeamHome);
+            var line = await LineUpNow.GetNowLineUp(_db, TeamGuest);
 
             var linePlayers = line.Select(x => _db.RosterGuest.Find(p => p.Id == x.Value)).ToList();
 
@@ -579,6 +582,8 @@ public partial class ScoreBoardPage : ContentPage
 
         var task = new TaskCompletionSource<bool>();
 
+        await _db.ClearReplaceID();
+
         await Navigation.PushModalAsync(new LineupPage(_db, task));
 
         await task.Task;
@@ -594,6 +599,8 @@ public partial class ScoreBoardPage : ContentPage
 
         if (sets.Count == 0)
         {
+            await _db.ClearReplaceID();
+
             await CreateSet();
 
             sets = await _db.GetSetAsync();
@@ -610,11 +617,9 @@ public partial class ScoreBoardPage : ContentPage
 
             if (set.WinnerID != 0)
             {
+                await _db.ClearReplaceID();
+             
                 await CreateSet(set);
-
-                sets = await _db.GetSetAsync();
-
-                set = await _db.GetLastSetAsync();
             }
             else
             {
@@ -622,6 +627,8 @@ public partial class ScoreBoardPage : ContentPage
 
                 if (lines == null)
                 {
+                    await _db.ClearReplaceID();
+
                     await Navigation.PushModalAsync(new LineupPage(_db, task));
 
                     await task.Task;
@@ -832,13 +839,33 @@ public partial class ScoreBoardPage : ContentPage
 
         if (ch)
         {
-            //замена
+            var list = await ReplaceService.GetListPlayerReplace(_db, team, player, true);
+
+            string result = null;
+
+            while(result == null)
+            {
+                result = await DisplayActionSheet($"Выберите замену для удалёного игрока в команде {team.Name}", null, null, list.Select(x => x.Number).ToArray());
+
+                if(result != null)
+                {
+                    if (sanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
+                    {
+                        await ReplaceService.Replace(_db, team, player, list.Find(x => x.Number == result), false, true, false);
+                    }
+
+                    if (sanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
+                    {
+                        await ReplaceService.Replace(_db, team, player, list.Find(x => x.Number == result), false, false, true);
+                    }
+                }
+            }
         }
         else
         {
             Set set = await _db.GetLastSetAsync();
 
-            if (sanction.Id == _db.SanctionsCategories.Find(x => x.Name == "Remark").Id)
+            if (sanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
             {
                 if (team.IsHome)
                 {
@@ -852,7 +879,7 @@ public partial class ScoreBoardPage : ContentPage
                 await CheckEndGame();
             }
 
-            if(sanction.Id == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
+            if(sanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
             {
                 if(team.IsHome)
                 {

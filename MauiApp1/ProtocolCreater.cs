@@ -56,7 +56,7 @@ namespace MauiApp1
 
                                 image.SetWidth(22f);
 
-                                image.SetHeight(12f);
+                                image.SetHeight(16f);
 
                                 Rectangle rectangle = field.GetWidgets().FirstOrDefault().GetRectangle().ToRectangle();
 
@@ -70,14 +70,12 @@ namespace MauiApp1
                         else
                         {
                             field.SetFont(item.Value.Font);
-                            field.SetFontSize(item.Value.Size);
-                            field.SetJustification(item.Value.Align);
-                            field.SetValue(item.Value.Text);
 
-                            if (!item.Key.Contains("Protest"))
-                            {
-                                form.PartialFormFlattening(item.Key);
-                            }
+                            field.SetFontSize(item.Value.Size);
+
+                            field.SetJustification(item.Value.Align);
+
+                            field.SetValue(string.IsNullOrWhiteSpace(item.Value.Text) ? string.Empty : item.Value.Text);
                         }
                     }
                 }

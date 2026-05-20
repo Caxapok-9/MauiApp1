@@ -35,8 +35,8 @@ namespace MauiApp1
 
         public bool ProtestGuest { get; set; }
 
-        public int MVPHome {  get; set; }
+        public int? MVPHome { get; set; } = null;
 
-        public int MVPGuest { get; set; }
+        public int? MVPGuest { get; set; } = null;
     }
 }

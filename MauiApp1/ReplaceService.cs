@@ -14,7 +14,7 @@ namespace MauiApp1
 
             Team TeamGuest = await _db.GetTeamGuestAsync();
 
-            var line = await LineUpNow.GetNowLineUp(_db, _targetTeam, _targetTeam.IsHome ? TeamGuest : TeamHome);
+            var line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 
             var listBench = (_targetTeam.IsHome ? _db.RosterHome : _db.RosterGuest).Where(x => !line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
 
@@ -28,48 +28,69 @@ namespace MauiApp1
             }
         }
 
-        public async static Task<List<Player>> GetListPlayerReplace(DatabaseService _db, Team _targetTeam, Player _targetPlayer)
+        public async static Task<List<Player>> GetListPlayerReplace(DatabaseService _db, Team _targetTeam, Player _targetPlayer, bool mode)
         {
             Team TeamHome = await _db.GetTeamHomeAsync();
 
             Team TeamGuest = await _db.GetTeamGuestAsync();
 
-            var line = await LineUpNow.GetNowLineUp(_db, _targetTeam, _targetTeam.IsHome ? TeamGuest : TeamHome);
+            var line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 
             var listBench = (_targetTeam.IsHome ? _db.RosterHome : _db.RosterGuest).Where(x => !line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
-
-            if (_targetPlayer.ReplaceID == 0)
+            
+            if (_targetPlayer != null)
             {
-                if (listBench.Count > 0)
+                if (_targetPlayer.ReplaceID == 0)
                 {
-                    var listTarget = listBench.Where(x => x.ReplaceID == _targetPlayer.Id).ToList();
-
-                    if (listTarget.Count > 0)
+                    if (listBench.Count > 0)
                     {
-                        return new List<Player> { listTarget.First() };
-                    }
-                    else
-                    {
-                        var listReplace = listBench.Where(x => x.ReplaceID == 0).ToList();
+                        var listTarget = listBench.Where(x => x.ReplaceID == _targetPlayer.Id).ToList();
 
-                        if (listReplace.Count > 0)
+                        if (listTarget.Count > 0)
                         {
-                            return listReplace;
+                            return new List<Player> { listTarget.First() };
                         }
                         else
                         {
-                            return listBench;
+                            var listReplace = listBench.Where(x => x.ReplaceID == 0).ToList();
+
+                            if (listReplace.Count > 0)
+                            {
+                                return listReplace;
+                            }
+                            else
+                            {
+                                if (mode)
+                                {
+                                    return listBench;
+                                }
+                                else
+                                {
+                                    return null;
+                                }
+                            }
                         }
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
                 else
                 {
-                    return null;
+                    if (mode)
+                    {
+                        return listBench;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
             else
             {
-                return listBench;
+                return null;
             }
         }
 
