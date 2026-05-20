@@ -25,6 +25,30 @@ namespace MauiApp1
             builder.Logging.AddDebug();
 #endif
 
+#if ANDROID
+
+            Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping("NoUnderLine", (handler, view) =>
+            {
+                handler.PlatformView.Background = null;
+                handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+                handler.PlatformView.Touch += (sender, e) =>
+                {
+                    Android.Widget.EditText ed = sender as Android.Widget.EditText;
+
+                    if (!string.IsNullOrWhiteSpace(ed.Text))
+                        handler.PlatformView.Parent?.RequestDisallowInterceptTouchEvent(true);
+
+                    e.Handled = false;
+                };
+            });
+
+            Microsoft.Maui.Handlers.PickerHandler.Mapper.AppendToMapping("NoUnderLine", (handler, view) =>
+            {
+                handler.PlatformView.Background = null;
+                handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+            });
+#endif
+
             return builder.Build();
         }
     }

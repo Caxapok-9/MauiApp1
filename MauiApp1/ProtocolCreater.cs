@@ -60,7 +60,7 @@ namespace MauiApp1
 
                                 Rectangle rectangle = field.GetWidgets().FirstOrDefault().GetRectangle().ToRectangle();
 
-                                image.SetFixedPosition(rectangle.GetLeft() + 6, rectangle.GetBottom() + 3);
+                                image.SetFixedPosition(rectangle.GetLeft() + 4, rectangle.GetBottom() + 4);
 
                                 Document layout = new Document(doc);
 

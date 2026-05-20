@@ -16,27 +16,6 @@ public partial class SignaturePage : ContentPage
         var activty = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
         if (activty != null)
             activty.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
-
-        Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping("NoUnderLine", (handler, view) =>
-        {
-            handler.PlatformView.Background = null;
-            handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
-            handler.PlatformView.Touch += (sender, e) =>
-            {
-                Android.Widget.EditText ed = sender as Android.Widget.EditText;
-                
-                if(!string.IsNullOrWhiteSpace(ed.Text))
-                    handler.PlatformView.Parent?.RequestDisallowInterceptTouchEvent(true);
-
-                e.Handled = false;
-            };
-        });
-
-        Microsoft.Maui.Handlers.PickerHandler.Mapper.AppendToMapping("NoUnderLine", (handler, view) =>
-        {
-            handler.PlatformView.Background = null;
-            handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
-        });
 #endif
         }
 

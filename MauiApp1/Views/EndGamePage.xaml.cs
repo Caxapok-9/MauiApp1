@@ -1,6 +1,9 @@
+
+using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
+
 namespace MauiApp1.Views;
 
-public partial class EndGamePage : TabbedPage
+public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
 {
     DatabaseService _db;
 
@@ -15,6 +18,10 @@ public partial class EndGamePage : TabbedPage
         Children.Add(new NavigationPage(new SignaturePage(db) { Title = "Второй судья" }) { Title = "3" });
         Children.Add(new NavigationPage(new SignaturePage(db) { Title = "Капитан А" }) { Title = "4" });
         Children.Add(new NavigationPage(new SignaturePage(db) { Title = "Капитан Б" }) { Title = "5" });
+
+#if ANDROID
+        this.On<Microsoft.Maui.Controls.PlatformConfiguration.Android>().SetOffscreenPageLimit(5);
+#endif
     }
 
     protected override async void OnAppearing()
@@ -111,7 +118,7 @@ public partial class EndGamePage : TabbedPage
 
             await _db.ClearAsync();
 
-            Application.Current.MainPage = new NavigationPage(new StartPage(_db));
+            Microsoft.Maui.Controls.Application.Current.MainPage = new NavigationPage(new StartPage(_db));
         }
         finally
         {
