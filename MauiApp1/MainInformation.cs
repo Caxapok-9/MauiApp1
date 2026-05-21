@@ -38,5 +38,7 @@ namespace MauiApp1
         public int? MVPHome { get; set; } = null;
 
         public int? MVPGuest { get; set; } = null;
+
+        public bool End {  get; set; } = false;
     }
 }

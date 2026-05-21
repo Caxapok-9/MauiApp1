@@ -14,9 +14,13 @@ namespace MauiApp1
 
             Team TeamGuest = await _db.GetTeamGuestAsync();
 
+            List<Player> RosterHome = await _db.GetRoster(TeamHome);
+
+            List<Player> RosterGuest = await _db.GetRoster(TeamGuest);
+
             var line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 
-            var listBench = (_targetTeam.IsHome ? _db.RosterHome : _db.RosterGuest).Where(x => !line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
+            var listBench = (_targetTeam.IsHome ? RosterHome : RosterGuest).Where(x => !line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
 
             if(listBench.Count > 0)
             {
@@ -34,9 +38,13 @@ namespace MauiApp1
 
             Team TeamGuest = await _db.GetTeamGuestAsync();
 
+            List<Player> RosterHome = await _db.GetRoster(TeamHome);
+
+            List<Player> RosterGuest = await _db.GetRoster(TeamGuest);
+
             var line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 
-            var listBench = (_targetTeam.IsHome ? _db.RosterHome : _db.RosterGuest).Where(x => !line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
+            var listBench = (_targetTeam.IsHome ? RosterHome : RosterGuest).Where(x => !line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
             
             if (_targetPlayer != null)
             {
@@ -142,8 +150,6 @@ namespace MauiApp1
             await _db.UpdatePlayerAsync(courtPlayer);
 
             await _db.UpdatePlayerAsync(benchPlayer);
-
-            await _db.UpdateRoster();
         }
     }
 }

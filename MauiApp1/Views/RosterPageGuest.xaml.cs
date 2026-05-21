@@ -241,8 +241,6 @@ public partial class RosterPageGuest : ContentPage
 
         await _db.UpdateTeamAsync(TeamGuest);
 
-        await _db.UpdateRoster();
-
         #endregion
 
         Application.Current.MainPage = new NavigationPage(new ScoreBoardPage(_db));

@@ -89,8 +89,8 @@
 
             <HorizontalStackLayout>
 
-                <CheckBox x:Name="WarningHealth" VerticalOptions="Center" CheckedChanged="OnSelectItem"/>
-                <Label Text="Травма (только если нет допустимых замен)" TextColor="Orange" FontAttributes="Bold" VerticalOptions="Center" Margin="0,0,10,0"/>                
+                <CheckBox x:Name="WarningHealth" VerticalOptions="Center" CheckedChanged="OnSelectItemHealth"/>
+                <Label x:Name="HealthLabel" Text="Травма" TextColor="Orange" FontAttributes="Bold" VerticalOptions="Center" Margin="0,0,10,0"/>                
 
             </HorizontalStackLayout>
 

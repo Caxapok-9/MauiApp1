@@ -16,10 +16,6 @@ public class DatabaseService
 
     public List<SanctionCategory> SanctionsCategories;
 
-    public List<Player> RosterHome;
-
-    public List<Player> RosterGuest;
-
     public async Task ClearAsync()
     {
         await _db.DeleteAllAsync<Event>();
@@ -51,25 +47,16 @@ public class DatabaseService
         return SanctionsCategories.Find(x => x.Name == name).Id;
     }
 
-    public List<Player> GetRoster(Team team)
+    public async Task<List<Player>> GetFullRoster(Team team)
     {
-        if (team.IsHome)
-            return RosterHome;
-        else
-            return RosterGuest;
+        return await GetPlayerAsync(team);
     }
 
-    public async Task UpdateRoster()
+    public async Task<List<Player>> GetRoster(Team team)
     {
-        var players = await GetPlayerAsync();
+        var list = await GetPlayerAsync(team);
 
-        var TeamHome = await GetTeamHomeAsync();
-
-        var TeamGuest = await GetTeamGuestAsync();
-
-        RosterHome = players.Where(x => x.TeamID == TeamHome.Id).ToList();
-
-        RosterGuest = players.Where(x => x.TeamID == TeamGuest.Id).ToList();
+        return list.Where(x => !x.IsDisqual && !x.IsInjury && !x.IsRemove && !x.IsLibero).ToList();
     }
 
     #region MainInfo
@@ -154,7 +141,6 @@ public class DatabaseService
     public async Task UpdatePlayerAsync(Player player)
     {
         await _db.UpdateAsync(player);
-        await UpdateRoster();
     }
 
     public async Task<List<Player>> GetPlayerAsync() => await _db.Table<Player>().ToListAsync();
@@ -178,6 +164,8 @@ public class DatabaseService
     public async Task<int> UpdateSetAsync(Set set) => await _db.UpdateAsync(set);
 
     public async Task<List<Set>> GetSetAsync() => await _db.Table<Set>().ToListAsync();
+
+    public async Task<Set> GetSetAsync(int ID) => await _db.Table<Set>().Where(x => x.Id == ID).FirstOrDefaultAsync();
 
     public async Task<Set> GetLastSetAsync() => await _db.Table<Set>().OrderByDescending(x => x.Id).FirstOrDefaultAsync();
 

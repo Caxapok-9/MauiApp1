@@ -8,10 +8,6 @@ public partial class SanctionPage : ContentPage
 
     private Team TeamGuest;
 
-    private List<Player> RosterHome = new();
-
-    private List<Player> RosterGuest = new();
-
     private List<SanctionCategory> Sanctions;
 
 	private TaskCompletionSource<bool> IsReplace;
@@ -35,20 +31,20 @@ public partial class SanctionPage : ContentPage
 		TeamHome = await _db.GetTeamHomeAsync();
 		TeamGuest = await _db.GetTeamGuestAsync();
 
-		RosterHome.AddRange(_db.RosterHome.Where(x => !x.IsRemove && !x.IsDisqual).ToArray());
-        RosterHome.Add(new Player() { Id = -1, Number = "Тренер" });
-        RosterHome.Add(new Player() { Id = -2, Number = "Команда" });
-
-		RosterGuest.AddRange(_db.RosterGuest.Where(x => !x.IsRemove && !x.IsDisqual).ToArray());
-        RosterGuest.Add(new Player() { Id = -1, Number = "Тренер" });
-        RosterGuest.Add(new Player() { Id = -2, Number = "Команда" });
-
 		PickerSanction.ItemsSource = _db.SanctionsCategories.Select(x => x.DisplayName).ToList();
     }
 
 	private async void OnTeamsChanged(object sender, EventArgs e)
 	{
-		Picker picker = sender as Picker;
+        var RosterHome = await _db.GetRoster(TeamHome);
+        RosterHome.Add(new Player() { Id = -1, Number = "Тренер" });
+        RosterHome.Add(new Player() { Id = -2, Number = "Команда" });
+
+        var RosterGuest = await _db.GetRoster(TeamGuest);
+        RosterGuest.Add(new Player() { Id = -1, Number = "Тренер" });
+        RosterGuest.Add(new Player() { Id = -2, Number = "Команда" });
+
+        Picker picker = sender as Picker;
 
 		Team team = picker.SelectedItem as Team;
 

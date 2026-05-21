@@ -29,9 +29,18 @@ public partial class ReplacePage : ContentPage
 
         TeamGuest = await _db.GetTeamGuestAsync();
 
+        var rosterHome = await _db.GetRoster(TeamHome);
+
+        var rosterGuest = await _db.GetRoster(TeamGuest);
+
         line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 
-        ListPlayerIn.ItemsSource = line.Select(c => (_targetTeam.IsHome ? _db.RosterHome : _db.RosterGuest).Find(x => x.Id == c.Value)).ToList();
+        ListPlayerIn.ItemsSource = line.Select(c => (_targetTeam.IsHome ? rosterHome : rosterGuest).Find(x => x.Id == c.Value)).ToList();
+
+        WarningHealth.IsVisible = false;
+        WarningHealth.IsEnabled = false;
+        WarningHealth.IsChecked = false;
+        HealthLabel.IsVisible = false;
     }
 
     private async void OnReplaceButtonClick(object sender, EventArgs e)
@@ -68,12 +77,53 @@ public partial class ReplacePage : ContentPage
         }
     }
 
+    private async void OnSelectItemHealth(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+
+            await SelectItemHealth();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     private async void OnExitButtonClick(object sender, EventArgs e)
     {
         await Navigation.PopModalAsync();
     }
 
     private async Task SelectItem()
+    {
+        Player targetPlayer = ListPlayerIn.SelectedItem as Player;
+
+        var listBench = await ReplaceService.GetListPlayerReplace(_db, _targetTeam, targetPlayer, false);
+
+        ListPlayerOut.ItemsSource = listBench;
+
+        if (listBench != null)
+        {
+            WarningHealth.IsVisible = false;
+            WarningHealth.IsEnabled = false;
+            WarningHealth.IsChecked = false;
+            HealthLabel.IsVisible = false;
+        }
+        else
+        {
+            WarningHealth.IsEnabled = true;
+            WarningHealth.IsVisible = true;
+            HealthLabel.IsVisible = true;
+            WarningHealth.IsChecked = false;
+        }
+    }
+
+    private async Task SelectItemHealth()
     {
         Player targetPlayer = ListPlayerIn.SelectedItem as Player;
 
@@ -90,8 +140,11 @@ public partial class ReplacePage : ContentPage
 
         Player benchPlayer = ListPlayerOut.SelectedItem as Player;
 
-        await ReplaceService.Replace(_db, _targetTeam, courtPlayer, benchPlayer, WarningHealth.IsChecked);
+        if(courtPlayer != null && benchPlayer != null)
+        {
+            await ReplaceService.Replace(_db, _targetTeam, courtPlayer, benchPlayer, WarningHealth.IsChecked);
 
-        await Navigation.PopModalAsync();
+            await Navigation.PopModalAsync();
+        }
     }
 }

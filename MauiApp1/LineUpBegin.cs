@@ -49,12 +49,15 @@ namespace MauiApp1
 
         public void PostPosition(int[] dataPosition)
         {
-            Zone1PlayerID = dataPosition[0];
-            Zone2PlayerID = dataPosition[1];
-            Zone3PlayerID = dataPosition[2];
-            Zone4PlayerID = dataPosition[3];
-            Zone5PlayerID = dataPosition[4];
-            Zone6PlayerID = dataPosition[5];
+            if (dataPosition.Count() == 6)
+            {
+                Zone1PlayerID = dataPosition[0];
+                Zone2PlayerID = dataPosition[1];
+                Zone3PlayerID = dataPosition[2];
+                Zone4PlayerID = dataPosition[3];
+                Zone5PlayerID = dataPosition[4];
+                Zone6PlayerID = dataPosition[5];
+            }
         }
     }
 }

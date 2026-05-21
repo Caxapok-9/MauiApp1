@@ -154,13 +154,16 @@ public partial class StartPage : ContentPage
 
             if (result == "Да")
             {
-                var Teams = await _db.GetTeamAsync();
+                var info = await _db.GetMainInfoAsync();
 
-                _db.RosterHome = await _db.GetPlayerAsync(Teams.Find(x => x.IsHome));
-
-                _db.RosterGuest = await _db.GetPlayerAsync(Teams.Find(x => !x.IsHome));
-
-                Application.Current.MainPage = new NavigationPage(new ScoreBoardPage(_db));
+                if(info.End)
+                {
+                    Application.Current.MainPage = new NavigationPage(new EndGamePage(_db));
+                }
+                else
+                {
+                    Application.Current.MainPage = new NavigationPage(new ScoreBoardPage(_db));
+                }
             }
             else
             {

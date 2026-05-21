@@ -23,6 +23,10 @@ public partial class SignaturePage : ContentPage
     {
         base.OnAppearing();
 
+        var TeamHome = await _db.GetTeamHomeAsync();
+
+        var TeamGuest = await _db.GetTeamGuestAsync();
+
         if (this.Title == "Капитан А")
         {
             EditorProtest.IsVisible = true;
@@ -36,7 +40,7 @@ public partial class SignaturePage : ContentPage
 
             MVP.IsVisible = true;
             MVP.IsEnabled = true;
-            PickerMVP.ItemsSource = _db.RosterGuest;
+            PickerMVP.ItemsSource = await _db.GetFullRoster(TeamGuest);
         }
         else if (this.Title == "Капитан Б")
         {
@@ -51,7 +55,7 @@ public partial class SignaturePage : ContentPage
 
             MVP.IsVisible = true;
             MVP.IsEnabled = true;
-            PickerMVP.ItemsSource = _db.RosterHome;
+            PickerMVP.ItemsSource = await _db.GetFullRoster(TeamHome);
         }    
         else
         {

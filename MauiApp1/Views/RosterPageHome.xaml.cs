@@ -241,8 +241,6 @@ public partial class RosterPageHome : ContentPage
 
         await _db.UpdateTeamAsync(TeamHome);
 
-        await _db.UpdateRoster();
-
         #endregion
 
         await Navigation.PushAsync(new RosterPageGuest(_db));

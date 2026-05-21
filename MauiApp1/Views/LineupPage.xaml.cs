@@ -122,12 +122,12 @@ public partial class LineupPage : ContentPage
 
             lineUpBeginHome.SetId = set.Id;
             lineUpBeginHome.TeamId = TeamHome.Id;
-            lineUpBeginHome.Zone1PlayerID = (int)_db.RosterHome.Find(x => x == homePosPicker1.SelectedItem).Id;
-            lineUpBeginHome.Zone2PlayerID = (int)_db.RosterHome.Find(x => x == homePosPicker2.SelectedItem).Id;
-            lineUpBeginHome.Zone3PlayerID = (int)_db.RosterHome.Find(x => x == homePosPicker3.SelectedItem).Id;
-            lineUpBeginHome.Zone4PlayerID = (int)_db.RosterHome.Find(x => x == homePosPicker4.SelectedItem).Id;
-            lineUpBeginHome.Zone5PlayerID = (int)_db.RosterHome.Find(x => x == homePosPicker5.SelectedItem).Id;
-            lineUpBeginHome.Zone6PlayerID = (int)_db.RosterHome.Find(x => x == homePosPicker6.SelectedItem).Id;
+            lineUpBeginHome.Zone1PlayerID = (int)(homePosPicker1.SelectedItem as Player).Id;
+            lineUpBeginHome.Zone2PlayerID = (int)(homePosPicker2.SelectedItem as Player).Id;
+            lineUpBeginHome.Zone3PlayerID = (int)(homePosPicker3.SelectedItem as Player).Id;
+            lineUpBeginHome.Zone4PlayerID = (int)(homePosPicker4.SelectedItem as Player).Id;
+            lineUpBeginHome.Zone5PlayerID = (int)(homePosPicker5.SelectedItem as Player).Id;
+            lineUpBeginHome.Zone6PlayerID = (int)(homePosPicker6.SelectedItem as Player).Id;
 
             await _db.SaveLineUpBeginAsync(lineUpBeginHome);
 
@@ -135,13 +135,13 @@ public partial class LineupPage : ContentPage
 
             lineUpBeginGuest.SetId = set.Id;
             lineUpBeginGuest.TeamId = TeamGuest.Id;
-            lineUpBeginGuest.Zone1PlayerID = (int)_db.RosterGuest.Find(x => x == guestPosPicker1.SelectedItem).Id;
-            lineUpBeginGuest.Zone2PlayerID = (int)_db.RosterGuest.Find(x => x == guestPosPicker2.SelectedItem).Id;
-            lineUpBeginGuest.Zone3PlayerID = (int)_db.RosterGuest.Find(x => x == guestPosPicker3.SelectedItem).Id;
-            lineUpBeginGuest.Zone4PlayerID = (int)_db.RosterGuest.Find(x => x == guestPosPicker4.SelectedItem).Id;
-            lineUpBeginGuest.Zone5PlayerID = (int)_db.RosterGuest.Find(x => x == guestPosPicker5.SelectedItem).Id;
-            lineUpBeginGuest.Zone6PlayerID = (int)_db.RosterGuest.Find(x => x == guestPosPicker6.SelectedItem).Id;
-            
+            lineUpBeginGuest.Zone1PlayerID = (int)(guestPosPicker1.SelectedItem as Player).Id;
+            lineUpBeginGuest.Zone2PlayerID = (int)(guestPosPicker2.SelectedItem as Player).Id;
+            lineUpBeginGuest.Zone3PlayerID = (int)(guestPosPicker3.SelectedItem as Player).Id;
+            lineUpBeginGuest.Zone4PlayerID = (int)(guestPosPicker4.SelectedItem as Player).Id;
+            lineUpBeginGuest.Zone5PlayerID = (int)(guestPosPicker5.SelectedItem as Player).Id;
+            lineUpBeginGuest.Zone6PlayerID = (int)(guestPosPicker6.SelectedItem as Player).Id;
+
             await _db.SaveLineUpBeginAsync(lineUpBeginGuest);
 
             _task.SetResult(true);
@@ -283,9 +283,9 @@ public partial class LineupPage : ContentPage
 
         TeamGuest = await _db.GetTeamGuestAsync();
 
-        rosterHome = _db.RosterHome.Where(x => !x.IsLibero && !x.IsDisqual && !x.IsInjury).ToList();
+        rosterHome = await _db.GetRoster(TeamHome);
 
-        rosterGuest = _db.RosterGuest.Where(x => !x.IsLibero && !x.IsDisqual && !x.IsInjury).ToList();
+        rosterGuest = await _db.GetRoster(TeamGuest);
     }
 
     private async Task CheckServ()

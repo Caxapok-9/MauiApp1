@@ -50,11 +50,13 @@ public partial class ScoreBoardPage : ContentPage
             }
             
             await _db.UpdateMainInfoAsync(info);
+
+            await UpdateData();
+
+            await ReverseCheck();
         }
         finally
         {
-            await ReverseCheck();
-
             IsBusy = false;
         }
     }
@@ -147,8 +149,6 @@ public partial class ScoreBoardPage : ContentPage
         }
         finally
         {
-            await UpdateData();
-
             IsBusy = false;
         }
     }
@@ -166,8 +166,6 @@ public partial class ScoreBoardPage : ContentPage
         }
         finally
         {
-            await UpdateData();
-
             IsBusy = false;
         }
     }
@@ -185,8 +183,6 @@ public partial class ScoreBoardPage : ContentPage
         }
         finally
         {
-            await UpdateData();
-
             IsBusy = false;
         }
     }
@@ -204,8 +200,6 @@ public partial class ScoreBoardPage : ContentPage
         }
         finally
         {
-            await UpdateData();
-
             IsBusy = false;
         }
     }
@@ -265,8 +259,6 @@ public partial class ScoreBoardPage : ContentPage
         }
         finally
         {
-            await UpdateData();
-
             IsBusy = false;
         }
     }
@@ -284,8 +276,6 @@ public partial class ScoreBoardPage : ContentPage
         }
         finally
         {
-            await UpdateData();
-
             IsBusy = false;
         }
     }
@@ -303,8 +293,6 @@ public partial class ScoreBoardPage : ContentPage
         }
         finally
         {
-            await UpdateData();
-
             IsBusy = false;
         }
     }
@@ -326,14 +314,11 @@ public partial class ScoreBoardPage : ContentPage
 
             if(task.Task.Result)
             {
-                await ReplaceSanction();
-
-                await UpdateData();
+                await ReplaceSanction();                
             }
         }
         finally
         {
-
             IsBusy = false;
         }
     }
@@ -344,6 +329,10 @@ public partial class ScoreBoardPage : ContentPage
 
         Set set = await _db.GetLastSetAsync();
 
+        var RosterHome = await _db.GetRoster(TeamHome);
+
+        var RosterGuest = await _db.GetRoster(TeamGuest);
+
         NameHome.Text = TeamHome.Name;
         NameGuest.Text = TeamGuest.Name;
 
@@ -353,7 +342,7 @@ public partial class ScoreBoardPage : ContentPage
         ScoreHomeButton.Text = set.ScoreHome.ToString();
         ScoreGuestButton.Text = set.ScoreGuest.ToString();
 
-        if (_db.RosterHome.Where(x => !x.IsLibero).Count() == 6)
+        if (RosterHome.Where(x => !x.IsLibero).Count() == 6)
         {
             ReplaceHomeButton.IsEnabled = false;
             ReplaceHomeButton.BackgroundColor = Colors.Grey;
@@ -365,9 +354,9 @@ public partial class ScoreBoardPage : ContentPage
 
             var line = await LineUpNow.GetNowLineUp(_db, TeamHome);
 
-            var linePlayers = line.Select(x => _db.RosterHome.Find(p => p.Id == x.Value)).ToList();
+            var linePlayers = line.Select(x => RosterHome.Find(p => p.Id == x.Value)).ToList();
 
-            var banchPlayers = _db.RosterHome.Where(x => !linePlayers.Contains(x) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
+            var banchPlayers = RosterHome.Where(x => !linePlayers.Contains(x) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
 
             foreach(Player player in banchPlayers)
             {
@@ -394,7 +383,7 @@ public partial class ScoreBoardPage : ContentPage
             }            
         }
 
-        if (_db.RosterGuest.Where(x => !x.IsLibero).Count() == 6)
+        if (RosterGuest.Where(x => !x.IsLibero).Count() == 6)
         {
             ReplaceGuestButton.IsEnabled = false;
             ReplaceGuestButton.BackgroundColor = Colors.Grey;
@@ -406,9 +395,9 @@ public partial class ScoreBoardPage : ContentPage
 
             var line = await LineUpNow.GetNowLineUp(_db, TeamGuest);
 
-            var linePlayers = line.Select(x => _db.RosterGuest.Find(p => p.Id == x.Value)).ToList();
+            var linePlayers = line.Select(x => RosterGuest.Find(p => p.Id == x.Value)).ToList();
 
-            var banchPlayers = _db.RosterGuest.Where(x => !linePlayers.Contains(x) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
+            var banchPlayers = RosterGuest.Where(x => !linePlayers.Contains(x) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
 
             foreach (Player player in banchPlayers)
             {
@@ -584,6 +573,8 @@ public partial class ScoreBoardPage : ContentPage
 
         await _db.ClearReplaceID();
 
+        await _db.ClearRemove();
+
         await Navigation.PushModalAsync(new LineupPage(_db, task));
 
         await task.Task;
@@ -600,6 +591,8 @@ public partial class ScoreBoardPage : ContentPage
         if (sets.Count == 0)
         {
             await _db.ClearReplaceID();
+
+            await _db.ClearRemove();
 
             await CreateSet();
 
@@ -618,7 +611,9 @@ public partial class ScoreBoardPage : ContentPage
             if (set.WinnerID != 0)
             {
                 await _db.ClearReplaceID();
-             
+
+                await _db.ClearRemove();
+
                 await CreateSet(set);
             }
             else
@@ -629,14 +624,14 @@ public partial class ScoreBoardPage : ContentPage
                 {
                     await _db.ClearReplaceID();
 
+                    await _db.ClearRemove();
+
                     await Navigation.PushModalAsync(new LineupPage(_db, task));
 
                     await task.Task;
                 }
             }
         }
-
-        await UpdateData();
     }
 
     private async Task TakeTimeOut(Team team)
@@ -657,6 +652,8 @@ public partial class ScoreBoardPage : ContentPage
             await _db.SaveEventAsync(ev);
 
             await DisplayAlert("Информация", "Тайм-аут взят!", "OK");
+
+            await UpdateData();
         }        
     }
 
@@ -769,6 +766,8 @@ public partial class ScoreBoardPage : ContentPage
                 await DisplayAlert("Информация", "Для последнего события в протоколе необходим счёт, поэтому дальше убирать очки нельзя!", "OK");
             }
         }
+
+        await UpdateData();
     }
 
     private async Task CheckEndGame()
@@ -819,6 +818,12 @@ public partial class ScoreBoardPage : ContentPage
         {
             IsBusy = true;
 
+            var info = await _db.GetMainInfoAsync();
+
+            info.End = true;
+
+            await _db.UpdateMainInfoAsync(info);
+
             Application.Current.MainPage = new EndGamePage(_db);
         }
         finally
@@ -860,6 +865,8 @@ public partial class ScoreBoardPage : ContentPage
                     }
                 }
             }
+
+            await UpdateData();
         }
         else
         {

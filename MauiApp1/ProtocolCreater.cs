@@ -60,7 +60,7 @@ namespace MauiApp1
 
                                 Rectangle rectangle = field.GetWidgets().FirstOrDefault().GetRectangle().ToRectangle();
 
-                                image.SetFixedPosition(rectangle.GetLeft() + 4, rectangle.GetBottom() + 4);
+                                image.SetFixedPosition(rectangle.GetLeft() + 5, rectangle.GetBottom() + 2);
 
                                 Document layout = new Document(doc);
 
@@ -75,7 +75,7 @@ namespace MauiApp1
 
                             field.SetJustification(item.Value.Align);
 
-                            field.SetValue(string.IsNullOrWhiteSpace(item.Value.Text) ? string.Empty : item.Value.Text);
+                            field.SetValue(item.Value.Text);
                         }
                     }
                 }
