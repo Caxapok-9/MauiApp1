@@ -32,7 +32,7 @@
 
             </HorizontalStackLayout>
 
-            <Label x:Name="LabelProtest" Text="Протест" FontAttributes="Bold" FontSize="Subtitle" TextColor="White" Margin="25,10,0,10"/>
+            <Label x:Name="LabelProtest" Text="Протест (кратко)" FontAttributes="Bold" FontSize="Subtitle" TextColor="White" Margin="25,10,0,10"/>
             <Border x:Name="BorderProtest" HeightRequest="150" Margin="15,0,15,0" Stroke="{DynamicResource MainColor}">
 
                 <Border.StrokeShape>

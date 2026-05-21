@@ -166,23 +166,23 @@ namespace MauiApp1
             if(!string.IsNullOrWhiteSpace(MainInfo.TextProtestHome))
             {
                 dictionary["ProtestHome"] = new WriteText("Протест", "teamRoster");
-                dictionary["TextProtestHome"] = new WriteText(MainInfo.TextProtestHome, "main");
+                dictionary["TextProtestHome"] = new WriteText(MainInfo.TextProtestHome, "protest");
             }
 
             if (!string.IsNullOrWhiteSpace(MainInfo.TextProtestGuest))
             {
                 dictionary["ProtestGuest"] = new WriteText("Протест", "teamRoster");
-                dictionary["TextProtestGuest"] = new WriteText(MainInfo.TextProtestGuest, "main");
+                dictionary["TextProtestGuest"] = new WriteText(MainInfo.TextProtestGuest, "protest");
             }
 
             if (!string.IsNullOrWhiteSpace(MainInfo.TextProtestSecretary))
-                dictionary["TextProtestSecretary"] = new WriteText(MainInfo.TextProtestSecretary, "main");
+                dictionary["TextProtestSecretary"] = new WriteText(MainInfo.TextProtestSecretary, "protest");
 
             if (!string.IsNullOrWhiteSpace(MainInfo.TextProtestFirstReferee))
-                dictionary["TextProtestFirstReferee"] = new WriteText(MainInfo.TextProtestFirstReferee, "main");
+                dictionary["TextProtestFirstReferee"] = new WriteText(MainInfo.TextProtestFirstReferee, "protest");
 
             if (!string.IsNullOrWhiteSpace(MainInfo.TextProtestToReferee))
-                dictionary["TextProtestToReferee"] = new WriteText(MainInfo.TextProtestToReferee, "main");
+                dictionary["TextProtestToReferee"] = new WriteText(MainInfo.TextProtestToReferee, "protest");
 
             #endregion
 
@@ -825,6 +825,13 @@ namespace MauiApp1
             {
                 this.Size = 11;
                 this.Align = iText.Layout.Properties.TextAlignment.CENTER;
+                this.Font = Setting.Calibri;
+            }
+
+            if (mode == "protest")
+            {
+                this.Size = 11;
+                this.Align = iText.Layout.Properties.TextAlignment.JUSTIFIED;
                 this.Font = Setting.Calibri;
             }
 
