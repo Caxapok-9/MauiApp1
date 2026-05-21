@@ -116,8 +116,6 @@ namespace MauiApp1
                     }
                     catch (Exception ex)
                     {
-                        // сохранение БД
-
                         await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
 
                         outputStream.Close();
@@ -128,8 +126,6 @@ namespace MauiApp1
             }
             catch(Exception ex) 
             {
-                // сохранение БД
-
                 await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
 
                 outputStream.Close();
