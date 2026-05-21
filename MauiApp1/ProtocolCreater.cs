@@ -18,7 +18,7 @@ namespace MauiApp1
 {
     public static class ProtocolCreater
     {
-        public static async Task CreatePDF(DatabaseService _db, Dictionary<string, byte[]> Signs)
+        public static async Task<bool> CreatePDF(DatabaseService _db, Dictionary<string, byte[]> Signs)
         {
             ProtocolInfo info = new ProtocolInfo(_db);
 
@@ -27,7 +27,7 @@ namespace MauiApp1
             MemoryStream outputStream = new MemoryStream();
 
             try
-            { 
+            {
                 var streamTemplate = await FileSystem.OpenAppPackageFileAsync("protokol.pdf");
 
                 PdfWriter writer = new PdfWriter(outputStream);
@@ -60,7 +60,7 @@ namespace MauiApp1
 
                                 Rectangle rectangle = field.GetWidgets().FirstOrDefault().GetRectangle().ToRectangle();
 
-                                image.SetFixedPosition(rectangle.GetLeft() + 5, rectangle.GetBottom() + 2);
+                                image.SetFixedPosition(rectangle.GetLeft() + 8, rectangle.GetBottom() + 2);
 
                                 Document layout = new Document(doc);
 
@@ -91,21 +91,50 @@ namespace MauiApp1
                 if (res.IsSuccessful)
                 {
                     await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
+
+                    return true;
                 }
                 else
                 {
-                    // сохранение БД
+                    await App.Current.MainPage.DisplayAlert("Информация", "Сохранение PDF в \"Загрузки\"", "OK");
 
-                    await App.Current.MainPage.DisplayAlert("Информация", "Ошибка формирования PDF", "OK");
+                    try
+                    {
+#if ANDROID
+                        string downloadPath = global::Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).AbsolutePath;
+
+                        string fullPath = System.IO.Path.Combine(downloadPath, "VolleyProtocol.pdf");
+
+                        using (var fileStream = new System.IO.FileStream(fullPath, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+                        {
+                            await outputStream.CopyToAsync(fileStream);
+                        }
+#endif              
+                        await App.Current.MainPage.DisplayAlert("Информация", "PDF успешно сохранён в \"Загрузки\"", "OK");
+
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        // сохранение БД
+
+                        await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
+
+                        outputStream.Close();
+
+                        return false;
+                    }
                 }
             }
-            catch(Exception e) 
+            catch(Exception ex) 
             {
                 // сохранение БД
 
-                await App.Current.MainPage.DisplayAlert("Информация", e.Message, "OK");
+                await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
 
                 outputStream.Close();
+
+                return false;
             }
         }
     }

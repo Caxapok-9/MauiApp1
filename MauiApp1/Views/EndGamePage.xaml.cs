@@ -139,9 +139,12 @@ public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
                 await _db.UpdateMainInfoAsync(info);
             }
 
-            await ProtocolCreater.CreatePDF(_db, signes);
+            bool checkSave = await ProtocolCreater.CreatePDF(_db, signes);
 
-            await _db.ClearAsync();
+            if(checkSave)
+            {
+                await _db.ClearAsync();
+            }            
 
             Microsoft.Maui.Controls.Application.Current.MainPage = new NavigationPage(new StartPage(_db));
         }
