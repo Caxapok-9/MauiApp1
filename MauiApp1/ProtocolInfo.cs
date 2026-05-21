@@ -184,6 +184,9 @@ namespace MauiApp1
             if (!string.IsNullOrWhiteSpace(MainInfo.TextProtestToReferee))
                 dictionary["TextProtestToReferee"] = new WriteText(MainInfo.TextProtestToReferee, "protest");
 
+            if (!string.IsNullOrWhiteSpace(MainInfo.Logs))
+                dictionary["Logs"] = new WriteText(MainInfo.Logs, "protest");
+
             #endregion
 
             #region Roster
@@ -415,6 +418,7 @@ namespace MauiApp1
 
         Dictionary<string, WriteText> dictionary = new Dictionary<string, WriteText>()
         {
+            {"Logs", null},
             {"MVPHome", null},
             {"MVPGuest", null},
             {"SignFirstReferee", new WriteText("Подпись", "main")},

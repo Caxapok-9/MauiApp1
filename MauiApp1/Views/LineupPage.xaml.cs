@@ -290,53 +290,81 @@ public partial class LineupPage : ContentPage
 
     private async Task CheckServ()
     {
-        if (TeamHome.FirstSetServ)
+        if(!set.IsShort)
         {
-            if (set.NumberSet % 2 != 0)
+            if (TeamHome.FirstSetServ)
             {
-                if (TeamHome.IsLeft)
+                if (set.NumberSet % 2 != 0)
                 {
-                    LabelServe.Text = "< Подача слева";
+                    if (TeamHome.IsLeft)
+                    {
+                        LabelServe.Text = "< Подача слева";
+                    }
+                    else
+                    {
+                        LabelServe.Text = "Подача справа >";
+                    }
                 }
                 else
                 {
-                    LabelServe.Text = "Подача справа >";
+                    if (TeamHome.IsLeft)
+                    {
+                        LabelServe.Text = "Подача справа >";
+                    }
+                    else
+                    {
+                        LabelServe.Text = "< Подача слева";
+                    }
                 }
             }
             else
             {
-                if (TeamHome.IsLeft)
+                if (set.NumberSet % 2 == 0)
                 {
-                    LabelServe.Text = "Подача справа >";
+                    if (TeamHome.IsLeft)
+                    {
+                        LabelServe.Text = "Подача справа >";
+                    }
+                    else
+                    {
+                        LabelServe.Text = "< Подача слева";
+                    }
                 }
                 else
                 {
-                    LabelServe.Text = "< Подача слева";
+                    if (TeamHome.IsLeft)
+                    {
+                        LabelServe.Text = "< Подача слева";
+                    }
+                    else
+                    {
+                        LabelServe.Text = "Подача справа >";
+                    }
                 }
             }
         }
         else
         {
-            if (set.NumberSet % 2 == 0)
+            if (TeamHome.FinalySetServ)
             {
                 if (TeamHome.IsLeft)
                 {
-                    LabelServe.Text = "Подача справа >";
+                    LabelServe.Text = "< Подача слева";
                 }
                 else
                 {
-                    LabelServe.Text = "< Подача слева";
+                    LabelServe.Text = "Подача справа >";
                 }
             }
             else
             {
                 if (TeamHome.IsLeft)
                 {
-                    LabelServe.Text = "< Подача слева";
+                    LabelServe.Text = "Подача справа >";
                 }
                 else
                 {
-                    LabelServe.Text = "Подача справа >";
+                    LabelServe.Text = "< Подача слева";
                 }
             }
         }

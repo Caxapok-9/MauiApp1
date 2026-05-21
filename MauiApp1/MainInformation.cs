@@ -46,5 +46,7 @@ namespace MauiApp1
         public string TextProtestFirstReferee { set; get; }
 
         public string TextProtestToReferee { set; get; }
+
+        public string Logs {  get; set; }
     }
 }

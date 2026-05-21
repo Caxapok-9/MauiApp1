@@ -110,6 +110,8 @@ namespace MauiApp1
 
             if (injury || remark || disqual)
             {
+                var info = await _db.GetMainInfoAsync();
+
                 benchPlayer.ReplaceID = (int)courtPlayer.Id;
 
                 courtPlayer.ReplaceID = (int)benchPlayer.Id;
@@ -117,19 +119,27 @@ namespace MauiApp1
                 if(injury)
                 {
                     courtPlayer.IsInjury = true;
+                    string Log = $"Замена в команде {_targetTeam.Name} игрока под номером {courtPlayer.Number} на игрока под номером {benchPlayer.Number} в связи с травмой. В партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
+                    info.Logs += Log;
                 }
 
                 if(remark)
                 {
                     courtPlayer.IsRemove = true;
+                    string Log = $"Замена в команде {_targetTeam.Name} игрока под номером {courtPlayer.Number} на игрока под номером {benchPlayer.Number} в связи с удалением. В партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
+                    info.Logs += Log;
                 }
 
                 if(disqual)
                 {
                     courtPlayer.IsDisqual = true;
+                    string Log = $"Замена в команде {_targetTeam.Name} игрока под номером {courtPlayer.Number} на игрока под номером {benchPlayer.Number} в связи с дисквалификацией. В партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
+                    info.Logs += Log;
                 }
 
                 ev.EventID = _db.EventsCategories["WR"];
+
+                await _db.UpdateMainInfoAsync(info);
             }
             else
             {
