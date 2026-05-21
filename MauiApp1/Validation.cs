@@ -51,6 +51,12 @@ namespace MauiApp1
                 return false;
             }
 
+            if (number[0] == '0')
+            {
+                error = $"Номера не должны начинаться с нуля {number}";
+                return false;
+            }
+
             number = number.TrimEnd();
 
             int num;
@@ -67,13 +73,13 @@ namespace MauiApp1
                 return false;
             }
 
-            if (num > 99)
+            if (num > 20)
             {
                 error = $"Слишком длинный номер {number}";
                 return false;
             }
 
-            if (num < 0)
+            if (num < 1)
             {
                 error = $"Номер не может быть отрицательным {number}";
                 return false;

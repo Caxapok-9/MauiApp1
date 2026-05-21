@@ -283,9 +283,9 @@ public partial class LineupPage : ContentPage
 
         TeamGuest = await _db.GetTeamGuestAsync();
 
-        rosterHome = await _db.GetRoster(TeamHome);
+        rosterHome = await _db.GetRoster(TeamHome, false);
 
-        rosterGuest = await _db.GetRoster(TeamGuest);
+        rosterGuest = await _db.GetRoster(TeamGuest, false);
     }
 
     private async Task CheckServ()

@@ -31,14 +31,20 @@ namespace MauiApp1
 
         public DateTime? TimeBegin { get; set; } = null;
 
-        public bool ProtestHome { get; set; }
-
-        public bool ProtestGuest { get; set; }
-
         public int? MVPHome { get; set; } = null;
 
         public int? MVPGuest { get; set; } = null;
 
         public bool End {  get; set; } = false;
+
+        public string TextProtestHome {  set; get; }
+
+        public string TextProtestGuest { set; get; }
+
+        public string TextProtestSecretary { set; get; }
+
+        public string TextProtestFirstReferee { set; get; }
+
+        public string TextProtestToReferee { set; get; }
     }
 }

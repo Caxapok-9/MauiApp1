@@ -14,9 +14,9 @@ namespace MauiApp1
 
             Team TeamGuest = await _db.GetTeamGuestAsync();
 
-            List<Player> RosterHome = await _db.GetRoster(TeamHome);
+            List<Player> RosterHome = await _db.GetRoster(TeamHome, false);
 
-            List<Player> RosterGuest = await _db.GetRoster(TeamGuest);
+            List<Player> RosterGuest = await _db.GetRoster(TeamGuest, false);
 
             var line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 
@@ -38,9 +38,9 @@ namespace MauiApp1
 
             Team TeamGuest = await _db.GetTeamGuestAsync();
 
-            List<Player> RosterHome = await _db.GetRoster(TeamHome);
+            List<Player> RosterHome = await _db.GetRoster(TeamHome, false);
 
-            List<Player> RosterGuest = await _db.GetRoster(TeamGuest);
+            List<Player> RosterGuest = await _db.GetRoster(TeamGuest, false);
 
             var line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 

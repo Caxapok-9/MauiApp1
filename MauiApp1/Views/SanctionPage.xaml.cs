@@ -36,11 +36,11 @@ public partial class SanctionPage : ContentPage
 
 	private async void OnTeamsChanged(object sender, EventArgs e)
 	{
-        var RosterHome = await _db.GetRoster(TeamHome);
+        var RosterHome = await _db.GetRoster(TeamHome, true);
         RosterHome.Add(new Player() { Id = -1, Number = "Тренер" });
         RosterHome.Add(new Player() { Id = -2, Number = "Команда" });
 
-        var RosterGuest = await _db.GetRoster(TeamGuest);
+        var RosterGuest = await _db.GetRoster(TeamGuest, true);
         RosterGuest.Add(new Player() { Id = -1, Number = "Тренер" });
         RosterGuest.Add(new Player() { Id = -2, Number = "Команда" });
 
@@ -84,7 +84,7 @@ public partial class SanctionPage : ContentPage
 
             if (sanctionPDF.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
 			{
-                if (target.Id != -2 && target.Id != -1)
+                if (target.Id != -2 && target.Id != -1 && !target.IsLibero)
 				{
                     target.IsRemove = true;
 
@@ -96,11 +96,15 @@ public partial class SanctionPage : ContentPage
 					{
                         IsReplace.SetResult(false);
                     }
-                } 
+                }
+                else
+                {
+                    IsReplace.SetResult(false);
+                }
             }	
 			else if (sanctionPDF.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
 			{
-                if (target.Id != -2 && target.Id != -1)
+                if (target.Id != -2 && target.Id != -1 && !target.IsLibero)
                 {
                     target.IsDisqual = true;
 
@@ -112,6 +116,10 @@ public partial class SanctionPage : ContentPage
                     {
                         IsReplace.SetResult(false);
                     }
+                }
+                else
+                {
+                    IsReplace.SetResult(false);
                 }
             }
 			else

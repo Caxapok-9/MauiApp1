@@ -163,6 +163,27 @@ namespace MauiApp1
             if(MainInfo.MVPGuest != null)
                 dictionary["MVPGuest"] = new WriteText(RosterGuest.Find(x => x.Id == MainInfo.MVPGuest).Number, "char");
 
+            if(!string.IsNullOrWhiteSpace(MainInfo.TextProtestHome))
+            {
+                dictionary["ProtestHome"] = new WriteText("Протест", "teamRoster");
+                dictionary["TextProtestHome"] = new WriteText(MainInfo.TextProtestHome, "main");
+            }
+
+            if (!string.IsNullOrWhiteSpace(MainInfo.TextProtestGuest))
+            {
+                dictionary["ProtestGuest"] = new WriteText("Протест", "teamRoster");
+                dictionary["TextProtestGuest"] = new WriteText(MainInfo.TextProtestGuest, "main");
+            }
+
+            if (!string.IsNullOrWhiteSpace(MainInfo.TextProtestSecretary))
+                dictionary["TextProtestSecretary"] = new WriteText(MainInfo.TextProtestSecretary, "main");
+
+            if (!string.IsNullOrWhiteSpace(MainInfo.TextProtestFirstReferee))
+                dictionary["TextProtestFirstReferee"] = new WriteText(MainInfo.TextProtestFirstReferee, "main");
+
+            if (!string.IsNullOrWhiteSpace(MainInfo.TextProtestToReferee))
+                dictionary["TextProtestToReferee"] = new WriteText(MainInfo.TextProtestToReferee, "main");
+
             #endregion
 
             #region Roster
@@ -425,8 +446,6 @@ namespace MauiApp1
             {"Disqual4", null},
             {"Disqual5", null},
             {"Disqual6", null},
-            {"ProtestHome", null},
-            {"ProtestGuest", null},
             {"SetSanction1", null},
             {"SetSanction2", null},
             {"SetSanction3", null},
@@ -762,6 +781,14 @@ namespace MauiApp1
             {"HomePlayerName12", null},
             {"GuestPlayerNumber12", null},
             {"GuestPlayerName12", null},
+            {"HomePlayerNumber13", null},
+            {"HomePlayerName13", null},
+            {"GuestPlayerNumber13", null},
+            {"GuestPlayerName13", null},
+            {"HomePlayerNumber14", null},
+            {"HomePlayerName14", null},
+            {"GuestPlayerNumber14", null},
+            {"GuestPlayerName14", null},
             {"HomeCoach", null},
             {"GuestCoach", null},
             {"HomeCaptain", null},
@@ -777,7 +804,14 @@ namespace MauiApp1
             {"Set_3_Char_Result", null},
             {"Set_4_Char_Result", null},
             {"Set_5_Char_Result", null},
-            {"Final_Char_Result", null}
+            {"Final_Char_Result", null},
+            {"ProtestHome", null},
+            {"ProtestGuest", null},
+            {"TextProtestHome", null},
+            {"TextProtestGuest", null},
+            {"TextProtestFirstReferee", null},
+            {"TextProtestToReferee", null},
+            {"TextProtestSecretary", null}
         };
     }
 

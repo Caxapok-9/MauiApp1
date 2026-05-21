@@ -52,11 +52,14 @@ public class DatabaseService
         return await GetPlayerAsync(team);
     }
 
-    public async Task<List<Player>> GetRoster(Team team)
+    public async Task<List<Player>> GetRoster(Team team, bool IsLibero)
     {
         var list = await GetPlayerAsync(team);
 
-        return list.Where(x => !x.IsDisqual && !x.IsInjury && !x.IsRemove && !x.IsLibero).ToList();
+        if(IsLibero)
+            return list.Where(x => !x.IsDisqual && !x.IsInjury && !x.IsRemove).ToList();
+        else
+            return list.Where(x => !x.IsDisqual && !x.IsInjury && !x.IsRemove && !x.IsLibero).ToList();
     }
 
     #region MainInfo

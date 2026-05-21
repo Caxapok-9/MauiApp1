@@ -329,9 +329,9 @@ public partial class ScoreBoardPage : ContentPage
 
         Set set = await _db.GetLastSetAsync();
 
-        var RosterHome = await _db.GetRoster(TeamHome);
+        var RosterHome = await _db.GetRoster(TeamHome, false);
 
-        var RosterGuest = await _db.GetRoster(TeamGuest);
+        var RosterGuest = await _db.GetRoster(TeamGuest, false);
 
         NameHome.Text = TeamHome.Name;
         NameGuest.Text = TeamGuest.Name;

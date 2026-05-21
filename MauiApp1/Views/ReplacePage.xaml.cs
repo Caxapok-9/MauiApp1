@@ -29,9 +29,9 @@ public partial class ReplacePage : ContentPage
 
         TeamGuest = await _db.GetTeamGuestAsync();
 
-        var rosterHome = await _db.GetRoster(TeamHome);
+        var rosterHome = await _db.GetRoster(TeamHome, false);
 
-        var rosterGuest = await _db.GetRoster(TeamGuest);
+        var rosterGuest = await _db.GetRoster(TeamGuest, false);
 
         line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 

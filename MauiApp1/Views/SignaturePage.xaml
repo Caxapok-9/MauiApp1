@@ -50,24 +50,6 @@
 
             </Border>
 
-            <Label Text="Замечания" FontAttributes="Bold" FontSize="Subtitle" TextColor="White" Margin="25,10,0,10"/>
-            <Border  HeightRequest="150" Margin="15,0,15,0" Stroke="{DynamicResource MainColor}">
-
-                <Border.StrokeShape>
-
-                    <RoundRectangle CornerRadius="15"/>
-
-                </Border.StrokeShape>
-
-                <Editor x:Name="EditorRemark" 
-                        Placeholder="При отсутствии замечаний оставить пустым" 
-                        FontSize="Subtitle"                       
-                        VerticalOptions="Fill" 
-                        HorizontalOptions="Fill"
-                        Margin="5,0,5,0"/>
-
-            </Border>
-
             <Label Text="Ваша подпись" FontAttributes="Bold" FontSize="Subtitle" TextColor="White" Margin="25,10,0,10"/>
             <Border HeightRequest="220" WidthRequest="320" HorizontalOptions="Center" Margin="15,0,15,0" Stroke="{DynamicResource MainColor}">
 

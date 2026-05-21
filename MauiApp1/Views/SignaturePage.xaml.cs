@@ -29,30 +29,12 @@ public partial class SignaturePage : ContentPage
 
         if (this.Title == "Капитан А")
         {
-            EditorProtest.IsVisible = true;
-            EditorProtest.IsEnabled = true;
-
-            LabelProtest.IsVisible = true;
-            LabelProtest.IsEnabled = true;
-
-            BorderProtest.IsVisible = true;
-            BorderProtest.IsEnabled = true;
-
             MVP.IsVisible = true;
             MVP.IsEnabled = true;
             PickerMVP.ItemsSource = await _db.GetFullRoster(TeamGuest);
         }
         else if (this.Title == "Капитан Б")
         {
-            EditorProtest.IsVisible = true;
-            EditorProtest.IsEnabled = true;
-
-            LabelProtest.IsVisible = true;
-            LabelProtest.IsEnabled = true;
-
-            BorderProtest.IsVisible = true;
-            BorderProtest.IsEnabled = true;
-
             MVP.IsVisible = true;
             MVP.IsEnabled = true;
             PickerMVP.ItemsSource = await _db.GetFullRoster(TeamHome);
@@ -62,14 +44,8 @@ public partial class SignaturePage : ContentPage
             MVP.IsVisible = false;
             MVP.IsEnabled = false;
 
-            EditorProtest.IsVisible = false;
-            EditorProtest.IsEnabled = false;
-
-            BorderProtest.IsVisible = false;
-            BorderProtest.IsEnabled = false;
-
-            LabelProtest.IsVisible = false;
-            LabelProtest.IsEnabled = false;
+            LabelProtest.Text = "Комментарий";
+            EditorProtest.Placeholder = "Заполнить при наличии комментариев";
         }
     }
 
@@ -108,14 +84,6 @@ public partial class SignaturePage : ContentPage
     {
         if (!string.IsNullOrWhiteSpace(EditorProtest.Text))
             return EditorProtest.Text;
-        else
-            return null;
-    }
-
-    public string GetRemark()
-    {
-        if (!string.IsNullOrWhiteSpace(EditorRemark.Text))
-            return EditorRemark.Text;
         else
             return null;
     }

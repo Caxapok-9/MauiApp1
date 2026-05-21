@@ -86,31 +86,47 @@ public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
 
                 byte[] sign = await signpage.GetSignature();
 
+                var info = await _db.GetMainInfoAsync();
+
                 if (sign != null)
                 {
                     if (signpage.Title == "Секретарь")
                     {
                         signes["SignSecretary"] = sign;
+
+                        info.TextProtestSecretary = signpage.GetProtest();
                     }
 
                     if (signpage.Title == "Главный судья")
                     {
                         signes["SignFirstReferee"] = sign;
+
+                        info.TextProtestFirstReferee = signpage.GetProtest();
                     }
 
                     if (signpage.Title == "Второй судья")
                     {
                         signes["SignToReferee"] = sign;
+
+                        info.TextProtestToReferee = signpage.GetProtest();
                     }
 
                     if (signpage.Title == "Капитан А")
                     {
                         signes["SignCaptainHome"] = sign;
+
+                        info.MVPGuest = signpage.GetMVP()?.Id;
+
+                        info.TextProtestHome = signpage.GetProtest();
                     }
 
                     if (signpage.Title == "Капитан Б")
                     {
                         signes["SignCaptainGuest"] = sign;
+
+                        info.MVPHome = signpage.GetMVP()?.Id;
+
+                        info.TextProtestGuest = signpage.GetProtest();
                     }
                 }
                 else
@@ -120,23 +136,7 @@ public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
                     return;
                 }
 
-                if (signpage.Title == "Капитан А")
-                {
-                    var info = await _db.GetMainInfoAsync(); 
-
-                    info.MVPGuest = signpage.GetMVP()?.Id;
-
-                    await _db.UpdateMainInfoAsync(info);
-                }
-
-                if (signpage.Title == "Капитан Б")
-                {
-                    var info = await _db.GetMainInfoAsync();
-
-                    info.MVPHome = signpage.GetMVP()?.Id;
-
-                    await _db.UpdateMainInfoAsync(info);
-                }
+                await _db.UpdateMainInfoAsync(info);
             }
 
             await ProtocolCreater.CreatePDF(_db, signes);
