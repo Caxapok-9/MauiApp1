@@ -809,13 +809,13 @@ namespace MauiApp1
             {"Set_4_Char_Result", null},
             {"Set_5_Char_Result", null},
             {"Final_Char_Result", null},
-            {"ProtestHome", null},
-            {"ProtestGuest", null},
-            {"TextProtestHome", null},
-            {"TextProtestGuest", null},
-            {"TextProtestFirstReferee", null},
-            {"TextProtestToReferee", null},
-            {"TextProtestSecretary", null}
+            {"ProtestHome", new WriteText("", "main")},
+            {"ProtestGuest", new WriteText("", "main")},
+            {"TextProtestHome", new WriteText("", "main")},
+            {"TextProtestGuest", new WriteText("", "main")},
+            {"TextProtestFirstReferee", new WriteText("", "main")},
+            {"TextProtestToReferee", new WriteText("", "main")},
+            {"TextProtestSecretary", new WriteText("", "main")}
         };
     }
 
