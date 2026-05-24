@@ -36,6 +36,20 @@ public partial class StartPage : ContentPage
         await _db.InizializeAllTablesAsync();
 
         await CheckDataBase();
+
+        EntryFirstReferee.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+
+        EntryGroup.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeSentence);
+
+        EntrySecretary.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+
+        EntryTeamGuest.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeSentence);
+
+        EntryTeamHome.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeSentence);
+
+        EntryToReferee.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeWord);
+
+        EntryTournament.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeSentence);
     }
 
     private async void OnSettingClicked(object sender, EventArgs e)
@@ -72,17 +86,17 @@ public partial class StartPage : ContentPage
             return;
         }
 
-        //if (EntryTeamHome.Text.Length > 20 || EntryTeamGuest.Text.Length > 20)
-        //{
-        //    await DisplayAlert("Ошибка", "Кол-во символов в названиях команд не должно быть больше 20", "OK");
-        //    return;
-        //}
+        if (EntryTeamHome.Text.Length > 15 || EntryTeamGuest.Text.Length > 15)
+        {
+            await DisplayAlert("Ошибка", "Кол-во символов в названиях команд не должно быть больше 15", "OK");
+            return;
+        }
 
-        //if (EntryTournament.Text.Length > 50)
-        //{
-        //    await DisplayAlert("Ошибка", "Кол-во символов в названии турнира не должно быть больше 50", "OK");
-        //    return;
-        //}
+        if (EntryTournament.Text.Length > 35)
+        {
+            await DisplayAlert("Ошибка", "Кол-во символов в названии турнира не должно быть больше 35", "OK");
+            return;
+        }
 
         if (EntryTeamHome.Text == EntryTeamGuest.Text)
         {

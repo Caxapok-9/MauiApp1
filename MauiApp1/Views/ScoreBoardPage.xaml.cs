@@ -711,37 +711,65 @@ public partial class ScoreBoardPage : ContentPage
         if (!set.IsShort)
         {
             if((set.ScoreHome >= Setting.MaxScore || set.ScoreGuest >= Setting.MaxScore) && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
-            {                
-                if(set.ScoreHome > set.ScoreGuest)
+            {
+                string result = null;
+
+                while(result == null)
                 {
-                    set.WinnerID = TeamHome.Id;
+                    result = await DisplayActionSheet("Информация", null, null, "Завершить партию", "Отменить очко");
+                }
+
+                if (result == "Завершить партию")
+                {
+                    if (set.ScoreHome > set.ScoreGuest)
+                    {
+                        set.WinnerID = TeamHome.Id;
+                    }
+                    else
+                    {
+                        set.WinnerID = TeamGuest.Id;
+                    }
+
+                    await _db.UpdateSetAsync(set);
+
+                    return true;
                 }
                 else
                 {
-                    set.WinnerID = TeamGuest.Id;
+                    await CancelScore();
                 }
-
-                await _db.UpdateSetAsync(set);
-
-                return true;
             }
         }
         else
         {
             if ((set.ScoreHome >= Setting.MaxScoreInShortSet || set.ScoreGuest >= Setting.MaxScoreInShortSet) && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
             {
-                if (set.ScoreHome > set.ScoreGuest)
+                string result = null;
+
+                while (result == null)
                 {
-                    set.WinnerID = TeamHome.Id;
+                    result = await DisplayActionSheet("Информация", null, null, "Завершить партию", "Отменить очко");
+                }
+
+                if (result == "Завершить партию")
+                {
+                    if (set.ScoreHome > set.ScoreGuest)
+                    {
+                        set.WinnerID = TeamHome.Id;
+                    }
+                    else
+                    {
+                        set.WinnerID = TeamGuest.Id;
+                    }
+
+                    await _db.UpdateSetAsync(set);
+
+                    return true;
                 }
                 else
                 {
-                    set.WinnerID = TeamGuest.Id;
+                    await CancelScore();
                 }
-
-                await _db.UpdateSetAsync(set);
-
-                return true;
             }
         }
 
