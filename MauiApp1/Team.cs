@@ -21,7 +21,5 @@ namespace MauiApp1
         public bool FinalySetServ { get; set; } = false;
 
         public bool IsLeft { get; set; }
-
-        public string Coach { get; set; } = null;
     }
 }

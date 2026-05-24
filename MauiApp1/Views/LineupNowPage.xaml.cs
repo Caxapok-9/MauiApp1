@@ -26,7 +26,7 @@ public partial class LineupNowPage : ContentPage
 
         Set set = await _db.GetLastSetAsync();
 
-        var Roster = await _db.GetRoster(_teamTarget, false);
+        var Roster = await _db.GetRosterPlayer(_teamTarget);
         
         var dict = Roster.ToDictionary(x => (int)x.Id, x => x.Number);
 

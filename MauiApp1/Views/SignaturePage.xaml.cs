@@ -31,13 +31,13 @@ public partial class SignaturePage : ContentPage
         {
             MVP.IsVisible = true;
             MVP.IsEnabled = true;
-            PickerMVP.ItemsSource = await _db.GetFullRoster(TeamGuest);
+            PickerMVP.ItemsSource = await _db.GetRosterPlayer(TeamGuest);
         }
         else if (this.Title == "Капитан Б")
         {
             MVP.IsVisible = true;
             MVP.IsEnabled = true;
-            PickerMVP.ItemsSource = await _db.GetFullRoster(TeamHome);
+            PickerMVP.ItemsSource = await _db.GetRosterPlayer(TeamHome);
         }    
         else
         {

@@ -29,9 +29,9 @@ namespace MauiApp1
 
             Players = await db.GetPlayerAsync();
 
-            RosterHome = await db.GetFullRoster(TeamHome);
+            RosterHome = await db.GetRosterFull(TeamHome);
 
-            RosterGuest = await db.GetFullRoster(TeamGuest);
+            RosterGuest = await db.GetRosterFull(TeamGuest);
 
             var MainInfo = await db.GetMainInfoAsync();
 
@@ -194,25 +194,44 @@ namespace MauiApp1
             for (int i = 0; i < RosterHome.Count; i++)
             {
                 int index = i + 1;
-                dictionary["HomePlayerNumber" + index.ToString()] = new WriteText(RosterHome[i].Number, "rosterNumber");
-                dictionary["HomePlayerName" + index.ToString()] = new WriteText(RosterHome[i].Name, "roster");
+
+                if (RosterHome[i].IsCoach)
+                {
+                    dictionary["HomeCoach"] = new WriteText(RosterHome[i].Name, "roster");
+                }
+                else if(RosterHome[i].IsCaptain)
+                {                    
+                    dictionary["HomeCaptain"] = new WriteText(RosterHome[i].Name, "roster");
+                    dictionary["HomePlayerNumber" + index.ToString()] = new WriteText(RosterHome[i].Number, "rosterNumber");
+                    dictionary["HomePlayerName" + index.ToString()] = new WriteText(RosterHome[i].Name, "roster");
+                }
+                else
+                {
+                    dictionary["HomePlayerNumber" + index.ToString()] = new WriteText(RosterHome[i].Number, "rosterNumber");
+                    dictionary["HomePlayerName" + index.ToString()] = new WriteText(RosterHome[i].Name, "roster");
+                }
             }
 
             for (int i = 0; i < RosterGuest.Count; i++)
             {
                 int index = i + 1;
-                dictionary["GuestPlayerNumber" + index.ToString()] = new WriteText(RosterGuest[i].Number, "rosterNumber");
-                dictionary["GuestPlayerName" + index.ToString()] = new WriteText(RosterGuest[i].Name, "roster");
+
+                if (RosterGuest[i].IsCoach)
+                {
+                    dictionary["GuestCoach"] = new WriteText(RosterGuest[i].Name, "roster");
+                }
+                else if(RosterGuest[i].IsCaptain)
+                {
+                    dictionary["GuestCaptain"] = new WriteText(RosterGuest[i].Name, "roster");
+                    dictionary["GuestPlayerNumber" + index.ToString()] = new WriteText(RosterGuest[i].Number, "rosterNumber");
+                    dictionary["GuestPlayerName" + index.ToString()] = new WriteText(RosterGuest[i].Name, "roster");
+                }
+                else
+                {
+                    dictionary["GuestPlayerNumber" + index.ToString()] = new WriteText(RosterGuest[i].Number, "rosterNumber");
+                    dictionary["GuestPlayerName" + index.ToString()] = new WriteText(RosterGuest[i].Name, "roster");
+                }
             }
-
-            dictionary["HomeCaptain"] = new WriteText(RosterHome.Find(x => x.IsCaptain).Name, "roster");
-            dictionary["GuestCaptain"] = new WriteText(RosterGuest.Find(x => x.IsCaptain).Name, "roster");
-
-            if(TeamHome.Coach != null)
-                dictionary["HomeCoach"] = new WriteText(TeamHome.Coach, "roster");
-
-            if(TeamGuest.Coach != null)
-                dictionary["GuestCoach"] = new WriteText(TeamGuest.Coach, "roster");
 
             #endregion
 
@@ -257,11 +276,11 @@ namespace MauiApp1
                 {
                     if (sanction.TargetId == -1)
                     {
-                        dictionary["Warning" + number.ToString()] = new WriteText("Т", "result");
+                        dictionary["Warning" + number.ToString()] = new WriteText("К", "result");
                     }
-                    else if (sanction.TargetId == -2)
+                    else if (Players.Find(x => x.Id == sanction.TargetId).IsCoach)
                     {
-                        dictionary["Warning" + number.ToString()] = new WriteText("K", "result");
+                        dictionary["Warning" + number.ToString()] = new WriteText("Т", "result");
                     }
                     else
                     {
@@ -273,11 +292,11 @@ namespace MauiApp1
                 {
                     if (sanction.TargetId == -1)
                     {
-                        dictionary["Remark" + number.ToString()] = new WriteText("Т", "result");
+                        dictionary["Remark" + number.ToString()] = new WriteText("К", "result");
                     }
-                    else if (sanction.TargetId == -2)
+                    else if (Players.Find(x => x.Id == sanction.TargetId).IsCoach)
                     {
-                        dictionary["Remark" + number.ToString()] = new WriteText("K", "result");
+                        dictionary["Remark" + number.ToString()] = new WriteText("Т", "result");
                     }
                     else
                     {
@@ -289,11 +308,11 @@ namespace MauiApp1
                 {
                     if (sanction.TargetId == -1)
                     {
-                        dictionary["Remove" + number.ToString()] = new WriteText("Т", "result");
+                        dictionary["Remove" + number.ToString()] = new WriteText("К", "result");
                     }
-                    else if (sanction.TargetId == -2)
+                    else if (Players.Find(x => x.Id == sanction.TargetId).IsCoach)
                     {
-                        dictionary["Remove" + number.ToString()] = new WriteText("K", "result");
+                        dictionary["Remove" + number.ToString()] = new WriteText("Т", "result");
                     }
                     else
                     {
@@ -305,11 +324,11 @@ namespace MauiApp1
                 {
                     if (sanction.TargetId == -1)
                     {
-                        dictionary["Disqual" + number.ToString()] = new WriteText("Т", "result");
+                        dictionary["Disqual" + number.ToString()] = new WriteText("К", "result");
                     }
-                    else if (sanction.TargetId == -2)
+                    else if (Players.Find(x => x.Id == sanction.TargetId).IsCoach)
                     {
-                        dictionary["Disqual" + number.ToString()] = new WriteText("K", "result");
+                        dictionary["Disqual" + number.ToString()] = new WriteText("Т", "result");
                     }
                     else
                     {

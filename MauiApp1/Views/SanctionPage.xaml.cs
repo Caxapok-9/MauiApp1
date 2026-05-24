@@ -36,13 +36,11 @@ public partial class SanctionPage : ContentPage
 
 	private async void OnTeamsChanged(object sender, EventArgs e)
 	{
-        var RosterHome = await _db.GetRoster(TeamHome, true);
-        RosterHome.Add(new Player() { Id = -1, Number = "Тренер" });
-        RosterHome.Add(new Player() { Id = -2, Number = "Команда" });
+        var RosterHome = await _db.GetRosterAccess(TeamHome);
+        RosterHome.Add(new Player() { Id = -1, Number = "Команда" });
 
-        var RosterGuest = await _db.GetRoster(TeamGuest, true);
-        RosterGuest.Add(new Player() { Id = -1, Number = "Тренер" });
-        RosterGuest.Add(new Player() { Id = -2, Number = "Команда" });
+        var RosterGuest = await _db.GetRosterAccess(TeamGuest);
+        RosterGuest.Add(new Player() { Id = -1, Number = "Команда" });
 
         Picker picker = sender as Picker;
 
@@ -84,11 +82,11 @@ public partial class SanctionPage : ContentPage
 
             if (sanctionPDF.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
 			{
-                if (target.Id != -2 && target.Id != -1 && !target.IsLibero)
+                if (target.Id != -1)
 				{
                     target.IsRemove = true;
 
-					if(line.ContainsValue((int)target.Id))
+					if(line.ContainsValue((int)target.Id) && !target.IsLibero && !target.IsCoach)
 					{
                         IsReplace.SetResult(true);
                     }
@@ -104,11 +102,11 @@ public partial class SanctionPage : ContentPage
             }	
 			else if (sanctionPDF.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
 			{
-                if (target.Id != -2 && target.Id != -1 && !target.IsLibero)
+                if (target.Id != -1)
                 {
                     target.IsDisqual = true;
 
-                    if (line.ContainsValue((int)target.Id))
+                    if (line.ContainsValue((int)target.Id) && !target.IsLibero && !target.IsCoach)
                     {
                         IsReplace.SetResult(true);
                     }
@@ -153,7 +151,7 @@ public partial class SanctionPage : ContentPage
 
     private async void OnExitButtonClick(object sender, EventArgs e)
     {
-        IsReplace.SetResult(false);
+        IsReplace = null;
 
         await Navigation.PopModalAsync();
     }

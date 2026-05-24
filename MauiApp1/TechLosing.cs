@@ -9,8 +9,12 @@ namespace MauiApp1
 {
     public static class TechLosing
     {
-        public static async Task TechLoseSet(DatabaseService _db, Set set, Team teamLoser, Team teamEnemy)
+        public static async Task TechLoseSet(DatabaseService _db, Set set, Team teamLoser)
         {
+            Team TeamHome = await _db.GetTeamHomeAsync();
+
+            Team TeamGuest = await _db.GetTeamGuestAsync();
+
             if (!set.IsShort)
             {
                 while (set.WinnerID == 0)
@@ -21,7 +25,7 @@ namespace MauiApp1
 
                         if (set.ScoreGuest >= Setting.MaxScore && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
                         {
-                            set.WinnerID = teamEnemy.Id;
+                            set.WinnerID = TeamGuest.Id;
                         }
                     }
                     else
@@ -30,7 +34,7 @@ namespace MauiApp1
 
                         if (set.ScoreHome >= Setting.MaxScore && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
                         {
-                            set.WinnerID = teamEnemy.Id;
+                            set.WinnerID = TeamHome.Id;
                         }
                     }
                 }
@@ -45,7 +49,7 @@ namespace MauiApp1
 
                         if (set.ScoreGuest >= Setting.MaxScoreInShortSet && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
                         {
-                            set.WinnerID = teamEnemy.Id;
+                            set.WinnerID = TeamGuest.Id;
                         }
                     }
                     else
@@ -54,7 +58,7 @@ namespace MauiApp1
 
                         if (set.ScoreHome >= Setting.MaxScoreInShortSet && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
                         {
-                            set.WinnerID = teamEnemy.Id;
+                            set.WinnerID = TeamHome.Id;
                         }
                     }
                 }
@@ -63,9 +67,13 @@ namespace MauiApp1
             await _db.UpdateSetAsync(set);
         }
 
-        public static async Task TechLoseGame(DatabaseService _db, Set set, Team teamLoser, Team teamEnemy)
+        public static async Task TechLoseGame(DatabaseService _db, Set set, Team teamLoser)
         {
-            await TechLoseSet(_db, set, teamLoser, teamEnemy);
+            Team TeamHome = await _db.GetTeamHomeAsync();
+
+            Team TeamGuest = await _db.GetTeamGuestAsync();
+
+            await TechLoseSet(_db, set, teamLoser);
 
             var Sets = await _db.GetSetAsync();
 
@@ -87,7 +95,7 @@ namespace MauiApp1
                             {
                                 newSet.ScoreHome = 0;
                                 newSet.ScoreGuest = Setting.MaxScore;
-                                newSet.WinnerID = teamEnemy.Id;
+                                newSet.WinnerID = TeamGuest.Id;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = false;
                             }
@@ -95,7 +103,7 @@ namespace MauiApp1
                             {
                                 newSet.ScoreHome = 0;
                                 newSet.ScoreGuest = Setting.MaxScoreInShortSet;
-                                newSet.WinnerID = teamEnemy.Id;
+                                newSet.WinnerID = TeamGuest.Id;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = true;
                             }
@@ -106,7 +114,7 @@ namespace MauiApp1
                             {
                                 newSet.ScoreHome = Setting.MaxScore;
                                 newSet.ScoreGuest = 0;
-                                newSet.WinnerID = teamEnemy.Id;
+                                newSet.WinnerID = TeamHome.Id;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = false;
                             }
@@ -114,7 +122,7 @@ namespace MauiApp1
                             {
                                 newSet.ScoreHome = Setting.MaxScoreInShortSet;
                                 newSet.ScoreGuest = 0;
-                                newSet.WinnerID = teamEnemy.Id;
+                                newSet.WinnerID = TeamHome.Id;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = true;
                             }
@@ -142,7 +150,7 @@ namespace MauiApp1
                             {
                                 newSet.ScoreHome = 0;
                                 newSet.ScoreGuest = Setting.MaxScore;
-                                newSet.WinnerID = teamEnemy.Id;
+                                newSet.WinnerID = TeamGuest.Id;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = false;
                             }
@@ -150,7 +158,7 @@ namespace MauiApp1
                             {
                                 newSet.ScoreHome = 0;
                                 newSet.ScoreGuest = Setting.MaxScoreInShortSet;
-                                newSet.WinnerID = teamEnemy.Id;
+                                newSet.WinnerID = TeamGuest.Id;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = true;
                             }
@@ -161,7 +169,7 @@ namespace MauiApp1
                             {
                                 newSet.ScoreHome = Setting.MaxScore;
                                 newSet.ScoreGuest = 0;
-                                newSet.WinnerID = teamEnemy.Id;
+                                newSet.WinnerID = TeamHome.Id;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = false;
                             }
@@ -169,7 +177,7 @@ namespace MauiApp1
                             {
                                 newSet.ScoreHome = Setting.MaxScoreInShortSet;
                                 newSet.ScoreGuest = 0;
-                                newSet.WinnerID = teamEnemy.Id;
+                                newSet.WinnerID = TeamHome.Id;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = true;
                             }

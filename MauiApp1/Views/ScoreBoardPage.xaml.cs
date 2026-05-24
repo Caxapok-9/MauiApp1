@@ -110,7 +110,7 @@ public partial class ScoreBoardPage : ContentPage
 
                         await _db.UpdateMainInfoAsync(info);
 
-                        await TechLosing.TechLoseGame(_db, set, TeamHome, TeamGuest);
+                        await TechLosing.TechLoseGame(_db, set, TeamHome);
 
                         await EndGame();
                     }
@@ -128,7 +128,7 @@ public partial class ScoreBoardPage : ContentPage
 
                         await _db.UpdateMainInfoAsync(info);
 
-                        await TechLosing.TechLoseGame(_db, set, TeamGuest, TeamHome);
+                        await TechLosing.TechLoseGame(_db, set, TeamGuest);
 
                         await EndGame();
                     }
@@ -324,9 +324,46 @@ public partial class ScoreBoardPage : ContentPage
 
             await task.Task;
 
-            if(task.Task.Result)
+            if (task != null)
             {
-                await ReplaceSanction();                
+                if (task.Task.Result)
+                {
+                    await ReplaceSanction();
+                }
+                else
+                {
+                    var LastSanction = await _db.GetLastSanctionAsync();
+
+                    Set set = await _db.GetLastSetAsync();
+
+                    var info = await _db.GetMainInfoAsync();
+
+                    if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id && LastSanction.TargetId == -1)
+                    {
+                        info.Logs += $"Команде {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} назначено техническое поражение в партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
+
+                        await _db.UpdateMainInfoAsync(info);
+
+                        await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} удалена до конца партии", "Ок");
+
+                        await TechLosing.TechLoseSet(_db, set, (LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest));
+
+                        await CheckEndGame();
+                    }
+
+                    if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id && LastSanction.TargetId == -1)
+                    {
+                        info.Logs += $"Команде {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} назначено техническое поражение в матче. Партия номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
+
+                        await _db.UpdateMainInfoAsync(info);
+
+                        await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} дисквалифицирована", "Ок");
+
+                        await TechLosing.TechLoseGame(_db, set, (LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest));
+
+                        await EndGame();
+                    }
+                }
             }
         }
         finally
@@ -341,9 +378,9 @@ public partial class ScoreBoardPage : ContentPage
 
         Set set = await _db.GetLastSetAsync();
 
-        var RosterHome = await _db.GetRoster(TeamHome, false);
+        var RosterHome = await _db.GetRosterPlayer(TeamHome);
 
-        var RosterGuest = await _db.GetRoster(TeamGuest, false);
+        var RosterGuest = await _db.GetRosterPlayer(TeamGuest);
 
         NameHome.Text = TeamHome.Name;
         NameGuest.Text = TeamGuest.Name;
@@ -874,11 +911,11 @@ public partial class ScoreBoardPage : ContentPage
 
     private async Task ReplaceSanction()
     {
-        var sanction = await _db.GetLastSanctionAsync();
+        var LastSanction = await _db.GetLastSanctionAsync();
 
-        Team team = await _db.GetTeamAsync(sanction.TeamId);
+        Team team = await _db.GetTeamAsync(LastSanction.TeamId);
 
-        Player player = await _db.GetPlayerAsync(sanction.TargetId);
+        Player player = await _db.GetPlayerAsync(LastSanction.TargetId);
 
         bool ch = await ReplaceService.CheckReplacePlayer(_db, team);
 
@@ -894,12 +931,12 @@ public partial class ScoreBoardPage : ContentPage
 
                 if(result != null)
                 {
-                    if (sanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
+                    if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
                     {
                         await ReplaceService.Replace(_db, team, player, list.Find(x => x.Number == result), false, true, false);
                     }
 
-                    if (sanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
+                    if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
                     {
                         await ReplaceService.Replace(_db, team, player, list.Find(x => x.Number == result), false, false, true);
                     }
@@ -910,54 +947,32 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            var info = await _db.GetMainInfoAsync();
-
-            var RosterHome = await _db.GetFullRoster(TeamHome);
-
-            var RosterGuest = await _db.GetFullRoster(TeamGuest);
-
             Set set = await _db.GetLastSetAsync();
 
-            if (sanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
+            var info = await _db.GetMainInfoAsync();
+
+            if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
             {
-                if (team.IsHome)
-                {
-                    info.Logs += $"Команде {TeamHome.Name} назначено техническое поражение в партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest} в связи с удалением игрока {RosterHome.Find(x => x.Id == sanction.TargetId).Number}\n";
+                info.Logs += $"Команде {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} назначено техническое поражение в партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}. В связи с удалением игрока\n";
 
-                    await _db.UpdateMainInfoAsync(info);
+                await _db.UpdateMainInfoAsync(info);
 
-                    await TechLosing.TechLoseSet(_db, set, TeamHome, TeamGuest);
-                }
-                else
-                {
-                    info.Logs += $"Команде {TeamGuest.Name} назначено техническое поражение в партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest} в связи с удалением игрока {RosterGuest.Find(x => x.Id == sanction.TargetId).Number}\n";
+                await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest)} удалена до конца партии", "Ок");
 
-                    await _db.UpdateMainInfoAsync(info);
-
-                    await TechLosing.TechLoseSet(_db, set, TeamGuest, TeamHome);
-                }
+                await TechLosing.TechLoseSet(_db, set, (LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest));
 
                 await CheckEndGame();
             }
 
-            if(sanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
+            if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
             {
-                if(team.IsHome)
-                {
-                    info.Logs += $"Команде {TeamHome.Name} назначено техническое поражение в матче в связи с дисквалификацией игрока {RosterHome.Find(x => x.Id == sanction.TargetId).Number}. Партия номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
+                info.Logs += $"Команде {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} назначено техническое поражение в матче. Партия номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}. В связи с дисквалификацией игрока\n";
 
-                    await _db.UpdateMainInfoAsync(info);
+                await _db.UpdateMainInfoAsync(info);
 
-                    await TechLosing.TechLoseGame(_db, set, TeamHome, TeamGuest);
-                }
-                else
-                {
-                    info.Logs += $"Команде {TeamGuest.Name} назначено техническое поражение в матче в связи с дисквалификацией игрока {RosterGuest.Find(x => x.Id == sanction.TargetId).Number}. Партия номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
+                await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest)} дисквалифицирована", "Ок");
 
-                    await _db.UpdateMainInfoAsync(info);
-
-                    await TechLosing.TechLoseGame(_db, set, TeamGuest, TeamHome);
-                }
+                await TechLosing.TechLoseGame(_db, set, (LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest));
 
                 await EndGame();
             }

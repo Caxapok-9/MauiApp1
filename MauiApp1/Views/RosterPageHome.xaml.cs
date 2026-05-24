@@ -216,7 +216,7 @@ public partial class RosterPageHome : ContentPage
 
         while (true)
         {
-            string result = await DisplayPromptAsync("Ввод данных", "Введите ФИО тренера (Необязательно)", "Ок", null);
+            string result = await DisplayPromptAsync("Ввод данных", "Введите ФИО тренера (Необязательно)", "Ок", null, null, -1, Keyboard.Create(KeyboardFlags.CapitalizeWord));
 
             if (!string.IsNullOrWhiteSpace(result))
             {
@@ -228,7 +228,7 @@ public partial class RosterPageHome : ContentPage
                 }
                 else
                 {
-                    TeamHome.Coach = result;
+                    await _db.SavePlayerAsync(new Player() { Name = result, Number = "Тренер", IsLibero = false, IsCaptain = false, TeamID = TeamHome.Id, IsCoach = true });
 
                     break;
                 }

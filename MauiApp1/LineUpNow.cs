@@ -108,18 +108,30 @@ namespace MauiApp1
 
         private static bool CheckServ(Team team, Set set)
         {
-            bool serv = team.FirstSetServ;
-
-            if (serv)
+            if (!set.IsShort)
             {
-                if (set.NumberSet % 2 != 0)
-                    return true;
+                bool serv = team.FirstSetServ;
+
+                if (serv)
+                {
+                    if (set.NumberSet % 2 != 0)
+                        return true;
+                    else
+                        return false;
+                }
                 else
-                    return false;
+                {
+                    if (set.NumberSet % 2 == 0)
+                        return true;
+                    else
+                        return false;
+                }
             }
             else
             {
-                if (set.NumberSet % 2 == 0)
+                bool serv = team.FinalySetServ;
+
+                if (serv)
                     return true;
                 else
                     return false;

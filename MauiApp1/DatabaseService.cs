@@ -47,19 +47,23 @@ public class DatabaseService
         return SanctionsCategories.Find(x => x.Name == name).Id;
     }
 
-    public async Task<List<Player>> GetFullRoster(Team team)
+    public async Task<List<Player>> GetRosterFull(Team team)
     {
         return await GetPlayerAsync(team);
     }
 
-    public async Task<List<Player>> GetRoster(Team team, bool IsLibero)
+    public async Task<List<Player>> GetRosterAccess(Team team)
     {
         var list = await GetPlayerAsync(team);
 
-        if(IsLibero)
-            return list.Where(x => !x.IsDisqual && !x.IsInjury && !x.IsRemove).ToList();
-        else
-            return list.Where(x => !x.IsDisqual && !x.IsInjury && !x.IsRemove && !x.IsLibero).ToList();
+        return list.Where(x => !x.IsDisqual && !x.IsInjury && !x.IsRemove).ToList();
+    }
+
+    public async Task<List<Player>> GetRosterPlayer(Team team)
+    {
+        var list = await GetPlayerAsync(team);
+
+        return list.Where(x => !x.IsDisqual && !x.IsInjury && !x.IsRemove && !x.IsLibero && !x.IsCoach).ToList();
     }
 
     #region MainInfo

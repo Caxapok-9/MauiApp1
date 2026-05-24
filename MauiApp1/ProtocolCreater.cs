@@ -20,6 +20,10 @@ namespace MauiApp1
     {
         public static async Task<bool> CreatePDF(DatabaseService _db, Dictionary<string, byte[]> Signs)
         {
+            Team TeamHome = await _db.GetTeamHomeAsync();
+
+            Team TeamGuest = await _db.GetTeamGuestAsync();
+
             ProtocolInfo info = new ProtocolInfo(_db);
 
             var dict = await info.GetDataDictionary();
@@ -86,7 +90,7 @@ namespace MauiApp1
 
                 outputStream.Position = 0;
 
-                var res = await FileSaver.Default.SaveAsync("VolleyProtocol.pdf", outputStream, CancellationToken.None);
+                var res = await FileSaver.Default.SaveAsync($"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf", outputStream, CancellationToken.None);
 
                 if (res.IsSuccessful)
                 {
@@ -103,7 +107,7 @@ namespace MauiApp1
 #if ANDROID
                         string downloadPath = global::Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).AbsolutePath;
 
-                        string fullPath = System.IO.Path.Combine(downloadPath, "VolleyProtocol.pdf");
+                        string fullPath = System.IO.Path.Combine(downloadPath, $"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf");
 
                         using (var fileStream = new System.IO.FileStream(fullPath, System.IO.FileMode.Create, System.IO.FileAccess.Write))
                         {
