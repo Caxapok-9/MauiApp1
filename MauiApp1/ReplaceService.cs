@@ -8,6 +8,65 @@ namespace MauiApp1
 {
     public static class ReplaceService
     {
+        public async static Task<int> GetCountReplace(DatabaseService _db, Team _targetTeam)
+        {
+            Set set = await _db.GetLastSetAsync();
+
+            Team TeamHome = await _db.GetTeamHomeAsync();
+
+            Team TeamGuest = await _db.GetTeamGuestAsync();
+
+            List<Player> TargetRoster;
+
+            if (_targetTeam.IsHome)
+            {
+                TargetRoster = await _db.GetRosterPlayer(TeamHome);
+            }
+            else
+            {
+                TargetRoster = await _db.GetRosterPlayer(TeamGuest);
+            }
+
+            int countReplace = 6;
+
+            if (TargetRoster.Count == 6)
+                return 0;
+
+
+            var Events = await _db.GetEventAsync(set, _targetTeam, new List<int> { _db.EventsCategories["R"], _db.EventsCategories["RR"] });
+
+            foreach (var e in Events)
+            {
+                if (e.EventID == _db.EventsCategories["R"] || e.EventID == _db.EventsCategories["RR"])
+                    countReplace--;
+            }
+
+            int countTeory = 0;
+
+            var line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
+
+            var listBench = TargetRoster.Where(x => !line.ContainsValue((int)x.Id)).ToList();
+
+            foreach(var item in listBench)
+            {
+                if (item.ReplaceID == 0)
+                {
+                    countTeory += 2;
+                }
+                else
+                {
+                    Player p = TargetRoster.Find(x => x.Id == item.ReplaceID);
+
+                    if (p != null && p.ReplaceID == 0 && line.ContainsValue((int)p.Id))
+                    {
+                        countTeory += 1;
+                    }
+                }
+            }
+
+            return Math.Min(countReplace, countTeory);
+        }
+
         public async static Task<bool> CheckReplacePlayer(DatabaseService _db, Team _targetTeam)
         {
             Team TeamHome = await _db.GetTeamHomeAsync();
@@ -44,7 +103,21 @@ namespace MauiApp1
 
             var line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 
-            var listBench = (_targetTeam.IsHome ? RosterHome : RosterGuest).Where(x => !line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
+            int countReplace = await GetCountReplace(_db, _targetTeam);
+
+            if (countReplace == 0)
+            {
+                if(!mode)
+                {
+                    return null;
+                }
+                else
+                {
+                    return (_targetTeam.IsHome ? RosterHome : RosterGuest).Where(x => !line.ContainsValue((int)x.Id)).ToList();
+                }
+            }
+
+            var listBench = (_targetTeam.IsHome ? RosterHome : RosterGuest).Where(x => !line.ContainsValue((int)x.Id)).ToList();
             
             if (_targetPlayer != null)
             {
@@ -112,11 +185,28 @@ namespace MauiApp1
             {
                 var info = await _db.GetMainInfoAsync();
 
-                benchPlayer.ReplaceID = (int)courtPlayer.Id;
+                var roster = await _db.GetRosterPlayer(_targetTeam);
 
-                courtPlayer.ReplaceID = (int)benchPlayer.Id;
+                if (benchPlayer.ReplaceID != 0)
+                {
+                    var p = roster.Find(x => x.Id == benchPlayer.ReplaceID);
 
-                if(injury)
+                    if (p != null)
+                    {
+                        if (p.ReplaceID == 0)
+                        {
+                            p.ReplaceID = (int)benchPlayer.Id;
+
+                            await _db.UpdatePlayerAsync(p);
+                        }
+                    }
+                }
+                else
+                {
+                    benchPlayer.ReplaceID = (int)courtPlayer.Id;
+                }
+
+                if (injury)
                 {
                     courtPlayer.IsInjury = true;
                     string Log = $"Замена в команде {_targetTeam.Name} игрока под номером {courtPlayer.Number} на игрока под номером {benchPlayer.Number} в связи с травмой. В партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";

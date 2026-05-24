@@ -94,21 +94,48 @@ public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
                     {
                         signes["SignSecretary"] = sign;
 
-                        info.TextProtestSecretary = signpage.GetProtest();
+                        string t = signpage.GetProtest();
+
+                        if (t != null && t.Length > 590)
+                        {
+                            await DisplayAlert("Ошибка", "Максимальное кол-во символов в протесте, комментарии 590 символов", "Ок");
+                        }
+                        else
+                        {
+                            info.TextProtestSecretary = t;
+                        }
                     }
 
                     if (signpage.Title == "Главный судья")
                     {
                         signes["SignFirstReferee"] = sign;
 
-                        info.TextProtestFirstReferee = signpage.GetProtest();
+                        string t = signpage.GetProtest();
+
+                        if (t != null && t.Length > 590)
+                        {
+                            await DisplayAlert("Ошибка", "Максимальное кол-во символов в протесте, комментарии 590 символов", "Ок");
+                        }
+                        else
+                        {
+                            info.TextProtestFirstReferee = t;
+                        }
                     }
 
                     if (signpage.Title == "Второй судья")
                     {
                         signes["SignToReferee"] = sign;
 
-                        info.TextProtestToReferee = signpage.GetProtest();
+                        string t = signpage.GetProtest();
+
+                        if (t != null && t.Length > 590)
+                        {
+                            await DisplayAlert("Ошибка", "Максимальное кол-во символов в протесте, комментарии 590 символов", "Ок");
+                        }
+                        else
+                        {
+                            info.TextProtestToReferee = t;
+                        }
                     }
 
                     if (signpage.Title == "Капитан А")
@@ -117,7 +144,16 @@ public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
 
                         info.MVPGuest = signpage.GetMVP()?.Id;
 
-                        info.TextProtestHome = signpage.GetProtest();
+                        string t = signpage.GetProtest();
+
+                        if (t != null && t.Length > 590)
+                        {
+                            await DisplayAlert("Ошибка", "Максимальное кол-во символов в протесте, комментарии 590 символов", "Ок");
+                        }
+                        else
+                        {
+                            info.TextProtestHome = t;
+                        }
                     }
 
                     if (signpage.Title == "Капитан Б")
@@ -126,7 +162,16 @@ public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
 
                         info.MVPHome = signpage.GetMVP()?.Id;
 
-                        info.TextProtestGuest = signpage.GetProtest();
+                        string t = signpage.GetProtest();
+
+                        if (t != null && t.Length > 590)
+                        {
+                            await DisplayAlert("Ошибка", "Максимальное кол-во символов в протесте, комментарии 590 символов", "Ок");
+                        }
+                        else
+                        {
+                            info.TextProtestGuest = t;
+                        }
                     }
                 }
                 else

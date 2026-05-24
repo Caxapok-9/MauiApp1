@@ -391,7 +391,7 @@ public partial class ScoreBoardPage : ContentPage
         ScoreHomeButton.Text = set.ScoreHome.ToString();
         ScoreGuestButton.Text = set.ScoreGuest.ToString();
 
-        if (RosterHome.Where(x => !x.IsLibero).Count() == 6)
+        if (RosterHome.Count() == 6)
         {
             ReplaceHomeButton.IsEnabled = false;
             ReplaceHomeButton.BackgroundColor = Colors.Grey;
@@ -399,28 +399,7 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            int countReplace = 0;
-
-            var line = await LineUpNow.GetNowLineUp(_db, TeamHome);
-
-            var linePlayers = line.Select(x => RosterHome.Find(p => p.Id == x.Value)).ToList();
-
-            var banchPlayers = RosterHome.Where(x => !linePlayers.Contains(x) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
-
-            foreach(Player player in banchPlayers)
-            {
-                if(player.ReplaceID == 0)
-                {
-                    countReplace += 2;
-                }
-                else
-                {
-                    if(linePlayers.Find(x => x.ReplaceID == player.Id) == null)
-                    {
-                        countReplace++;
-                    }
-                }
-            }     
+            int countReplace = await ReplaceService.GetCountReplace(_db, TeamHome);
 
             if (countReplace == 0)
             {
@@ -432,7 +411,7 @@ public partial class ScoreBoardPage : ContentPage
             }            
         }
 
-        if (RosterGuest.Where(x => !x.IsLibero).Count() == 6)
+        if (RosterGuest.Count() == 6)
         {
             ReplaceGuestButton.IsEnabled = false;
             ReplaceGuestButton.BackgroundColor = Colors.Grey;
@@ -440,28 +419,7 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            int countReplace = 0;
-
-            var line = await LineUpNow.GetNowLineUp(_db, TeamGuest);
-
-            var linePlayers = line.Select(x => RosterGuest.Find(p => p.Id == x.Value)).ToList();
-
-            var banchPlayers = RosterGuest.Where(x => !linePlayers.Contains(x) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
-
-            foreach (Player player in banchPlayers)
-            {
-                if (player.ReplaceID == 0)
-                {
-                    countReplace = countReplace + 2;
-                }
-                else
-                {
-                    if(linePlayers.Find(x => x.ReplaceID == player.Id) == null)
-                    {
-                        countReplace++;
-                    }                    
-                }
-            }
+            int countReplace = await ReplaceService.GetCountReplace(_db, TeamGuest);
 
             if (countReplace == 0)
             {
