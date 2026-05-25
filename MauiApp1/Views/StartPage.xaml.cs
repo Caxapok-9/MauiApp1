@@ -31,8 +31,6 @@ public partial class StartPage : ContentPage
 
         await Setting.GetSettings();
 
-        await Setting.GetFonts();
-
         await _db.InizializeAllTablesAsync();
 
         await CheckDataBase();
@@ -54,7 +52,19 @@ public partial class StartPage : ContentPage
 
     private async void OnSettingClicked(object sender, EventArgs e)
     {
-        await Navigation.PushModalAsync(new SettingPage());
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+
+            await Navigation.PushModalAsync(new SettingPage());
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
@@ -155,28 +165,42 @@ public partial class StartPage : ContentPage
 
     private async Task CheckDataBase()
     {
-        var Sets = await _db.GetSetAsync();
+        if (IsBusy)
+            return;
 
-        if (Sets.Count > 0)
+        try
         {
-            string result = null;
+            IsBusy = true;
 
-            while (string.IsNullOrWhiteSpace(result))
+            var Sets = await _db.GetSetAsync();
+
+            if (Sets.Count > 0)
             {
-                result = await DisplayActionSheet("Восстановить состояние с прошлой игры ?", null, null, "Да", "Нет");
-            }
+                string result = null;
 
-            if (result == "Да")
-            {
-                var info = await _db.GetMainInfoAsync();
-
-                if(info.End)
+                while (string.IsNullOrWhiteSpace(result))
                 {
-                    Application.Current.MainPage = new NavigationPage(new EndGamePage(_db));
+                    result = await DisplayActionSheet("Восстановить состояние с прошлой игры ?", null, null, "Да", "Нет");
+                }
+
+                if (result == "Да")
+                {
+                    var info = await _db.GetMainInfoAsync();
+
+                    if(info.End)
+                    {
+                        Application.Current.MainPage = new NavigationPage(new EndGamePage(_db));
+                    }
+                    else
+                    {
+                        Application.Current.MainPage = new NavigationPage(new ScoreBoardPage(_db));
+                    }
                 }
                 else
                 {
-                    Application.Current.MainPage = new NavigationPage(new ScoreBoardPage(_db));
+                    await _db.ClearAsync();
+
+                    await _db.InizializeAllTablesAsync();
                 }
             }
             else
@@ -186,11 +210,9 @@ public partial class StartPage : ContentPage
                 await _db.InizializeAllTablesAsync();
             }
         }
-        else
+        finally
         {
-            await _db.ClearAsync();
-
-            await _db.InizializeAllTablesAsync();
+            IsBusy = false;
         }
     }
 }

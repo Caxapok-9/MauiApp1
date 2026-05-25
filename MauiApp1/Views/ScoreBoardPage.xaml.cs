@@ -766,6 +766,13 @@ public partial class ScoreBoardPage : ContentPage
                     await CancelScore();
                 }
             }
+            else
+            {
+                if (set.ScoreHome == (Setting.MaxScoreInShortSet + 1) / 2 || set.ScoreGuest == (Setting.MaxScoreInShortSet + 1)/ 2)
+                {
+                    await DisplayAlert("Информация", "Смена сторон", "Ок");
+                }
+            }
         }
 
         return false;

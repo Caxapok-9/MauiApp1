@@ -57,7 +57,7 @@ namespace MauiApp1
 
             var streamTemplate = await FileSystem.OpenAppPackageFileAsync("protokol.pdf");
 
-            string password = await App.Current.MainPage.DisplayPromptAsync("Безопасность", "Введите пин-код", "Ок", "Отмена");
+            string password = await App.Current.MainPage.DisplayPromptAsync("Безопасность", "Введите пин-код", "Ок", "Отмена", null, -1, Keyboard.Numeric);
 
             if (password == null || string.IsNullOrWhiteSpace(password))
             {
@@ -245,8 +245,6 @@ namespace MauiApp1
             }
             else
             {
-                await App.Current.MainPage.DisplayAlert("Информация", "Ошибка при отправке письма!", "OK");
-
                 _CompletedTask.SetResult(false);
 
                 return;
@@ -259,9 +257,9 @@ namespace MauiApp1
             {
                 var message = new MimeMessage();
 
-                message.From.Add(new MailboxAddress("VolleyApp Рассылка", "iv.al.vi@rambler.ru"));
+                message.From.Add(new MailboxAddress("VolleyApp Рассылка", "c4xapo4ek28@yandex.ru"));
                 message.To.Add(new MailboxAddress("Получатель", "bereft@vk.com"));
-                message.Subject = "Протокол матча - " + DateTime.Now.ToString("dd.MM.yyyy");
+                message.Subject = $"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от " + DateTime.Now.ToString("dd.MM.yyyy");
 
                 var builder = new BodyBuilder()
                 {
@@ -275,9 +273,17 @@ namespace MauiApp1
 
                 using (var client = new MailKit.Net.Smtp.SmtpClient())
                 {
-                    await client.ConnectAsync("smtp.rambler.ru", 465, MailKit.Security.SecureSocketOptions.SslOnConnect);
+                    client.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) =>
+                    {
+                        if (sslPolicyErrors == System.Net.Security.SslPolicyErrors.None)
+                            return true;
 
-                    await client.AuthenticateAsync("iv.al.vi@rambler.ru", "Sacha2809");
+                        return true;
+                    };
+
+                    await client.ConnectAsync("smtp.yandex.ru", 587, MailKit.Security.SecureSocketOptions.StartTls);
+
+                    await client.AuthenticateAsync("c4xapo4ek28@yandex.ru", "hhweyowzcqwuzxrk");
 
                     await client.SendAsync(message);
 
@@ -286,8 +292,10 @@ namespace MauiApp1
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
+
                 return false;
             }
         }
