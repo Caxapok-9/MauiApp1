@@ -30,8 +30,12 @@ namespace MauiApp1
 {
     public static class ProtocolCreater
     {
-        public static async Task<bool> CreatePDF(DatabaseService _db, Dictionary<string, byte[]> Signs)
-        {
+        private static TaskCompletionSource<bool> _CompletedTask = new TaskCompletionSource<bool>();
+
+        public static async Task CreatePDF(DatabaseService _db, Dictionary<string, byte[]> Signs, TaskCompletionSource<bool> CompletedTask)
+        {     
+            _CompletedTask = CompletedTask;
+
             Team TeamHome = await _db.GetTeamHomeAsync();
 
             Team TeamGuest = await _db.GetTeamGuestAsync();
@@ -42,12 +46,20 @@ namespace MauiApp1
 
             MemoryStream outputStream = new MemoryStream();
 
-            MemoryStream streamSign = null;
+            MemoryStream streamSign = new MemoryStream();
+
+            var streamTemplate = await FileSystem.OpenAppPackageFileAsync("protokol.pdf");
+
+            string password = await App.Current.MainPage.DisplayPromptAsync("Безопасность", "Введите пин-код", "Ок", "Отмена");
+
+            if (password == null || string.IsNullOrWhiteSpace(password))
+            {
+                _CompletedTask.SetResult(false);
+                return;
+            }
 
             try
             {
-                var streamTemplate = await FileSystem.OpenAppPackageFileAsync("protokol.pdf");
-
                 iText.Kernel.Pdf.PdfWriter writer = new iText.Kernel.Pdf.PdfWriter(outputStream);
 
                 writer.SetCloseStream(false);
@@ -57,6 +69,8 @@ namespace MauiApp1
                 iText.Kernel.Pdf.PdfDocument doc = new iText.Kernel.Pdf.PdfDocument(reader, writer);
 
                 iText.Forms.PdfAcroForm form = iText.Forms.PdfAcroForm.GetAcroForm(doc, true);
+
+                await Setting.GetFonts();
 
                 foreach (var item in dict)
                 {
@@ -102,76 +116,26 @@ namespace MauiApp1
 
                 doc.Close();
 
-                while (streamSign == null)
-                {
-                    string password = await App.Current.MainPage.DisplayPromptAsync("Безопасность", "Введите пин-код", "Ок", "Отмена");
+                outputStream.Position = 0;
 
-                    if(password == null)
-                    {
-                        return false;
-                    }
-
-                    outputStream.Position = 0;
-
-                    streamSign = await SignPdfContractAsync(outputStream, password);
-
-                    if (streamSign != null)
-                    {
-                        var res = await FileSaver.Default.SaveAsync($"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf", streamSign, CancellationToken.None);
-
-                        if (res.IsSuccessful)
-                        {
-                            await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
-
-                            return true;
-                        }
-                        else
-                        {
-                            try
-                            {
-#if ANDROID
-                                await App.Current.MainPage.DisplayAlert("Информация", "Сохранение PDF в \"Загрузки\"", "OK");
-
-                                string downloadPath = global::Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).AbsolutePath;
-
-                                string fullPath = System.IO.Path.Combine(downloadPath, $"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf");
-
-                                using (var fileStream = new System.IO.FileStream(fullPath, System.IO.FileMode.Create, System.IO.FileAccess.Write))
-                                {
-                                    await streamSign.CopyToAsync(fileStream);
-                                }
-
-                                await App.Current.MainPage.DisplayAlert("Информация", "PDF успешно сохранён в \"Загрузки\"", "OK");
-#endif
-
-                                return true;
-                            }
-                            catch (Exception ex)
-                            {
-                                await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
-
-                                return false;
-                            }
-                        }
-                    }                    
-                }
-
-                return true;
+                await SignPdfContractAsync(_db, outputStream, password);
             }
             catch(Exception ex) 
             {
                 await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
 
-                return false;
-            }
-            finally
-            {
-                outputStream.Close();
+                _CompletedTask.SetResult(false);
+
+                return;
             }
         }
 
-        private static async Task<MemoryStream> SignPdfContractAsync(MemoryStream generatedPdfStream, string Password)
+        private static async Task SignPdfContractAsync(DatabaseService _db, MemoryStream generatedPdfStream, string Password)
         {
+            Team TeamHome = await _db.GetTeamHomeAsync();
+
+            Team TeamGuest = await _db.GetTeamGuestAsync();
+
             using Stream pfxStream = await FileSystem.OpenAppPackageFileAsync("VolleyApp.pfx");
 
             Pkcs12Store pkcs12Store = new Pkcs12StoreBuilder().Build();
@@ -182,7 +146,11 @@ namespace MauiApp1
             }
             catch
             {
-                return null;
+                await App.Current.MainPage.DisplayAlert("Информация", "Пароль неверный!", "OK");
+
+                _CompletedTask.SetResult(false);
+
+                return;
             }
 
             string alias = null;
@@ -220,9 +188,54 @@ namespace MauiApp1
 
             byte[] bytes = memoryStream.ToArray();
 
-            MemoryStream ms = new MemoryStream(bytes);
+            var res = await FileSaver.Default.SaveAsync($"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf", new MemoryStream(bytes), CancellationToken.None);
 
-            return ms;
+            if (res.IsSuccessful)
+            {
+                await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
+
+                _CompletedTask.SetResult(true);
+
+                return;
+            }
+            else
+            {
+                try
+                {
+#if ANDROID
+                            await App.Current.MainPage.DisplayAlert("Информация", "Сохранение PDF в \"Загрузки\"", "OK");
+
+                            string downloadPath = global::Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).AbsolutePath;
+
+                            string fullPath = System.IO.Path.Combine(downloadPath, $"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf");
+
+                            using (var fileStream = new System.IO.FileStream(fullPath, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+                            {
+                                await new MemoryStream(bytes).CopyToAsync(fileStream);
+                            }
+
+                            await App.Current.MainPage.DisplayAlert("Информация", "PDF успешно сохранён в \"Загрузки\"", "OK");
+
+                            _CompletedTask.SetResult(true);
+
+                            return;
+#endif
+                    await App.Current.MainPage.DisplayAlert("Информация", "Файл не сохранён", "OK");
+
+                    _CompletedTask.SetResult(false);
+
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
+
+                    _CompletedTask.SetResult(false);
+
+                    return;
+                }
+            }
         }
     }
+    
 }

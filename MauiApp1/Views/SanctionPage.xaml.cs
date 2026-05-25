@@ -151,8 +151,20 @@ public partial class SanctionPage : ContentPage
 
     private async void OnExitButtonClick(object sender, EventArgs e)
     {
-        IsReplace = null;
+        if (IsBusy)
+            return;
 
-        await Navigation.PopModalAsync();
+        try
+        {
+            IsBusy = true;
+
+            IsReplace = null;
+
+            await Navigation.PopModalAsync();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

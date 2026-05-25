@@ -65,6 +65,9 @@ public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
 
     private async void OnEndClick(object sender, EventArgs e)
     {
+        if (IsBusy)
+            return;
+
         try
         {
             IsBusy = true;
@@ -184,14 +187,20 @@ public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
                 await _db.UpdateMainInfoAsync(info);
             }
 
-            bool checkSave = await ProtocolCreater.CreatePDF(_db, signes);
+            TaskCompletionSource<bool> CompletedTask = new TaskCompletionSource<bool>();
 
-            if(checkSave)
+            await ProtocolCreater.CreatePDF(_db, signes, CompletedTask);
+
+            IsBusy = true;
+
+            await CompletedTask.Task;
+
+            if(CompletedTask.Task.Result == true)
             {
-                await _db.ClearAsync();
-            }            
+                //await _db.ClearAsync();
 
-            Microsoft.Maui.Controls.Application.Current.MainPage = new NavigationPage(new StartPage(_db));
+                Microsoft.Maui.Controls.Application.Current.MainPage = new NavigationPage(new StartPage(_db));
+            }
         }
         finally
         {

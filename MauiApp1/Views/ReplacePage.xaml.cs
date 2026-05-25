@@ -96,7 +96,19 @@ public partial class ReplacePage : ContentPage
 
     private async void OnExitButtonClick(object sender, EventArgs e)
     {
-        await Navigation.PopModalAsync();
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+
+            await Navigation.PopModalAsync();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private async Task SelectItem()

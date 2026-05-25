@@ -915,7 +915,7 @@ public partial class ScoreBoardPage : ContentPage
 
                 await _db.UpdateMainInfoAsync(info);
 
-                await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest)} удалена до конца партии", "Ок");
+                await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} удалена до конца партии", "Ок");
 
                 await TechLosing.TechLoseSet(_db, set, (LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest));
 
@@ -928,7 +928,7 @@ public partial class ScoreBoardPage : ContentPage
 
                 await _db.UpdateMainInfoAsync(info);
 
-                await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest)} дисквалифицирована", "Ок");
+                await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} дисквалифицирована", "Ок");
 
                 await TechLosing.TechLoseGame(_db, set, (LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest));
 
