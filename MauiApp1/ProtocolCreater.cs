@@ -16,12 +16,15 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Signatures;
+using MailKit.Net.Smtp;
+using MimeKit;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,13 +35,17 @@ namespace MauiApp1
     {
         private static TaskCompletionSource<bool> _CompletedTask = new TaskCompletionSource<bool>();
 
+        private static Team TeamHome;
+
+        private static Team TeamGuest;
+
         public static async Task CreatePDF(DatabaseService _db, Dictionary<string, byte[]> Signs, TaskCompletionSource<bool> CompletedTask)
         {     
             _CompletedTask = CompletedTask;
 
-            Team TeamHome = await _db.GetTeamHomeAsync();
+            TeamHome = await _db.GetTeamHomeAsync();
 
-            Team TeamGuest = await _db.GetTeamGuestAsync();
+            TeamGuest = await _db.GetTeamGuestAsync();
 
             ProtocolInfo info = new ProtocolInfo(_db);
 
@@ -132,10 +139,6 @@ namespace MauiApp1
 
         private static async Task SignPdfContractAsync(DatabaseService _db, MemoryStream generatedPdfStream, string Password)
         {
-            Team TeamHome = await _db.GetTeamHomeAsync();
-
-            Team TeamGuest = await _db.GetTeamGuestAsync();
-
             using Stream pfxStream = await FileSystem.OpenAppPackageFileAsync("VolleyApp.pfx");
 
             Pkcs12Store pkcs12Store = new Pkcs12StoreBuilder().Build();
@@ -188,20 +191,24 @@ namespace MauiApp1
 
             byte[] bytes = memoryStream.ToArray();
 
-            var res = await FileSaver.Default.SaveAsync($"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf", new MemoryStream(bytes), CancellationToken.None);
+            bool send = await EmailSender(bytes);
 
-            if (res.IsSuccessful)
+            if (send)
             {
-                await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
+                var res = await FileSaver.Default.SaveAsync($"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf", new MemoryStream(bytes), CancellationToken.None);
 
-                _CompletedTask.SetResult(true);
-
-                return;
-            }
-            else
-            {
-                try
+                if (res.IsSuccessful)
                 {
+                    await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
+
+                    _CompletedTask.SetResult(true);
+
+                    return;
+                }
+                else
+                {
+                    try
+                    {
 #if ANDROID
                             await App.Current.MainPage.DisplayAlert("Информация", "Сохранение PDF в \"Загрузки\"", "OK");
 
@@ -220,22 +227,69 @@ namespace MauiApp1
 
                             return;
 #endif
-                    await App.Current.MainPage.DisplayAlert("Информация", "Файл не сохранён", "OK");
+                        await App.Current.MainPage.DisplayAlert("Информация", "Файл не сохранён", "OK");
 
-                    _CompletedTask.SetResult(false);
+                        _CompletedTask.SetResult(false);
 
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
 
-                    _CompletedTask.SetResult(false);
+                        _CompletedTask.SetResult(false);
 
-                    return;
+                        return;
+                    }
                 }
             }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Информация", "Ошибка при отправке письма!", "OK");
+
+                _CompletedTask.SetResult(false);
+
+                return;
+            }
         }
-    }
-    
+
+        private static async Task<bool> EmailSender(byte[] file)
+        {
+            try
+            {
+                var message = new MimeMessage();
+
+                message.From.Add(new MailboxAddress("VolleyApp Рассылка", "iv.al.vi@rambler.ru"));
+                message.To.Add(new MailboxAddress("Получатель", "bereft@vk.com"));
+                message.Subject = "Протокол матча - " + DateTime.Now.ToString("dd.MM.yyyy");
+
+                var builder = new BodyBuilder()
+                {
+                    TextBody = "Во вложении",
+                    HtmlBody = "Во вложении"
+                };
+
+                builder.Attachments.Add($"Протокол матча {TeamHome.Name} - {TeamGuest.Name}.pdf", file, ContentType.Parse("application/pdf"));
+
+                message.Body = builder.ToMessageBody();
+
+                using (var client = new MailKit.Net.Smtp.SmtpClient())
+                {
+                    await client.ConnectAsync("smtp.rambler.ru", 465, MailKit.Security.SecureSocketOptions.SslOnConnect);
+
+                    await client.AuthenticateAsync("iv.al.vi@rambler.ru", "Sacha2809");
+
+                    await client.SendAsync(message);
+
+                    await client.DisconnectAsync(true);
+
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }    
 }
