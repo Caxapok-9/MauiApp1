@@ -1,16 +1,28 @@
 ﻿using CommunityToolkit.Maui.Storage;
+using iText.Bouncycastle;
+using iText.Bouncycastle.Crypto;
+using iText.Bouncycastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.IO.Font;
 using iText.IO.Image;
+using iText.Kernel.Crypto;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Signatures;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,19 +42,21 @@ namespace MauiApp1
 
             MemoryStream outputStream = new MemoryStream();
 
+            MemoryStream streamSign = null;
+
             try
             {
                 var streamTemplate = await FileSystem.OpenAppPackageFileAsync("protokol.pdf");
 
-                PdfWriter writer = new PdfWriter(outputStream);
+                iText.Kernel.Pdf.PdfWriter writer = new iText.Kernel.Pdf.PdfWriter(outputStream);
 
                 writer.SetCloseStream(false);
 
-                PdfReader reader = new PdfReader(streamTemplate);
+                iText.Kernel.Pdf.PdfReader reader = new iText.Kernel.Pdf.PdfReader(streamTemplate);
 
                 iText.Kernel.Pdf.PdfDocument doc = new iText.Kernel.Pdf.PdfDocument(reader, writer);
 
-                PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+                iText.Forms.PdfAcroForm form = iText.Forms.PdfAcroForm.GetAcroForm(doc, true);
 
                 foreach (var item in dict)
                 {
@@ -60,7 +74,7 @@ namespace MauiApp1
 
                                 image.SetWidth(22f);
 
-                                image.SetHeight(16f);
+                                image.SetHeight(14f);
 
                                 Rectangle rectangle = field.GetWidgets().FirstOrDefault().GetRectangle().ToRectangle();
 
@@ -88,54 +102,127 @@ namespace MauiApp1
 
                 doc.Close();
 
-                outputStream.Position = 0;
-
-                var res = await FileSaver.Default.SaveAsync($"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf", outputStream, CancellationToken.None);
-
-                if (res.IsSuccessful)
+                while (streamSign == null)
                 {
-                    await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
+                    string password = await App.Current.MainPage.DisplayPromptAsync("Безопасность", "Введите пин-код", "Ок", "Отмена");
 
-                    return true;
-                }
-                else
-                {
-                    await App.Current.MainPage.DisplayAlert("Информация", "Сохранение PDF в \"Загрузки\"", "OK");
-
-                    try
+                    if(password == null)
                     {
-#if ANDROID
-                        string downloadPath = global::Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).AbsolutePath;
-
-                        string fullPath = System.IO.Path.Combine(downloadPath, $"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf");
-
-                        using (var fileStream = new System.IO.FileStream(fullPath, System.IO.FileMode.Create, System.IO.FileAccess.Write))
-                        {
-                            await outputStream.CopyToAsync(fileStream);
-                        }
-#endif              
-                        await App.Current.MainPage.DisplayAlert("Информация", "PDF успешно сохранён в \"Загрузки\"", "OK");
-
-                        return true;
-                    }
-                    catch (Exception ex)
-                    {
-                        await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
-
-                        outputStream.Close();
-
                         return false;
                     }
+
+                    outputStream.Position = 0;
+
+                    streamSign = await SignPdfContractAsync(outputStream, password);
+
+                    if (streamSign != null)
+                    {
+                        var res = await FileSaver.Default.SaveAsync($"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf", streamSign, CancellationToken.None);
+
+                        if (res.IsSuccessful)
+                        {
+                            await App.Current.MainPage.DisplayAlert("Информация", "Успешно сформирован PDF", "OK");
+
+                            return true;
+                        }
+                        else
+                        {
+                            try
+                            {
+#if ANDROID
+                                await App.Current.MainPage.DisplayAlert("Информация", "Сохранение PDF в \"Загрузки\"", "OK");
+
+                                string downloadPath = global::Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).AbsolutePath;
+
+                                string fullPath = System.IO.Path.Combine(downloadPath, $"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от ({DateTime.Now.ToString("dd.MM.yyyy")}).pdf");
+
+                                using (var fileStream = new System.IO.FileStream(fullPath, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+                                {
+                                    await streamSign.CopyToAsync(fileStream);
+                                }
+
+                                await App.Current.MainPage.DisplayAlert("Информация", "PDF успешно сохранён в \"Загрузки\"", "OK");
+#endif
+
+                                return true;
+                            }
+                            catch (Exception ex)
+                            {
+                                await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
+
+                                return false;
+                            }
+                        }
+                    }                    
                 }
+
+                return true;
             }
             catch(Exception ex) 
             {
                 await App.Current.MainPage.DisplayAlert("Информация", ex.Message, "OK");
 
-                outputStream.Close();
-
                 return false;
             }
+            finally
+            {
+                outputStream.Close();
+            }
+        }
+
+        private static async Task<MemoryStream> SignPdfContractAsync(MemoryStream generatedPdfStream, string Password)
+        {
+            using Stream pfxStream = await FileSystem.OpenAppPackageFileAsync("VolleyApp.pfx");
+
+            Pkcs12Store pkcs12Store = new Pkcs12StoreBuilder().Build();
+
+            try
+            {
+                pkcs12Store.Load(pfxStream, Password.ToCharArray());
+            }
+            catch
+            {
+                return null;
+            }
+
+            string alias = null;
+
+            foreach (string currentAlias in pkcs12Store.Aliases)
+            {
+                if (pkcs12Store.IsKeyEntry(currentAlias))
+                {
+                    alias = currentAlias;
+                    break;
+                }
+            }
+         
+            IX509Certificate[] chain = pkcs12Store.GetCertificateChain(alias).Select(x => new X509CertificateBC(x.Certificate)).ToArray();
+
+            StampingProperties properties = new StampingProperties();
+
+            ReaderProperties readerProperties = new ReaderProperties();
+
+            PdfReader reader = new PdfReader(generatedPdfStream, readerProperties);
+
+            MemoryStream memoryStream = new MemoryStream();
+
+            PdfSigner signer = new PdfSigner(reader, memoryStream, properties);
+
+            signer.GetDocument().SetCloseWriter(false);
+
+            var pk = pkcs12Store.GetKey(alias).Key;
+
+            IPrivateKey privateKey = new PrivateKeyBC(pk);
+
+            IExternalSignature signature = new PrivateKeySignature(privateKey, DigestAlgorithms.SHA256);
+
+            signer.SignDetached(signature, chain, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
+
+            byte[] bytes = memoryStream.ToArray();
+
+            MemoryStream ms = new MemoryStream(bytes);
+
+            return ms;
         }
     }
 }
