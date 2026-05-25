@@ -42,6 +42,18 @@ public partial class LineupNowPage : ContentPage
 
 	private async void OnExitClick(object sender, EventArgs e)
 	{
-		await Navigation.PopModalAsync();
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+
+            await Navigation.PopModalAsync();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
 	}
 }

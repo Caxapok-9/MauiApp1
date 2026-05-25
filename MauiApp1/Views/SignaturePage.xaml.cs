@@ -98,14 +98,38 @@ public partial class SignaturePage : ContentPage
 
     private async void OnClearButtonClick(object sender, EventArgs e)
     {
-        SignaturePad.Lines.Clear();
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+
+            SignaturePad.Lines.Clear();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private async void OnCancelButtonClick(object sender, EventArgs e)
     {
-        if(SignaturePad.Lines.Count > 0)
+        if (IsBusy)
+            return;
+
+        try
         {
-            SignaturePad.Lines.RemoveAt(SignaturePad.Lines.Count - 1);
-        }        
+            IsBusy = true;
+
+            if (SignaturePad.Lines.Count > 0)
+            {
+                SignaturePad.Lines.RemoveAt(SignaturePad.Lines.Count - 1);
+            }
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }
