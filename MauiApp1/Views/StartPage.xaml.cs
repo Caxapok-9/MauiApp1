@@ -27,6 +27,8 @@ public partial class StartPage : ContentPage
 
 #endif
 
+        await Setting.GetFonts();
+
         await Setting.SetColors();
 
         await Setting.GetSettings();
