@@ -197,7 +197,7 @@ public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
 
             if(CompletedTask.Task.Result == true)
             {
-                //await _db.ClearAsync();
+                await _db.ClearAsync();
 
                 Microsoft.Maui.Controls.Application.Current.MainPage = new NavigationPage(new StartPage(_db));
             }
