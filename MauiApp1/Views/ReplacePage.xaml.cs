@@ -35,7 +35,7 @@ public partial class ReplacePage : ContentPage
 
         line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 
-        ListPlayerIn.ItemsSource = line.Select(c => (_targetTeam.IsHome ? rosterHome : rosterGuest).Find(x => x.Id == c.Value)).ToList();
+        ListPlayerIn.ItemsSource = line.Select(c => (_targetTeam.IsHome ? rosterHome : rosterGuest).Find(x => x.ID == c.Value)).ToList();
 
         WarningHealth.IsVisible = false;
         WarningHealth.IsEnabled = false;

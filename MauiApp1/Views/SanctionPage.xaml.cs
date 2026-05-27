@@ -37,10 +37,10 @@ public partial class SanctionPage : ContentPage
 	private async void OnTeamsChanged(object sender, EventArgs e)
 	{
         var RosterHome = await _db.GetRosterAccess(TeamHome);
-        RosterHome.Add(new Player() { Id = -1, Number = "Команда" });
+        RosterHome.Add(new Player() { ID = -1, Number = "Команда" });
 
         var RosterGuest = await _db.GetRosterAccess(TeamGuest);
-        RosterGuest.Add(new Player() { Id = -1, Number = "Команда" });
+        RosterGuest.Add(new Player() { ID = -1, Number = "Команда" });
 
         Picker picker = sender as Picker;
 
@@ -64,29 +64,32 @@ public partial class SanctionPage : ContentPage
 		{
 			Set set = await _db.GetLastSetAsync();
 
-			var sanction = PickerSanction.SelectedItem.ToString();
+            var Score = await _db.GetScore(set);
+
+            var sanction = PickerSanction.SelectedItem.ToString();
             var team = PickerTeams.SelectedItem as Team;
             var target = PickerPTC.SelectedItem as Player;
 
-            Sanction sanctionPDF = new Sanction();
-			sanctionPDF.SanctionId = _db.SanctionsCategories.Find(x => x.DisplayName == sanction).Id;
-            sanctionPDF.TeamId = team.Id;
-            sanctionPDF.TargetId = (int)target.Id;
-			sanctionPDF.ScoreHome = set.ScoreHome;
-			sanctionPDF.ScoreGuest = set.ScoreGuest;
-			sanctionPDF.SetId = set.Id;
+            Event ev = new Event();
+            ev.EventCategoryID = _db.EventsCategories["SA"];
+            ev.SanctionCategoryID = _db.SanctionsCategories.Find(x => x.DisplayName == sanction).ID;
+            ev.TeamID = team.ID;
+            ev.TargetID = (int)target.ID;
+            ev.ScoreHome = Score.Item1;
+            ev.ScoreGuest = Score.Item2;
+            ev.SetID = set.ID;
 	
-			await _db.SaveSanctionAsync(sanctionPDF);
+			await _db.SaveEventAsync(ev);
 
 			var line = await LineUpNow.GetNowLineUp(_db, team);
 
-            if (sanctionPDF.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
+            if (ev.SanctionCategoryID == _db.SanctionsCategories.Find(x => x.Name == "Remove").ID)
 			{
-                if (target.Id != -1)
+                if (target.ID != -1)
 				{
                     target.IsRemove = true;
 
-					if(line.ContainsValue((int)target.Id) && !target.IsLibero && !target.IsCoach)
+					if(line.ContainsValue((int)target.ID) && !target.IsLibero && !target.IsCoach)
 					{
                         IsReplace.SetResult(true);
                     }
@@ -100,13 +103,13 @@ public partial class SanctionPage : ContentPage
                     IsReplace.SetResult(false);
                 }
             }	
-			else if (sanctionPDF.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
+			else if (ev.SanctionCategoryID == _db.SanctionsCategories.Find(x => x.Name == "Disqual").ID)
 			{
-                if (target.Id != -1)
+                if (target.ID != -1)
                 {
                     target.IsDisqual = true;
 
-                    if (line.ContainsValue((int)target.Id) && !target.IsLibero && !target.IsCoach)
+                    if (line.ContainsValue((int)target.ID) && !target.IsLibero && !target.IsCoach)
                     {
                         IsReplace.SetResult(true);
                     }

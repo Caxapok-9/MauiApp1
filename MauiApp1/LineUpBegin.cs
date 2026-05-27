@@ -1,4 +1,5 @@
-﻿using SQLiteNetExtensions.Attributes;
+﻿using SQLite;
+using SQLiteNetExtensions.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,28 +10,23 @@ namespace MauiApp1
 {
     public class LineUpBegin
     {
-        [ForeignKey(typeof(Set))]
-        public int SetId { get; set; }
+        [PrimaryKey, AutoIncrement]
+        public int ID { get; set; }
 
-        [ForeignKey(typeof(Team))]
-        public int TeamId { get; set; }
+        public int SetID { get; set; }
 
-        [ForeignKey(typeof(Player))]
+        public int TeamID { get; set; }
+
         public int Zone1PlayerID { get; set; }
 
-        [ForeignKey(typeof(Player))]
         public int Zone2PlayerID { get; set; }
 
-        [ForeignKey(typeof(Player))]
         public int Zone3PlayerID { get; set; }
 
-        [ForeignKey(typeof(Player))]
         public int Zone4PlayerID { get; set; }
 
-        [ForeignKey(typeof(Player))]
         public int Zone5PlayerID { get; set; }
 
-        [ForeignKey(typeof(Player))]
         public int Zone6PlayerID { get; set; }
 
         public int[] GetPosition()

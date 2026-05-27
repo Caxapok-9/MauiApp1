@@ -16,7 +16,7 @@ namespace MauiApp1
 
             Team TeamGuest = await _db.GetTeamGuestAsync();
 
-            var Events = await _db.GetEventAsync(set, new List<int> { _db.EventsCategories["S"], _db.EventsCategories["R"], _db.EventsCategories["RR"], _db.EventsCategories["WR"] });
+            var Events = await _db.GetEventAsync(set, new List<int> { _db.EventsCategories["SC"], _db.EventsCategories["R"], _db.EventsCategories["RR"], _db.EventsCategories["ER"] });
 
             LineUpBegin BeginLineUp = await _db.GetLineUpBeginAsync(set, _teamTarget);
 
@@ -24,13 +24,13 @@ namespace MauiApp1
 
             line.PostPosition(BeginLineUp.GetPosition());
 
-            TeamL target = new TeamL() { Id = _teamTarget.Id, IsServe = set.IsShort ? _teamTarget.FinalySetServ : CheckServ(_teamTarget, set) };
+            TeamL target = new TeamL() { Id = _teamTarget.ID, IsServe = set.IsShort ? _teamTarget.FinalySetServ : CheckServ(_teamTarget, set) };
 
-            TeamL enemy = new TeamL() { Id = (_teamTarget.IsHome ? TeamGuest : TeamHome).Id, IsServe = !target.IsServe };
+            TeamL enemy = new TeamL() { Id = (_teamTarget.IsHome ? TeamGuest : TeamHome).ID, IsServe = !target.IsServe };
 
             foreach (Event e in Events)
             {
-                if (e.EventID == _db.EventsCategories["S"])
+                if (e.EventCategoryID == _db.EventsCategories["SC"])
                 {
                     if (e.TeamID == target.Id)
                     {
@@ -55,7 +55,7 @@ namespace MauiApp1
                     }
                 }
 
-                if (e.EventID == _db.EventsCategories["R"] || e.EventID == _db.EventsCategories["RR"] || e.EventID == _db.EventsCategories["WR"])
+                if (e.EventCategoryID == _db.EventsCategories["R"] || e.EventCategoryID == _db.EventsCategories["RR"] || e.EventCategoryID == _db.EventsCategories["ER"])
                 {
                     if (line.Zone1PlayerID == e.PlayerInID)
                     {

@@ -151,8 +151,8 @@ public partial class StartPage : ContentPage
         MainInformation information = new MainInformation();
 
         information.NameTournament = EntryTournament.Text;
-        information.TeamHome = ListTeam.Where(x => x.IsHome).First().Id;
-        information.TeamGuest = ListTeam.Where(x => !x.IsHome).First().Id;
+        information.TeamHomeID = ListTeam.Where(x => x.IsHome).First().ID;
+        information.TeamGuestID = ListTeam.Where(x => !x.IsHome).First().ID;
         information.FirstReferee = EntryFirstReferee.Text;
         information.ToReferee = string.IsNullOrWhiteSpace(EntryToReferee.Text) ? null : EntryToReferee.Text;
         information.Secretary = EntrySecretary.Text;

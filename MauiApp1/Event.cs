@@ -14,23 +14,22 @@ namespace MauiApp1
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
 
-        [ForeignKey(typeof(Set))]
         public int SetID {  get; set; }
 
-        [ForeignKey(typeof(Team))]
         public int TeamID { get; set; }
 
-        [ForeignKey(typeof(EventCategory))]
-        public int EventID { get; set; }
+        public int EventCategoryID { get; set; }
 
         public int ScoreHome { get; set; }
 
         public int ScoreGuest { get; set; }
 
-        [ForeignKey(typeof(Player))]
         public int? PlayerInID { get; set; } = null;
 
-        [ForeignKey(typeof(Player))]
         public int? PlayerOutID { get; set; } = null;
+
+        public int? SanctionCategoryID { get; set; } = null;
+
+        public int? TargetID { get; set; } = null;
     }
 }

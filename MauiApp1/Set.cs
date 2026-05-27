@@ -11,15 +11,10 @@ namespace MauiApp1
     public class Set
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         public int NumberSet { get; set; }
 
-        public int ScoreHome { get; set; } = 0;
-
-        public int ScoreGuest { get; set; } = 0;
-
-        [ForeignKey(typeof(Team))]
         public int WinnerID { get; set; }
 
         public bool IsShort { get; set; } = false;

@@ -10,7 +10,7 @@ namespace MauiApp1
     public class EventCategory
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         public string Name { get; set; }
     }

@@ -104,12 +104,6 @@ public partial class ScoreBoardPage : ContentPage
 
                     if (warning == "Да")
                     {
-                        var info = await _db.GetMainInfoAsync();
-
-                        info.Logs += $"Команде {TeamHome.Name} назначено техническое поражение в матче. Партия номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}";
-
-                        await _db.UpdateMainInfoAsync(info);
-
                         await TechLosing.TechLoseGame(_db, set, TeamHome);
 
                         await EndGame();
@@ -122,12 +116,6 @@ public partial class ScoreBoardPage : ContentPage
 
                     if (warning == "Да")
                     {
-                        var info = await _db.GetMainInfoAsync();
-
-                        info.Logs += $"Команде {TeamGuest.Name} назначено техническое поражение в матче. Партия номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}";
-
-                        await _db.UpdateMainInfoAsync(info);
-
                         await TechLosing.TechLoseGame(_db, set, TeamGuest);
 
                         await EndGame();
@@ -332,34 +320,24 @@ public partial class ScoreBoardPage : ContentPage
                 }
                 else
                 {
-                    var LastSanction = await _db.GetLastSanctionAsync();
+                    var LastSanction = await _db.GetLastEventAsync();
 
                     Set set = await _db.GetLastSetAsync();
 
-                    var info = await _db.GetMainInfoAsync();
-
-                    if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id && LastSanction.TargetId == -1)
+                    if (LastSanction.SanctionCategoryID == _db.SanctionsCategories.Find(x => x.Name == "Remove").ID && LastSanction.TargetID == -1)
                     {
-                        info.Logs += $"Команде {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} назначено техническое поражение в партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
+                        await DisplayAlert("Информация", $"Команда {(LastSanction.TeamID == TeamHome.ID ? TeamHome : TeamGuest).Name} удалена до конца партии", "Ок");
 
-                        await _db.UpdateMainInfoAsync(info);
-
-                        await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} удалена до конца партии", "Ок");
-
-                        await TechLosing.TechLoseSet(_db, set, (LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest));
+                        await TechLosing.TechLoseSet(_db, set, (LastSanction.TeamID == TeamHome.ID ? TeamHome : TeamGuest));
 
                         await CheckEndGame();
                     }
 
-                    if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id && LastSanction.TargetId == -1)
+                    if (LastSanction.SanctionCategoryID == _db.SanctionsCategories.Find(x => x.Name == "Disqual").ID && LastSanction.TargetID == -1)
                     {
-                        info.Logs += $"Команде {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} назначено техническое поражение в матче. Партия номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
+                        await DisplayAlert("Информация", $"Команда {(LastSanction.TeamID == TeamHome.ID ? TeamHome : TeamGuest).Name} дисквалифицирована", "Ок");
 
-                        await _db.UpdateMainInfoAsync(info);
-
-                        await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} дисквалифицирована", "Ок");
-
-                        await TechLosing.TechLoseGame(_db, set, (LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest));
+                        await TechLosing.TechLoseGame(_db, set, (LastSanction.TeamID == TeamHome.ID ? TeamHome : TeamGuest));
 
                         await EndGame();
                     }
@@ -378,6 +356,8 @@ public partial class ScoreBoardPage : ContentPage
 
         Set set = await _db.GetLastSetAsync();
 
+        var Score = await _db.GetScore(set);
+
         var RosterHome = await _db.GetRosterPlayer(TeamHome);
 
         var RosterGuest = await _db.GetRosterPlayer(TeamGuest);
@@ -385,11 +365,11 @@ public partial class ScoreBoardPage : ContentPage
         NameHome.Text = TeamHome.Name;
         NameGuest.Text = TeamGuest.Name;
 
-        CountSetHome.Text = sets.Where(x => x.WinnerID == TeamHome.Id).Count().ToString();
-        CountSetGuest.Text = sets.Where(x => x.WinnerID == TeamGuest.Id).Count().ToString();
+        CountSetHome.Text = sets.Where(x => x.WinnerID == TeamHome.ID).Count().ToString();
+        CountSetGuest.Text = sets.Where(x => x.WinnerID == TeamGuest.ID).Count().ToString();
 
-        ScoreHomeButton.Text = set.ScoreHome.ToString();
-        ScoreGuestButton.Text = set.ScoreGuest.ToString();
+        ScoreHomeButton.Text = Score.Item1.ToString();
+        ScoreGuestButton.Text = Score.Item2.ToString();
 
         if (RosterHome.Count() == 6)
         {
@@ -518,7 +498,7 @@ public partial class ScoreBoardPage : ContentPage
 
     private async Task CreateSet()
     {
-        Set newSet = new Set() { NumberSet = 1, ScoreGuest = 0, ScoreHome = 0, IsShort = false };
+        Set newSet = new Set() { NumberSet = 1, IsShort = false };
 
         await _db.SaveSetAsync(newSet);
 
@@ -546,7 +526,7 @@ public partial class ScoreBoardPage : ContentPage
 
     private async Task CreateSet(Set s)
     {
-        Set newSet = new Set() { NumberSet = s.NumberSet + 1, ScoreGuest = 0, ScoreHome = 0 };
+        Set newSet = new Set() { NumberSet = s.NumberSet + 1 };
 
         newSet.IsShort = newSet.NumberSet == Setting.MaxSet ? true : false;
 
@@ -647,6 +627,8 @@ public partial class ScoreBoardPage : ContentPage
 
         Set set = await _db.GetLastSetAsync();
 
+        var Score = await _db.GetScore(set);
+
         while (string.IsNullOrWhiteSpace(result))
         {
             result = await DisplayActionSheet($"Команда {team.Name} берёт тайм-аут ?", null, null, "Да", "Нет");
@@ -654,7 +636,7 @@ public partial class ScoreBoardPage : ContentPage
 
         if (result == "Да")
         {
-            Event ev = new Event() { SetID = set.Id, TeamID = team.Id, EventID = _db.EventsCategories["T"], ScoreHome = set.ScoreHome, ScoreGuest = set.ScoreGuest };
+            Event ev = new Event() { SetID = set.ID, TeamID = team.ID, EventCategoryID = _db.EventsCategories["T"], ScoreHome = Score.Item1, ScoreGuest = Score.Item2 };
 
             await _db.SaveEventAsync(ev);
 
@@ -668,28 +650,11 @@ public partial class ScoreBoardPage : ContentPage
     {
         Set set = await _db.GetLastSetAsync();
 
-        Event ev = new Event() { SetID = set.Id, ScoreHome = set.ScoreHome, ScoreGuest = set.ScoreGuest, EventID = _db.EventsCategories["S"] };
+        var Score = await _db.GetScore(set);
 
-        if (team.IsHome)
-        {
-            ev.TeamID = TeamHome.Id;
-
-            ++set.ScoreHome;
-
-            ScoreHomeButton.Text = set.ScoreHome.ToString();
-        }
-        else
-        {
-            ev.TeamID = TeamGuest.Id;
-
-            ++set.ScoreGuest;
-
-            ScoreGuestButton.Text = set.ScoreGuest.ToString();
-        }
+        Event ev = new Event() { SetID = set.ID, TeamID = team.ID, ScoreHome = Score.Item1, ScoreGuest = Score.Item2, EventCategoryID = _db.EventsCategories["SC"] };
 
         await _db.SaveEventAsync(ev);
-
-        await _db.UpdateSetAsync(set);
 
         bool checkEndSet = await CheckEndSet();
 
@@ -697,15 +662,19 @@ public partial class ScoreBoardPage : ContentPage
         {
             await CheckEndGame();
         }
+
+        await UpdateData();
     }
 
     private async Task<bool> CheckEndSet()
     {
         Set set = await _db.GetLastSetAsync();
 
+        var Score = await _db.GetScore(set);
+
         if (!set.IsShort)
         {
-            if((set.ScoreHome >= Setting.MaxScore || set.ScoreGuest >= Setting.MaxScore) && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+            if((Score.Item1 >= Setting.MaxScore || Score.Item2 >= Setting.MaxScore) && Math.Abs(Score.Item1 - Score.Item2) > 1)
             {
                 string result = null;
 
@@ -716,13 +685,13 @@ public partial class ScoreBoardPage : ContentPage
 
                 if (result == "Завершить партию")
                 {
-                    if (set.ScoreHome > set.ScoreGuest)
+                    if (Score.Item1 > Score.Item2)
                     {
-                        set.WinnerID = TeamHome.Id;
+                        set.WinnerID = TeamHome.ID;
                     }
                     else
                     {
-                        set.WinnerID = TeamGuest.Id;
+                        set.WinnerID = TeamGuest.ID;
                     }
 
                     await _db.UpdateSetAsync(set);
@@ -737,7 +706,7 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            if ((set.ScoreHome >= Setting.MaxScoreInShortSet || set.ScoreGuest >= Setting.MaxScoreInShortSet) && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+            if ((Score.Item1 >= Setting.MaxScoreInShortSet || Score.Item2 >= Setting.MaxScoreInShortSet) && Math.Abs(Score.Item1 - Score.Item2) > 1)
             {
                 string result = null;
 
@@ -748,13 +717,13 @@ public partial class ScoreBoardPage : ContentPage
 
                 if (result == "Завершить партию")
                 {
-                    if (set.ScoreHome > set.ScoreGuest)
+                    if (Score.Item1 > Score.Item2)
                     {
-                        set.WinnerID = TeamHome.Id;
+                        set.WinnerID = TeamHome.ID;
                     }
                     else
                     {
-                        set.WinnerID = TeamGuest.Id;
+                        set.WinnerID = TeamGuest.ID;
                     }
 
                     await _db.UpdateSetAsync(set);
@@ -768,7 +737,7 @@ public partial class ScoreBoardPage : ContentPage
             }
             else
             {
-                if (set.ScoreHome == (Setting.MaxScoreInShortSet + 1) / 2 || set.ScoreGuest == (Setting.MaxScoreInShortSet + 1)/ 2)
+                if (Score.Item1 == (Setting.MaxScoreInShortSet + 1) / 2 || Score.Item2 == (Setting.MaxScoreInShortSet + 1)/ 2)
                 {
                     await DisplayAlert("Информация", "Смена сторон", "Ок");
                 }
@@ -782,24 +751,13 @@ public partial class ScoreBoardPage : ContentPage
     {
         Set set = await _db.GetLastSetAsync();
 
-        var events = await _db.GetEventAsync(set);
+        var ev = await _db.GetLastEventAsync();
 
-        if (events.Count > 0)
+        if (ev != null)
         {
-            Event ev = events.Last();
-
-            if (ev.EventID == _db.EventsCategories["S"])
+            if (ev.EventCategoryID == _db.EventsCategories["SC"])
             {
                 await _db.DeleteSelectEventAsync(ev);
-
-                if (ev.TeamID == TeamHome.Id)
-                {
-                    set.ScoreHome--;                    
-                }
-                else
-                {
-                    set.ScoreGuest--;
-                }
 
                 await _db.UpdateSetAsync(set);
             }
@@ -818,12 +776,12 @@ public partial class ScoreBoardPage : ContentPage
 
         if (Setting.MaxSet == 5)
         {
-            if (sets.Where(x => x.WinnerID == TeamHome.Id).Count() == 3)
+            if (sets.Where(x => x.WinnerID == TeamHome.ID).Count() == 3)
             {
                 await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamHome.Name}", "Ок");
                 await EndGame();
             }
-            else if (sets.Where(x => x.WinnerID == TeamGuest.Id).Count() == 3)
+            else if (sets.Where(x => x.WinnerID == TeamGuest.ID).Count() == 3)
             {
                 await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamGuest.Name}", "Ок");
                 await EndGame();
@@ -836,12 +794,12 @@ public partial class ScoreBoardPage : ContentPage
         }
         else
         {
-            if (sets.Where(x => x.WinnerID == TeamHome.Id).Count() == 2)
+            if (sets.Where(x => x.WinnerID == TeamHome.ID).Count() == 2)
             {
                 await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamHome.Name}", "Ок");
                 await EndGame();
             }
-            else if (sets.Where(x => x.WinnerID == TeamGuest.Id).Count() == 2)
+            else if (sets.Where(x => x.WinnerID == TeamGuest.ID).Count() == 2)
             {
                 await DisplayAlert("Информация", $"Матч окончен\nПобедила команда {TeamGuest.Name}", "Ок");
                 await EndGame();
@@ -876,11 +834,11 @@ public partial class ScoreBoardPage : ContentPage
 
     private async Task ReplaceSanction()
     {
-        var LastSanction = await _db.GetLastSanctionAsync();
+        var LastSanction = await _db.GetLastEventAsync();
 
-        Team team = await _db.GetTeamAsync(LastSanction.TeamId);
+        Team team = await _db.GetTeamAsync(LastSanction.TeamID);
 
-        Player player = await _db.GetPlayerAsync(LastSanction.TargetId);
+        Player player = await _db.GetPlayerAsync((int)LastSanction.TargetID);
 
         bool ch = await ReplaceService.CheckReplacePlayer(_db, team);
 
@@ -896,12 +854,12 @@ public partial class ScoreBoardPage : ContentPage
 
                 if(result != null)
                 {
-                    if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
+                    if (LastSanction.SanctionCategoryID == _db.SanctionsCategories.Find(x => x.Name == "Remove").ID)
                     {
                         await ReplaceService.Replace(_db, team, player, list.Find(x => x.Number == result), false, true, false);
                     }
 
-                    if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
+                    if (LastSanction.SanctionCategoryID == _db.SanctionsCategories.Find(x => x.Name == "Disqual").ID)
                     {
                         await ReplaceService.Replace(_db, team, player, list.Find(x => x.Number == result), false, false, true);
                     }
@@ -914,30 +872,20 @@ public partial class ScoreBoardPage : ContentPage
         {
             Set set = await _db.GetLastSetAsync();
 
-            var info = await _db.GetMainInfoAsync();
-
-            if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Remove").Id)
+            if (LastSanction.SanctionCategoryID == _db.SanctionsCategories.Find(x => x.Name == "Remove").ID)
             {
-                info.Logs += $"Команде {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} назначено техническое поражение в партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}. В связи с удалением игрока\n";
+                await DisplayAlert("Информация", $"Команда {(LastSanction.TeamID == TeamHome.ID ? TeamHome : TeamGuest).Name} удалена до конца партии", "Ок");
 
-                await _db.UpdateMainInfoAsync(info);
-
-                await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} удалена до конца партии", "Ок");
-
-                await TechLosing.TechLoseSet(_db, set, (LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest));
+                await TechLosing.TechLoseSet(_db, set, (LastSanction.TeamID == TeamHome.ID ? TeamHome : TeamGuest));
 
                 await CheckEndGame();
             }
 
-            if (LastSanction.SanctionId == _db.SanctionsCategories.Find(x => x.Name == "Disqual").Id)
+            if (LastSanction.SanctionCategoryID == _db.SanctionsCategories.Find(x => x.Name == "Disqual").ID)
             {
-                info.Logs += $"Команде {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} назначено техническое поражение в матче. Партия номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}. В связи с дисквалификацией игрока\n";
+                await DisplayAlert("Информация", $"Команда {(LastSanction.TeamID == TeamHome.ID ? TeamHome : TeamGuest).Name} дисквалифицирована", "Ок");
 
-                await _db.UpdateMainInfoAsync(info);
-
-                await DisplayAlert("Информация", $"Команда {(LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest).Name} дисквалифицирована", "Ок");
-
-                await TechLosing.TechLoseGame(_db, set, (LastSanction.TeamId == TeamHome.Id ? TeamHome : TeamGuest));
+                await TechLosing.TechLoseGame(_db, set, (LastSanction.TeamID == TeamHome.ID ? TeamHome : TeamGuest));
 
                 await EndGame();
             }

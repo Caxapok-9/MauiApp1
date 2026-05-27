@@ -21,20 +21,28 @@ namespace MauiApp1
                 {
                     if (teamLoser.IsHome)
                     {
-                        set.ScoreGuest++;
+                        var Score = await _db.GetScore(set);
 
-                        if (set.ScoreGuest >= Setting.MaxScore && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+                        await _db.SaveEventAsync(new Event() { TeamID = TeamGuest.ID, ScoreHome = Score.Item1, ScoreGuest = Score.Item2, SetID = set.ID, EventCategoryID = _db.EventsCategories["SC"] });
+
+                        Score = await _db.GetScore(set);
+
+                        if (Score.Item2 >= Setting.MaxScore && Math.Abs(Score.Item1 - Score.Item2) > 1)
                         {
-                            set.WinnerID = TeamGuest.Id;
+                            set.WinnerID = TeamGuest.ID;
                         }
                     }
                     else
                     {
-                        set.ScoreHome++;
+                        var Score = await _db.GetScore(set);
 
-                        if (set.ScoreHome >= Setting.MaxScore && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+                        await _db.SaveEventAsync(new Event() { TeamID = TeamHome.ID, ScoreHome = Score.Item1, ScoreGuest = Score.Item2, SetID = set.ID, EventCategoryID = _db.EventsCategories["SC"] });
+
+                        Score = await _db.GetScore(set);
+
+                        if (Score.Item1 >= Setting.MaxScore && Math.Abs(Score.Item1 - Score.Item2) > 1)
                         {
-                            set.WinnerID = TeamHome.Id;
+                            set.WinnerID = TeamHome.ID;
                         }
                     }
                 }
@@ -45,20 +53,28 @@ namespace MauiApp1
                 {
                     if (teamLoser.IsHome)
                     {
-                        set.ScoreGuest++;
+                        var Score = await _db.GetScore(set);
 
-                        if (set.ScoreGuest >= Setting.MaxScoreInShortSet && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+                        await _db.SaveEventAsync(new Event() { TeamID = TeamGuest.ID, ScoreHome = Score.Item1, ScoreGuest = Score.Item2, SetID = set.ID, EventCategoryID = _db.EventsCategories["SC"] });
+
+                        Score = await _db.GetScore(set);
+
+                        if (Score.Item2 >= Setting.MaxScoreInShortSet && Math.Abs(Score.Item1 - Score.Item2) > 1)
                         {
-                            set.WinnerID = TeamGuest.Id;
+                            set.WinnerID = TeamGuest.ID;
                         }
                     }
                     else
                     {
-                        set.ScoreHome++;
+                        var Score = await _db.GetScore(set);
 
-                        if (set.ScoreHome >= Setting.MaxScoreInShortSet && Math.Abs(set.ScoreHome - set.ScoreGuest) > 1)
+                        await _db.SaveEventAsync(new Event() { TeamID = TeamHome.ID, ScoreHome = Score.Item1, ScoreGuest = Score.Item2, SetID = set.ID, EventCategoryID = _db.EventsCategories["SC"] });
+
+                        Score = await _db.GetScore(set);
+
+                        if (Score.Item1 >= Setting.MaxScoreInShortSet && Math.Abs(Score.Item1 - Score.Item2) > 1)
                         {
-                            set.WinnerID = TeamHome.Id;
+                            set.WinnerID = TeamHome.ID;
                         }
                     }
                 }
@@ -77,7 +93,7 @@ namespace MauiApp1
 
             var Sets = await _db.GetSetAsync();
 
-            int winCount = Sets.Where(x => x.WinnerID != teamLoser.Id).Count();
+            int winCount = Sets.Where(x => x.WinnerID != teamLoser.ID).Count();
 
             if (Setting.MaxSet == 5)
             {
@@ -93,17 +109,13 @@ namespace MauiApp1
                         {
                             if (lastSet.NumberSet + 1 != 5)
                             {
-                                newSet.ScoreHome = 0;
-                                newSet.ScoreGuest = Setting.MaxScore;
-                                newSet.WinnerID = TeamGuest.Id;
+                                newSet.WinnerID = TeamGuest.ID;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = false;
                             }
                             else
                             {
-                                newSet.ScoreHome = 0;
-                                newSet.ScoreGuest = Setting.MaxScoreInShortSet;
-                                newSet.WinnerID = TeamGuest.Id;
+                                newSet.WinnerID = TeamGuest.ID;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = true;
                             }
@@ -112,17 +124,13 @@ namespace MauiApp1
                         {
                             if (lastSet.NumberSet + 1 != 5)
                             {
-                                newSet.ScoreHome = Setting.MaxScore;
-                                newSet.ScoreGuest = 0;
-                                newSet.WinnerID = TeamHome.Id;
+                                newSet.WinnerID = TeamHome.ID;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = false;
                             }
                             else
                             {
-                                newSet.ScoreHome = Setting.MaxScoreInShortSet;
-                                newSet.ScoreGuest = 0;
-                                newSet.WinnerID = TeamHome.Id;
+                                newSet.WinnerID = TeamHome.ID;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = true;
                             }
@@ -148,17 +156,13 @@ namespace MauiApp1
                         {
                             if (lastSet.NumberSet + 1 != 3)
                             {
-                                newSet.ScoreHome = 0;
-                                newSet.ScoreGuest = Setting.MaxScore;
-                                newSet.WinnerID = TeamGuest.Id;
+                                newSet.WinnerID = TeamGuest.ID;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = false;
                             }
                             else
                             {
-                                newSet.ScoreHome = 0;
-                                newSet.ScoreGuest = Setting.MaxScoreInShortSet;
-                                newSet.WinnerID = TeamGuest.Id;
+                                newSet.WinnerID = TeamGuest.ID;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = true;
                             }
@@ -167,17 +171,13 @@ namespace MauiApp1
                         {
                             if (lastSet.NumberSet + 1 != 3)
                             {
-                                newSet.ScoreHome = Setting.MaxScore;
-                                newSet.ScoreGuest = 0;
-                                newSet.WinnerID = TeamHome.Id;
+                                newSet.WinnerID = TeamHome.ID;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = false;
                             }
                             else
                             {
-                                newSet.ScoreHome = Setting.MaxScoreInShortSet;
-                                newSet.ScoreGuest = 0;
-                                newSet.WinnerID = TeamHome.Id;
+                                newSet.WinnerID = TeamHome.ID;
                                 newSet.NumberSet = lastSet.NumberSet + 1;
                                 newSet.IsShort = true;
                             }

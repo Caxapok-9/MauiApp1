@@ -211,7 +211,7 @@ public partial class RosterPageGuest : ContentPage
 
         foreach (Player player in guestPlayers)
         {
-            await _db.SavePlayerAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamGuest.Id });
+            await _db.SavePlayerAsync(new Player() { Name = player.Name, Number = player.Number, IsLibero = player.IsLibero, IsCaptain = player.IsCaptain, TeamID = TeamGuest.ID });
         }
 
         while (true)
@@ -228,7 +228,7 @@ public partial class RosterPageGuest : ContentPage
                 }
                 else
                 {
-                    await _db.SavePlayerAsync(new Player() { Name = result, Number = "Тренер", IsLibero = false, IsCaptain = false, TeamID = TeamGuest.Id, IsCoach = true });
+                    await _db.SavePlayerAsync(new Player() { Name = result, Number = "Тренер", IsLibero = false, IsCaptain = false, TeamID = TeamGuest.ID, IsCoach = true });
 
                     break;
                 }
