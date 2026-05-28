@@ -16,7 +16,7 @@ namespace MauiApp1
 
             Team TeamGuest = await _db.GetTeamGuestAsync();
 
-            var Events = await _db.GetEventAsync(set, new List<int> { _db.EventsCategories["SC"], _db.EventsCategories["R"], _db.EventsCategories["RR"], _db.EventsCategories["ER"] });
+            var Events = await _db.GetEventAsync(set, new List<int> { _db.EventsCategories["SC"], _db.EventsCategories["R"], _db.EventsCategories["RR"], _db.EventsCategories["ERI"], _db.EventsCategories["ERR"], _db.EventsCategories["ERD"] });
 
             LineUpBegin BeginLineUp = await _db.GetLineUpBeginAsync(set, _teamTarget);
 
@@ -55,7 +55,7 @@ namespace MauiApp1
                     }
                 }
 
-                if (e.EventCategoryID == _db.EventsCategories["R"] || e.EventCategoryID == _db.EventsCategories["RR"] || e.EventCategoryID == _db.EventsCategories["ER"])
+                if (e.EventCategoryID == _db.EventsCategories["R"] || e.EventCategoryID == _db.EventsCategories["RR"] || e.EventCategoryID == _db.EventsCategories["ERI"] || e.EventCategoryID == _db.EventsCategories["ERR"] || e.EventCategoryID == _db.EventsCategories["ERD"])
                 {
                     if (line.Zone1PlayerID == e.PlayerInID)
                     {

@@ -350,6 +350,23 @@ public partial class ScoreBoardPage : ContentPage
         }
     }
 
+    private async void OnHistoryClick(object sender, EventArgs e)
+    {
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+
+            await Navigation.PushModalAsync(new HistoryPage(_db));
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     private async Task UpdateData()
     {
         var sets = await _db.GetSetAsync();

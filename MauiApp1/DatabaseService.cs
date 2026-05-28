@@ -24,7 +24,7 @@ public class DatabaseService
         await _db.DeleteAllAsync<Team>();
         await _db.DeleteAllAsync<EventCategory>();
         await _db.DeleteAllAsync<SanctionCategory>();
-        await _db.ExecuteAsync("DELETE FROM sqlite_sequence WHERE name IN ('Event', 'LineUpBegin', 'Set', 'MainInformation', 'Player', 'Team');");
+        await _db.ExecuteAsync("DELETE FROM sqlite_sequence WHERE name IN ('Event', 'LineUpBegin', 'Set', 'MainInformation', 'Player', 'Team', 'EventCategory', 'SanctionCategory');");
     }
 
     public async Task InizializeAllTablesAsync()
@@ -178,8 +178,15 @@ public class DatabaseService
                 new EventCategory() {Name = "T"},
                 new EventCategory() {Name = "R"},
                 new EventCategory() {Name = "RR"},
-                new EventCategory() {Name = "ER"},
-                 new EventCategory() {Name = "SA"}
+                new EventCategory() {Name = "ERI"},
+                new EventCategory() {Name = "ERR"},
+                new EventCategory() {Name = "ERD"},
+                new EventCategory() {Name = "SAW"},
+                new EventCategory() {Name = "SARM"},
+                new EventCategory() {Name = "SARV"},
+                new EventCategory() {Name = "SAD"},
+                new EventCategory() {Name = "TLS"},
+                new EventCategory() {Name = "TLG"}
             };
 
             await _db.InsertAllAsync(list);

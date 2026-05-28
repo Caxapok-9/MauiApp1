@@ -16,6 +16,16 @@
             
         </ToolbarItem>
 
+        <ToolbarItem Clicked="OnHistoryClick" Priority="0" Order="Primary">
+
+            <ToolbarItem.IconImageSource>
+
+                <FontImageSource Glyph="История" Size="30" Color="White"/>
+
+            </ToolbarItem.IconImageSource>
+
+        </ToolbarItem>
+
     </ContentPage.ToolbarItems>
     
     <Grid RowDefinitions="2*, 8*, 3*" 

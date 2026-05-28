@@ -71,7 +71,20 @@ public partial class SanctionPage : ContentPage
             var target = PickerPTC.SelectedItem as Player;
 
             Event ev = new Event();
-            ev.EventCategoryID = _db.EventsCategories["SA"];
+
+            if (sanction == _db.SanctionsCategories.Find(x => x.Name == "Warning").DisplayName)
+                ev.EventCategoryID = _db.EventsCategories["SAW"];
+
+            if (sanction == _db.SanctionsCategories.Find(x => x.Name == "Remark").DisplayName)
+                ev.EventCategoryID = _db.EventsCategories["SARM"];
+
+            if (sanction == _db.SanctionsCategories.Find(x => x.Name == "Remove").DisplayName)
+                ev.EventCategoryID = _db.EventsCategories["SARV"];
+
+            if (sanction == _db.SanctionsCategories.Find(x => x.Name == "Disqual").DisplayName)
+                ev.EventCategoryID = _db.EventsCategories["SAD"];
+
+
             ev.SanctionCategoryID = _db.SanctionsCategories.Find(x => x.DisplayName == sanction).ID;
             ev.TeamID = team.ID;
             ev.TargetID = (int)target.ID;

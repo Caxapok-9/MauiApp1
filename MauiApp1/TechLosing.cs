@@ -1,10 +1,4 @@
-﻿using MauiApp1.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace MauiApp1
 {
     public static class TechLosing
@@ -14,6 +8,11 @@ namespace MauiApp1
             Team TeamHome = await _db.GetTeamHomeAsync();
 
             Team TeamGuest = await _db.GetTeamGuestAsync();
+
+            var score = await _db.GetScore(set);
+
+            await _db.SaveEventAsync(new Event() { SetID = set.ID, TeamID = teamLoser.ID, ScoreHome = score.Item1, ScoreGuest = score.Item2, EventCategoryID = _db.EventsCategories["TLS"] });
+
 
             if (!set.IsShort)
             {
@@ -94,6 +93,10 @@ namespace MauiApp1
             var Sets = await _db.GetSetAsync();
 
             int winCount = Sets.Where(x => x.WinnerID != teamLoser.ID).Count();
+
+            var score = await _db.GetScore(set);
+
+            await _db.SaveEventAsync(new Event() { SetID = set.ID, TeamID = teamLoser.ID, ScoreHome = score.Item1, ScoreGuest = score.Item2, EventCategoryID = _db.EventsCategories["TLG"] });
 
             if (Setting.MaxSet == 5)
             {
@@ -188,7 +191,7 @@ namespace MauiApp1
                         winCount++;
                     }
                 }
-            }
+            }            
         }
     }
 }

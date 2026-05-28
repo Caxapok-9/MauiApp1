@@ -211,19 +211,20 @@ namespace MauiApp1
                 if (injury)
                 {
                     courtPlayer.IsInjury = true;
+                    ev.EventCategoryID = _db.EventsCategories["ERI"];
                 }
 
                 if(remark)
                 {
                     courtPlayer.IsRemove = true;
+                    ev.EventCategoryID = _db.EventsCategories["ERR"];
                 }
 
                 if(disqual)
                 {
                     courtPlayer.IsDisqual = true;
+                    ev.EventCategoryID = _db.EventsCategories["ERD"];
                 }
-
-                ev.EventCategoryID = _db.EventsCategories["ER"];
 
                 await _db.UpdateMainInfoAsync(info);
             }

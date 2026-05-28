@@ -80,6 +80,9 @@
 	  <MauiXaml Update="Views\EndGamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\HistoryPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\LineupNowPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
