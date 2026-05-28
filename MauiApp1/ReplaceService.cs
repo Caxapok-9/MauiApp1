@@ -37,7 +37,7 @@ namespace MauiApp1
 
             foreach (var e in Events)
             {
-                if (e.EventID == _db.EventsCategories["R"] || e.EventID == _db.EventsCategories["RR"])
+                if (e.EventCategoryID == _db.EventsCategories["R"] || e.EventCategoryID == _db.EventsCategories["RR"])
                     countReplace--;
             }
 
@@ -45,7 +45,7 @@ namespace MauiApp1
 
             var line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 
-            var listBench = TargetRoster.Where(x => !line.ContainsValue((int)x.Id)).ToList();
+            var listBench = TargetRoster.Where(x => !line.ContainsValue((int)x.ID)).ToList();
 
             foreach(var item in listBench)
             {
@@ -55,9 +55,9 @@ namespace MauiApp1
                 }
                 else
                 {
-                    Player p = TargetRoster.Find(x => x.Id == item.ReplaceID);
+                    Player p = TargetRoster.Find(x => x.ID == item.ReplaceID);
 
-                    if (p != null && p.ReplaceID == 0 && line.ContainsValue((int)p.Id))
+                    if (p != null && p.ReplaceID == 0 && line.ContainsValue((int)p.ID))
                     {
                         countTeory += 1;
                     }
@@ -79,7 +79,7 @@ namespace MauiApp1
 
             var line = await LineUpNow.GetNowLineUp(_db, _targetTeam);
 
-            var listBench = (_targetTeam.IsHome ? RosterHome : RosterGuest).Where(x => !line.ContainsValue((int)x.Id) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
+            var listBench = (_targetTeam.IsHome ? RosterHome : RosterGuest).Where(x => !line.ContainsValue((int)x.ID) && !x.IsLibero && !x.IsRemove && !x.IsDisqual && !x.IsInjury).ToList();
 
             if(listBench.Count > 0)
             {
@@ -113,11 +113,11 @@ namespace MauiApp1
                 }
                 else
                 {
-                    return (_targetTeam.IsHome ? RosterHome : RosterGuest).Where(x => !line.ContainsValue((int)x.Id)).ToList();
+                    return (_targetTeam.IsHome ? RosterHome : RosterGuest).Where(x => !line.ContainsValue((int)x.ID)).ToList();
                 }
             }
 
-            var listBench = (_targetTeam.IsHome ? RosterHome : RosterGuest).Where(x => !line.ContainsValue((int)x.Id)).ToList();
+            var listBench = (_targetTeam.IsHome ? RosterHome : RosterGuest).Where(x => !line.ContainsValue((int)x.ID)).ToList();
             
             if (_targetPlayer != null)
             {
@@ -125,7 +125,7 @@ namespace MauiApp1
                 {
                     if (listBench.Count > 0)
                     {
-                        var listTarget = listBench.Where(x => x.ReplaceID == _targetPlayer.Id).ToList();
+                        var listTarget = listBench.Where(x => x.ReplaceID == _targetPlayer.ID).ToList();
 
                         if (listTarget.Count > 0)
                         {
@@ -179,7 +179,9 @@ namespace MauiApp1
         {
             Set set = await _db.GetLastSetAsync();
 
-            Event ev = new Event() { SetID = set.Id, TeamID = _targetTeam.Id, ScoreGuest = set.ScoreGuest, ScoreHome = set.ScoreHome, PlayerInID = courtPlayer.Id, PlayerOutID = benchPlayer.Id };
+            var Score = await _db.GetScore(set);
+
+            Event ev = new Event() { SetID = set.ID, TeamID = _targetTeam.ID, ScoreGuest = Score.Item2, ScoreHome = Score.Item1, PlayerInID = courtPlayer.ID, PlayerOutID = benchPlayer.ID };
 
             if (injury || remark || disqual)
             {
@@ -189,13 +191,13 @@ namespace MauiApp1
 
                 if (benchPlayer.ReplaceID != 0)
                 {
-                    var p = roster.Find(x => x.Id == benchPlayer.ReplaceID);
+                    var p = roster.Find(x => x.ID == benchPlayer.ReplaceID);
 
                     if (p != null)
                     {
                         if (p.ReplaceID == 0)
                         {
-                            p.ReplaceID = (int)benchPlayer.Id;
+                            p.ReplaceID = (int)benchPlayer.ID;
 
                             await _db.UpdatePlayerAsync(p);
                         }
@@ -203,45 +205,40 @@ namespace MauiApp1
                 }
                 else
                 {
-                    benchPlayer.ReplaceID = (int)courtPlayer.Id;
+                    benchPlayer.ReplaceID = (int)courtPlayer.ID;
                 }
 
                 if (injury)
                 {
                     courtPlayer.IsInjury = true;
-                    string Log = $"Замена в команде {_targetTeam.Name} игрока под номером {courtPlayer.Number} на игрока под номером {benchPlayer.Number} в связи с травмой. В партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
-                    info.Logs += Log;
+                    ev.EventCategoryID = _db.EventsCategories["ERI"];
                 }
 
                 if(remark)
                 {
                     courtPlayer.IsRemove = true;
-                    string Log = $"Замена в команде {_targetTeam.Name} игрока под номером {courtPlayer.Number} на игрока под номером {benchPlayer.Number} в связи с удалением. В партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
-                    info.Logs += Log;
+                    ev.EventCategoryID = _db.EventsCategories["ERR"];
                 }
 
                 if(disqual)
                 {
                     courtPlayer.IsDisqual = true;
-                    string Log = $"Замена в команде {_targetTeam.Name} игрока под номером {courtPlayer.Number} на игрока под номером {benchPlayer.Number} в связи с дисквалификацией. В партии номер {set.NumberSet} при счёте {set.ScoreHome}:{set.ScoreGuest}\n";
-                    info.Logs += Log;
+                    ev.EventCategoryID = _db.EventsCategories["ERD"];
                 }
-
-                ev.EventID = _db.EventsCategories["WR"];
 
                 await _db.UpdateMainInfoAsync(info);
             }
             else
             {
-                courtPlayer.ReplaceID = (int)benchPlayer.Id;
+                courtPlayer.ReplaceID = (int)benchPlayer.ID;
 
                 if (benchPlayer.ReplaceID == 0)
                 {
-                    ev.EventID = _db.EventsCategories["R"];
+                    ev.EventCategoryID = _db.EventsCategories["R"];
                 }
                 else
                 {
-                    ev.EventID = _db.EventsCategories["RR"];
+                    ev.EventCategoryID = _db.EventsCategories["RR"];
                 }
             }
 

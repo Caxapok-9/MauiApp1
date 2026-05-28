@@ -145,7 +145,7 @@ public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
                     {
                         signes["SignCaptainHome"] = sign;
 
-                        info.MVPGuest = signpage.GetMVP()?.Id;
+                        info.MVPGuestID = signpage.GetMVP()?.ID;
 
                         string t = signpage.GetProtest();
 
@@ -163,7 +163,7 @@ public partial class EndGamePage : Microsoft.Maui.Controls.TabbedPage
                     {
                         signes["SignCaptainGuest"] = sign;
 
-                        info.MVPHome = signpage.GetMVP()?.Id;
+                        info.MVPHomeID = signpage.GetMVP()?.ID;
 
                         string t = signpage.GetProtest();
 

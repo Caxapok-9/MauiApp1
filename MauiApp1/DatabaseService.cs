@@ -1,7 +1,5 @@
 ﻿using MauiApp1;
 using SQLite;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 public class DatabaseService
 {
@@ -10,41 +8,125 @@ public class DatabaseService
     public DatabaseService(string dbPath)
     {
         _db = new SQLiteAsyncConnection(dbPath);
+        _db.ExecuteAsync("PRAGMA foreign_keys = OFF;");
     }
 
     public Dictionary<string, int> EventsCategories;
 
     public List<SanctionCategory> SanctionsCategories;
-
     public async Task ClearAsync()
     {
         await _db.DeleteAllAsync<Event>();
-        await _db.DeleteAllAsync<Set>();
-        await _db.DeleteAllAsync<Player>();
         await _db.DeleteAllAsync<LineUpBegin>();
-        await _db.DeleteAllAsync<Team>();
+        await _db.DeleteAllAsync<Set>();
         await _db.DeleteAllAsync<MainInformation>();
+        await _db.DeleteAllAsync<Player>();
+        await _db.DeleteAllAsync<Team>();
         await _db.DeleteAllAsync<EventCategory>();
-        await _db.DeleteAllAsync<Sanction>();
         await _db.DeleteAllAsync<SanctionCategory>();
+        await _db.ExecuteAsync("DELETE FROM sqlite_sequence WHERE name IN ('Event', 'LineUpBegin', 'Set', 'MainInformation', 'Player', 'Team', 'EventCategory', 'SanctionCategory');");
     }
 
     public async Task InizializeAllTablesAsync()
     {
-        await _db.CreateTableAsync<MainInformation>();
-        await _db.CreateTableAsync<Event>();
-        await _db.CreateTableAsync<Set>();
-        await _db.CreateTableAsync<Player>();
-        await _db.CreateTableAsync<LineUpBegin>();
-        await _db.CreateTableAsync<Team>();
+        await _db.ExecuteAsync(@"CREATE TABLE IF NOT EXISTS ""Set"" (
+            ""ID"" INTEGER PRIMARY KEY AUTOINCREMENT, 
+            ""NumberSet"" INTEGER NOT NULL, 
+            ""WinnerID"" INTEGER, 
+            ""IsShort"" INTEGER NOT NULL DEFAULT 0, 
+            FOREIGN KEY (""WinnerID"") REFERENCES ""Team""(""ID""));");
+
+        await _db.ExecuteAsync(@"CREATE TABLE IF NOT EXISTS ""Team"" (
+            ""ID"" INTEGER PRIMARY KEY AUTOINCREMENT, 
+            ""Name"" TEXT NOT NULL, 
+            ""IsHome"" INTEGER NOT NULL, 
+            ""FirstSetServ"" INTEGER NOT NULL DEFAULT 0, 
+            ""FinalySetServ"" INTEGER NOT NULL DEFAULT 0, 
+            ""IsLeft"" INTEGER NOT NULL);");
+
+        await _db.ExecuteAsync(@"CREATE TABLE IF NOT EXISTS ""LineUpBegin"" (
+            ""ID"" INTEGER PRIMARY KEY AUTOINCREMENT, 
+            ""SetID"" INTEGER, 
+            ""TeamID"" INTEGER, 
+            ""Zone1PlayerID"" INTEGER, 
+            ""Zone2PlayerID"" INTEGER, 
+            ""Zone3PlayerID"" INTEGER, 
+            ""Zone4PlayerID"" INTEGER, 
+            ""Zone5PlayerID"" INTEGER, 
+            ""Zone6PlayerID"" INTEGER, 
+            FOREIGN KEY (""SetID"") REFERENCES ""Set""(""ID""), 
+            FOREIGN KEY (""TeamID"") REFERENCES ""Team""(""ID""), 
+            FOREIGN KEY (""Zone1PlayerID"") REFERENCES ""Player""(""ID""), 
+            FOREIGN KEY (""Zone2PlayerID"") REFERENCES ""Player""(""ID""), 
+            FOREIGN KEY (""Zone3PlayerID"") REFERENCES ""Player""(""ID""), 
+            FOREIGN KEY (""Zone4PlayerID"") REFERENCES ""Player""(""ID""), 
+            FOREIGN KEY (""Zone5PlayerID"") REFERENCES ""Player""(""ID""), 
+            FOREIGN KEY (""Zone6PlayerID"") REFERENCES ""Player""(""ID""));");
+
+        await _db.ExecuteAsync(@"CREATE TABLE IF NOT EXISTS ""Player"" (
+            ""ID"" INTEGER PRIMARY KEY AUTOINCREMENT, 
+            ""Name"" TEXT NOT NULL, 
+            ""Number"" TEXT NOT NULL, 
+            ""TeamID"" INTEGER, 
+            ""ReplaceID"" INTEGER, 
+            ""IsDisqual"" INTEGER NOT NULL DEFAULT 0, 
+            ""IsRemove"" INTEGER NOT NULL DEFAULT 0, 
+            ""IsInjury"" INTEGER NOT NULL DEFAULT 0, 
+            ""IsCaptain"" INTEGER NOT NULL DEFAULT 0, 
+            ""IsLibero"" INTEGER NOT NULL DEFAULT 0, 
+            ""IsCoach"" INTEGER NOT NULL DEFAULT 0, 
+            FOREIGN KEY (""TeamID"") REFERENCES ""Team""(""ID""), 
+            FOREIGN KEY (""ReplaceID"") REFERENCES ""Player""(""ID""));");
+
+        await _db.ExecuteAsync(@"CREATE TABLE IF NOT EXISTS ""Event"" (
+            ""ID"" INTEGER PRIMARY KEY AUTOINCREMENT, 
+            ""SetID"" INTEGER, 
+            ""TeamID"" INTEGER, 
+            ""EventCategoryID"" INTEGER, 
+            ""ScoreHome"" INTEGER NOT NULL, 
+            ""ScoreGuest"" INTEGER NOT NULL, 
+            ""PlayerInID"" INTEGER, 
+            ""PlayerOutID"" INTEGER, 
+            ""SanctionCategoryID"" INTEGER, 
+            ""TargetID"" INTEGER, 
+            FOREIGN KEY (""SetID"") REFERENCES ""Set""(""ID""), 
+            FOREIGN KEY (""TeamID"") REFERENCES ""Team""(""ID""), 
+            FOREIGN KEY (""EventCategoryID"") REFERENCES ""EventCategory""(""ID""), 
+            FOREIGN KEY (""PlayerInID"") REFERENCES ""Player""(""ID""), 
+            FOREIGN KEY (""PlayerOutID"") REFERENCES ""Player""(""ID""), 
+            FOREIGN KEY (""SanctionCategoryID"") REFERENCES ""SanctionCategory""(""ID""), 
+            FOREIGN KEY (""TargetID"") REFERENCES ""Player""(""ID""));");
+
+        await _db.ExecuteAsync(@"CREATE TABLE IF NOT EXISTS ""MainInformation"" (
+            ""ID"" INTEGER PRIMARY KEY AUTOINCREMENT, 
+            ""NameTournament"" TEXT NOT NULL, 
+            ""TeamHomeID"" INTEGER, 
+            ""TeamGuestID"" INTEGER, 
+            ""FirstReferee"" TEXT NOT NULL, 
+            ""ToReferee"" TEXT, 
+            ""Secretary"" TEXT NOT NULL, 
+            ""Group"" TEXT, 
+            ""TimeBegin"" TEXT, 
+            ""MVPHomeID"" INTEGER, 
+            ""MVPGuestID"" INTEGER, 
+            ""End"" INTEGER NOT NULL DEFAULT 0, 
+            ""TextProtestHome"" TEXT, 
+            ""TextProtestGuest"" TEXT, 
+            ""TextProtestSecretary"" TEXT, 
+            ""TextProtestFirstReferee"" TEXT, 
+            ""TextProtestToReferee"" TEXT, 
+            FOREIGN KEY (""TeamHomeID"") REFERENCES ""Team""(""ID""), 
+            FOREIGN KEY (""TeamGuestID"") REFERENCES ""Team""(""ID""), 
+            FOREIGN KEY (""MVPHomeID"") REFERENCES ""Player""(""ID""), 
+            FOREIGN KEY (""MVPGuestID"") REFERENCES ""Player""(""ID""));");
+
         await InitializeEventCategoryAsync();
-        await _db.CreateTableAsync<Sanction>();
         await InitializeSanctionCategoryAsync();
     }
 
     public int GetIdSanctionByName(string name)
     {
-        return SanctionsCategories.Find(x => x.Name == name).Id;
+        return SanctionsCategories.Find(x => x.Name == name).ID;
     }
 
     public async Task<List<Player>> GetRosterFull(Team team)
@@ -92,11 +174,19 @@ public class DatabaseService
         {
             var list = new List<EventCategory>
             {
-                new EventCategory() {Name = "S"},
+                new EventCategory() {Name = "SC"},
                 new EventCategory() {Name = "T"},
                 new EventCategory() {Name = "R"},
                 new EventCategory() {Name = "RR"},
-                new EventCategory() {Name = "WR"}
+                new EventCategory() {Name = "ERI"},
+                new EventCategory() {Name = "ERR"},
+                new EventCategory() {Name = "ERD"},
+                new EventCategory() {Name = "SAW"},
+                new EventCategory() {Name = "SARM"},
+                new EventCategory() {Name = "SARV"},
+                new EventCategory() {Name = "SAD"},
+                new EventCategory() {Name = "TLS"},
+                new EventCategory() {Name = "TLG"}
             };
 
             await _db.InsertAllAsync(list);
@@ -104,7 +194,7 @@ public class DatabaseService
 
         var l = await _db.Table<EventCategory>().ToListAsync();
 
-        EventsCategories = l.ToDictionary(x => x.Name, x => x.Id);
+        EventsCategories = l.ToDictionary(x => x.Name, x => x.ID);
     }
 
     #endregion
@@ -152,9 +242,9 @@ public class DatabaseService
 
     public async Task<List<Player>> GetPlayerAsync() => await _db.Table<Player>().ToListAsync();
 
-    public async Task<Player> GetPlayerAsync(int id) => await _db.Table<Player>().Where(x => x.Id == id).FirstOrDefaultAsync();
+    public async Task<Player> GetPlayerAsync(int id) => await _db.Table<Player>().Where(x => x.ID == id).FirstOrDefaultAsync();
 
-    public async Task<List<Player>> GetPlayerAsync(Team team) => await _db.Table<Player>().Where(x => x.TeamID == team.Id).ToListAsync();
+    public async Task<List<Player>> GetPlayerAsync(Team team) => await _db.Table<Player>().Where(x => x.TeamID == team.ID).ToListAsync();
 
     public async Task<int> DeletePlayerAsync() => await _db.DeleteAllAsync<Player>();
 
@@ -172,9 +262,9 @@ public class DatabaseService
 
     public async Task<List<Set>> GetSetAsync() => await _db.Table<Set>().ToListAsync();
 
-    public async Task<Set> GetSetAsync(int ID) => await _db.Table<Set>().Where(x => x.Id == ID).FirstOrDefaultAsync();
+    public async Task<Set> GetSetAsync(int ID) => await _db.Table<Set>().Where(x => x.ID == ID).FirstOrDefaultAsync();
 
-    public async Task<Set> GetLastSetAsync() => await _db.Table<Set>().OrderByDescending(x => x.Id).FirstOrDefaultAsync();
+    public async Task<Set> GetLastSetAsync() => await _db.Table<Set>().OrderByDescending(x => x.ID).FirstOrDefaultAsync();
 
     #endregion
 
@@ -190,7 +280,7 @@ public class DatabaseService
 
     public async Task<List<Team>> GetTeamAsync() => await _db.Table<Team>().ToListAsync();
 
-    public async Task<Team> GetTeamAsync(int id) => await _db.Table<Team>().Where(x => x.Id == id).FirstOrDefaultAsync();
+    public async Task<Team> GetTeamAsync(int id) => await _db.Table<Team>().Where(x => x.ID == id).FirstOrDefaultAsync();
 
     public async Task<Team> GetTeamHomeAsync() => await _db.Table<Team>().Where(x => x.IsHome).FirstOrDefaultAsync();
 
@@ -208,9 +298,9 @@ public class DatabaseService
 
     public async Task<List<LineUpBegin>> GetLineUpBeginAsync() => await _db.Table<LineUpBegin>().ToListAsync();
 
-    public async Task<LineUpBegin> GetLineUpBeginAsync(Set set) => await _db.Table<LineUpBegin>().Where(x => x.SetId == set.Id).FirstOrDefaultAsync();
+    public async Task<LineUpBegin> GetLineUpBeginAsync(Set set) => await _db.Table<LineUpBegin>().Where(x => x.SetID == set.ID).FirstOrDefaultAsync();
 
-    public async Task<LineUpBegin> GetLineUpBeginAsync(Set set, Team team) => await _db.Table<LineUpBegin>().Where(x => x.SetId == set.Id && x.TeamId == team.Id).FirstOrDefaultAsync();
+    public async Task<LineUpBegin> GetLineUpBeginAsync(Set set, Team team) => await _db.Table<LineUpBegin>().Where(x => x.SetID == set.ID && x.TeamID == team.ID).FirstOrDefaultAsync();
 
     #endregion
 
@@ -226,35 +316,50 @@ public class DatabaseService
 
     public async Task<int> DeleteEventAsync() => await _db.DeleteAllAsync<Event>();
 
-    public async Task<List<Event>> GetEventAsync() => await _db.Table<Event>().ToListAsync();
+    public async Task<Event> GetLastEventAsync()
+    {
+        var ev = await _db.Table<Event>().OrderByDescending(x => x.ID).FirstOrDefaultAsync();
 
-    public async Task<List<Event>> GetEventAsync(Set set) => await _db.Table<Event>().Where(x => x.SetID == set.Id).ToListAsync();
+        return ev != null ? ev : null;
+    }
 
-    public async Task<List<Event>> GetEventAsync(Set set, List<int> IDs_events) => await _db.Table<Event>().Where(x => x.SetID == set.Id && IDs_events.Contains(x.EventID)).ToListAsync();
+    public async Task<List<Event>> GetEventAsync(List<int> IDs_events = null)
+    {
+        if(IDs_events != null)
+            return await _db.Table<Event>().Where(x => IDs_events.Contains(x.EventCategoryID)).ToListAsync();
+        else
+            return await _db.Table<Event>().ToListAsync();
+    }
 
-    public async Task<List<Event>> GetEventAsync(Team team, List<int> IDs_events) => await _db.Table<Event>().Where(x => x.TeamID == team.Id && IDs_events.Contains(x.EventID)).ToListAsync();
+    public async Task<List<Event>> GetEventAsync(Set set) => await _db.Table<Event>().Where(x => x.SetID == set.ID).ToListAsync();
 
-    public async Task<List<Event>> GetEventAsync(Set set, Team team, List<int> IDs_events) => await _db.Table<Event>().Where(x => x.SetID == set.Id && x.TeamID == team.Id && IDs_events.Contains(x.EventID)).ToListAsync();
+    public async Task<List<Event>> GetEventAsync(Set set, List<int> IDs_events) => await _db.Table<Event>().Where(x => x.SetID == set.ID && IDs_events.Contains(x.EventCategoryID)).ToListAsync();
 
-    #endregion
+    public async Task<List<Event>> GetEventAsync(Team team, List<int> IDs_events) => await _db.Table<Event>().Where(x => x.TeamID == team.ID && IDs_events.Contains(x.EventCategoryID)).ToListAsync();
 
-    #region Sanction
+    public async Task<List<Event>> GetEventAsync(Set set, Team team, List<int> IDs_events) => await _db.Table<Event>().Where(x => x.SetID == set.ID && x.TeamID == team.ID && IDs_events.Contains(x.EventCategoryID)).ToListAsync();
 
-    public async Task InitializeSanctionAsync() => await _db.CreateTableAsync<Sanction>();
+    public async Task<Tuple<int, int>> GetScore(Set set)
+    {
+        var events = await _db.Table<Event>().ToListAsync();
 
-    public async Task<int> SaveSanctionAsync(Sanction sanction) => await _db.InsertAsync(sanction);
+        if (events != null && events.Count > 0)
+        {
+            Team TeamHome = await GetTeamHomeAsync();
 
-    public async Task<int> UpdateSanctionAsync(Sanction sanction) => await _db.UpdateAsync(sanction);
+            Team TeamGuest = await GetTeamGuestAsync();
 
-    public async Task<int> DeleteSelectSanctionAsync(Sanction sanction) => await _db.DeleteAsync(sanction);
+            int scoreHome = events.Where(x => x.SetID == set.ID && x.TeamID == TeamHome.ID && x.EventCategoryID == EventsCategories["SC"]).Count();
 
-    public async Task<int> DeleteSanctionAsync() => await _db.DeleteAllAsync<Sanction>();
+            int scoreGuest = events.Where(x => x.SetID == set.ID && x.TeamID == TeamGuest.ID && x.EventCategoryID == EventsCategories["SC"]).Count();
 
-    public async Task<List<Sanction>> GetSanctionAsync() => await _db.Table<Sanction>().ToListAsync();
-
-    public async Task<List<Sanction>> GetSanctionAsync(Set set) => await _db.Table<Sanction>().Where(x => x.SetId == set.Id).ToListAsync();
-
-    public async Task<Sanction> GetLastSanctionAsync() => await _db.Table<Sanction>().OrderByDescending(x => x.Id).FirstOrDefaultAsync();
+            return Tuple.Create(scoreHome, scoreGuest);
+        }
+        else
+        {
+            return Tuple.Create(0, 0);
+        }
+    }
 
     #endregion
 }

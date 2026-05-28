@@ -11,15 +11,13 @@ namespace MauiApp1
     public class MainInformation
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         public string NameTournament { get; set; }
 
-        [ForeignKey(typeof(Team))]
-        public int TeamHome { get; set; }
+        public int TeamHomeID { get; set; }
 
-        [ForeignKey(typeof(Team))]
-        public int TeamGuest { get; set; }
+        public int TeamGuestID { get; set; }
 
         public string FirstReferee { get; set; }
 
@@ -31,9 +29,9 @@ namespace MauiApp1
 
         public DateTime? TimeBegin { get; set; } = null;
 
-        public int? MVPHome { get; set; } = null;
+        public int? MVPHomeID { get; set; } = null;
 
-        public int? MVPGuest { get; set; } = null;
+        public int? MVPGuestID { get; set; } = null;
 
         public bool End {  get; set; } = false;
 
@@ -46,7 +44,5 @@ namespace MauiApp1
         public string TextProtestFirstReferee { set; get; }
 
         public string TextProtestToReferee { set; get; }
-
-        public string Logs {  get; set; }
     }
 }

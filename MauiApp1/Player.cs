@@ -16,23 +16,21 @@ namespace MauiApp1
         public string DisplayName => $"{Number} - {Name}";
 
         [PrimaryKey, AutoIncrement]
-        public int? Id { get; set; } = null;
+        public int ID { get; set; }
 
         public string Name { get; set; }
 
         public string Number { get; set; }
 
-        [ForeignKey(typeof(Team))]
         public int TeamID { get; set; }
 
-        [ForeignKey(typeof(Player))]
         public int ReplaceID { get; set; } = 0;
 
-        public bool IsDisqual {  get; set; }
+        public bool IsDisqual {  get; set; } = false;
 
-        public bool IsRemove { get; set; }
+        public bool IsRemove { get; set; } = false;
 
-        public bool IsInjury { get; set; }
+        public bool IsInjury { get; set; } = false;
 
         public bool IsCoach { get; set; } = false;
 
