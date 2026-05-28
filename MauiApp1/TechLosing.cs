@@ -13,7 +13,6 @@ namespace MauiApp1
 
             await _db.SaveEventAsync(new Event() { SetID = set.ID, TeamID = teamLoser.ID, ScoreHome = score.Item1, ScoreGuest = score.Item2, EventCategoryID = _db.EventsCategories["TLS"] });
 
-
             if (!set.IsShort)
             {
                 while (set.WinnerID == 0)

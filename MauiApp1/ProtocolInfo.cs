@@ -251,7 +251,7 @@ namespace MauiApp1
 
             #region Sanction
 
-            var Sanctions = await db.GetEventAsync(new List<int> { db.EventsCategories["SA"] });
+            var Sanctions = await db.GetEventAsync(new List<int> { db.EventsCategories["SAW"], db.EventsCategories["SARM"], db.EventsCategories["SARV"], db.EventsCategories["SAD"] });
 
             await FillSanction(Sanctions);
 
@@ -451,7 +451,6 @@ namespace MauiApp1
 
         Dictionary<string, WriteText> dictionary = new Dictionary<string, WriteText>()
         {
-            {"Logs", null},
             {"MVPHome", null},
             {"MVPGuest", null},
             {"SignFirstReferee", new WriteText("Подпись", "main")},

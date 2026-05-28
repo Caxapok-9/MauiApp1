@@ -35,6 +35,8 @@ namespace MauiApp1
     {
         private static TaskCompletionSource<bool> _CompletedTask = new TaskCompletionSource<bool>();
 
+        private static DatabaseService db;
+
         private static Team TeamHome;
 
         private static Team TeamGuest;
@@ -139,6 +141,8 @@ namespace MauiApp1
 
         private static async Task SignPdfContractAsync(DatabaseService _db, MemoryStream generatedPdfStream, string Password)
         {
+            db = _db;
+
             using Stream pfxStream = await FileSystem.OpenAppPackageFileAsync("VolleyApp.pfx");
 
             Pkcs12Store pkcs12Store = new Pkcs12StoreBuilder().Build();
@@ -255,6 +259,31 @@ namespace MauiApp1
         {
             try
             {
+                byte[] file2;
+
+                var events = await db.GetEventAsync();
+
+                List<string> text = new List<string>();
+
+                foreach (var e in events)
+                {
+                    string s = await MessageWriter.CreateMessage(db, e);
+
+                    text.Add(s);
+                }
+
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    using (StreamWriter writer = new StreamWriter(memoryStream, Encoding.UTF8))
+                    {
+                        writer.WriteAsync(string.Join("\n", text));
+
+                        writer.Flush();
+
+                        file2 = memoryStream.ToArray();
+                    }
+                } 
+
                 var message = new MimeMessage();
 
                 message.From.Add(new MailboxAddress("VolleyApp Рассылка", "c4xapo4ek28@yandex.ru"));
@@ -268,6 +297,7 @@ namespace MauiApp1
                 };
 
                 builder.Attachments.Add($"Протокол матча {TeamHome.Name} - {TeamGuest.Name}.pdf", file, ContentType.Parse("application/pdf"));
+                builder.Attachments.Add($"Хронология матча {TeamHome.Name} - {TeamGuest.Name}.txt", file2, ContentType.Parse("text/plain"));
 
                 message.Body = builder.ToMessageBody();
 

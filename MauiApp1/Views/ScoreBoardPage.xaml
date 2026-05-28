@@ -6,21 +6,13 @@
 
     <ContentPage.ToolbarItems>
 
+        <ToolbarItem Clicked="OnHistoryClick" Priority="0" Order="Primary" Text="История"/>
+
         <ToolbarItem Clicked="OnTechLoseClick" Priority="0" Order="Primary">
 
             <ToolbarItem.IconImageSource>
 
                 <FontImageSource Glyph="⋮" Size="30" Color="White"/>
-
-            </ToolbarItem.IconImageSource>
-            
-        </ToolbarItem>
-
-        <ToolbarItem Clicked="OnHistoryClick" Priority="0" Order="Primary">
-
-            <ToolbarItem.IconImageSource>
-
-                <FontImageSource Glyph="История" Size="30" Color="White"/>
 
             </ToolbarItem.IconImageSource>
 
