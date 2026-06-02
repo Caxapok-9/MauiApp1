@@ -9,7 +9,7 @@
             <ScrollView Grid.Row="0" VerticalOptions="Fill">
                 
                 <VerticalStackLayout Padding="10">
-            
+
                     <Label Text="Название турнира:" Margin="5,0,0,0"/>
                     <Entry x:Name="EntryTournament" Placeholder="Чемпионат города Твери" Margin="0,10,0,15"/>
 

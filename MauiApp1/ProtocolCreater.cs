@@ -57,7 +57,15 @@ namespace MauiApp1
 
             MemoryStream streamSign = new MemoryStream();
 
-            var streamTemplate = await FileSystem.OpenAppPackageFileAsync("protokol.pdf");
+            string federation = await App.Current.MainPage.DisplayActionSheet("Выберите федерацию", "Ок", null, Setting.Protokols.Keys.ToArray());
+
+            if (federation == null || string.IsNullOrWhiteSpace(federation))
+            {
+                _CompletedTask.SetResult(false);
+                return;
+            }
+
+            var streamTemplate = await FileSystem.OpenAppPackageFileAsync(@"DataFederation\" + Setting.Protokols[federation].Item1);
 
             string password = await App.Current.MainPage.DisplayPromptAsync("Безопасность", "Введите пин-код", "Ок", "Отмена", null, -1, Keyboard.Numeric);
 
@@ -127,7 +135,7 @@ namespace MauiApp1
 
                 outputStream.Position = 0;
 
-                await SignPdfContractAsync(_db, outputStream, password);
+                await SignPdfContractAsync(_db, outputStream, password, federation);
             }
             catch(Exception ex) 
             {
@@ -139,11 +147,11 @@ namespace MauiApp1
             }
         }
 
-        private static async Task SignPdfContractAsync(DatabaseService _db, MemoryStream generatedPdfStream, string Password)
+        private static async Task SignPdfContractAsync(DatabaseService _db, MemoryStream generatedPdfStream, string Password, string federation)
         {
             db = _db;
 
-            using Stream pfxStream = await FileSystem.OpenAppPackageFileAsync("VolleyApp.pfx");
+            using Stream pfxStream = await FileSystem.OpenAppPackageFileAsync(@"DataFederation\" + Setting.Protokols[federation].Item2);
 
             Pkcs12Store pkcs12Store = new Pkcs12StoreBuilder().Build();
 
