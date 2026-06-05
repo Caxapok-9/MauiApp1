@@ -65,7 +65,7 @@ namespace MauiApp1
                 return;
             }
 
-            var streamTemplate = await FileSystem.OpenAppPackageFileAsync(@"DataFederation\" + Setting.Protokols[federation].Item1);
+            var streamTemplate = await FileSystem.OpenAppPackageFileAsync(@"DataFederation\" + Setting.Protokols[federation].FilePDF);
 
             string password = await App.Current.MainPage.DisplayPromptAsync("Безопасность", "Введите пин-код", "Ок", "Отмена", null, -1, Keyboard.Numeric);
 
@@ -151,7 +151,7 @@ namespace MauiApp1
         {
             db = _db;
 
-            using Stream pfxStream = await FileSystem.OpenAppPackageFileAsync(@"DataFederation\" + Setting.Protokols[federation].Item2);
+            using Stream pfxStream = await FileSystem.OpenAppPackageFileAsync(@"DataFederation\" + Setting.Protokols[federation].FilePFX);
 
             Pkcs12Store pkcs12Store = new Pkcs12StoreBuilder().Build();
 
@@ -203,7 +203,7 @@ namespace MauiApp1
 
             byte[] bytes = memoryStream.ToArray();
 
-            bool send = await EmailSender(bytes);
+            bool send = await EmailSender(bytes, federation);
 
             if (send)
             {
@@ -263,7 +263,7 @@ namespace MauiApp1
             }
         }
 
-        private static async Task<bool> EmailSender(byte[] file)
+        private static async Task<bool> EmailSender(byte[] file, string federation)
         {
             try
             {
@@ -295,7 +295,7 @@ namespace MauiApp1
                 var message = new MimeMessage();
 
                 message.From.Add(new MailboxAddress("VolleyApp Рассылка", "c4xapo4ek28@yandex.ru"));
-                message.To.Add(new MailboxAddress("Получатель", "bereft@vk.com"));
+                message.To.Add(new MailboxAddress("Получатель", Setting.Protokols[federation].Email));
                 message.Subject = $"Протокол матча {TeamHome.Name} - {TeamGuest.Name} от " + DateTime.Now.ToString("dd.MM.yyyy");
 
                 var builder = new BodyBuilder()

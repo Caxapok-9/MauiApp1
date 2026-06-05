@@ -20,10 +20,10 @@ namespace MauiApp1
 
         public static PdfFont CalibriBold;
 
-        public static Dictionary<string, Tuple<string, string>> Protokols = new Dictionary<string, Tuple<string, string>>()
+        public static Dictionary<string, Federation> Protokols = new Dictionary<string, Federation>()
         {
-            {"Тверская городская федерация", Tuple.Create("Protokol_TGFV.pdf", "VolleyApp.pfx") },
-            {"Великолукская федерация", Tuple.Create("Protokol_VLFV.pdf", "VolleyApp.pfx")}
+            {"Тверская городская федерация", new Federation("Protokol_TGFV.pdf", "VolleyApp.pfx", "bereft@vk.com") },
+            {"Великолукская федерация", new Federation("Protokol_VLFV.pdf", "VolleyApp.pfx", "bereft@vk.com")}
         };
 
         public static async Task GetFonts()
